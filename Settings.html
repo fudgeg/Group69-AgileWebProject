@@ -1,0 +1,158 @@
+<!-- Settings page that let user to tweak soul map to their liking for better user experience-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="img/SoulMapsIcon.png" />
+    <title>Settings</title>
+  </head>
+  <body>
+
+    <!-- Top NavBar -->
+    <div class="navbar">
+      <div class="navbar-left">
+        <img
+          src="img/SoulMapsIcon.png"
+          alt="SoulMapsIcon"
+          class="navbar-icon"
+        />
+        <div class="logo">Soul Maps</div>
+      </div>
+
+      <div class="nav-icons">
+        <a href="Home.html">
+          <div class="nav-icon-button">
+            <img src="img/homeIcon.png" alt="Home" class="nav-icon" /></div
+        ></a>
+        <a href="Friends.html">
+          <div class="nav-icon-button">
+            <img
+              src="img/friendsIcon.png"
+              alt="Friends"
+              class="nav-icon"
+            /></div
+        ></a>
+        <a href="Settings.html">
+          <div class="nav-icon-button">
+            <img
+              src="img/settingsIcon.png"
+              alt="Settings"
+              class="nav-icon"
+            /></div
+        ></a>
+      </div>
+    </div>
+
+  <!-- Settings Layout -->
+  <div class="settings-page">
+    <!-- Sidebar -->
+    <div class="settings-sidebar">
+      <h2>Settings</h2>
+      <ul>
+        <li onclick="showSection('account')"><b>Account Settings</b></li>
+        <li onclick="showSection('privacy')"><b>Privacy Settings</b></li>
+        <li onclick="showSection('map')"><b>Map Customization</b></li>
+        <li onclick="showSection('notifications')"><b>Notifications</b></li>
+        <li onclick="showSection('connections')"><b>Connections & Social</b></li>
+        <li onclick="showSection('media')"><b>Media Sources Management</b></li>
+        <li onclick="showSection('about')"><b>About / Help / Legal</b></li>
+      </ul>
+      <button class="logout-button" onclick="confirmLogout()">Log Out</button>
+    </div>
+
+    <!-- Main Displayed Content -->
+    <div class="settings-content">
+      <div id="account" class="settings-section">
+        <h2>Account Settings</h2>
+        <ul>
+          <li>Username / Display Name</li>
+          <li>Profile Picture</li>
+          <li>Email</li>
+          <li>Password & Authentication</li>
+          <li>Delete Account</li>
+        </ul>
+      </div>
+
+    <!-- Content in Settings are purely static as of now -->
+      <div id="privacy" class="settings-section hidden">
+        <h2>Privacy Settings</h2>
+        <ul>
+          <li>Who can view my map?</li>
+          <li>Who can request to connect?</li>
+          <li>Hide specific media types</li>
+          <li>Hide specific items manually</li>
+        </ul>
+      </div>
+
+      <div id="map" class="settings-section hidden">
+        <h2>Map Customization</h2>
+        <ul>
+          <li>Choose map style</li>
+          <li>Color themes</li>
+          <li>Media type focus</li>
+          <li>Public vs Private nodes</li>
+        </ul>
+      </div>
+
+      <div id="notifications" class="settings-section hidden">
+        <h2>Notifications</h2>
+        <ul>
+          <li>New connection requests</li>
+          <li>Updates about shared media</li>
+          <li>Suggestions</li>
+          <li>Toggle email vs push notifications</li>
+        </ul>
+      </div>
+
+      <div id="connections" class="settings-section hidden">
+        <h2>Connections & Social</h2>
+        <ul>
+          <li>Manage friend requests</li>
+          <li>Blocked users list</li>
+          <li>Connection history</li>
+          <li>Invite friends</li>
+        </ul>
+      </div>
+
+      <div id="media" class="settings-section hidden">
+        <h2>Media Sources Management</h2>
+        <ul>
+          <li>Connected apps</li>
+          <li>Re-sync media libraries</li>
+          <li>Disconnect a service</li>
+          <li>Set primary media source</li>
+        </ul>
+      </div>
+
+      <div id="about" class="settings-section hidden">
+        <h2>About / Help / Legal</h2>
+        <ul>
+          <li>App version info</li>
+          <li>Terms of Service</li>
+          <li>Privacy Policy</li>
+          <li>Contact Support</li>
+          <li>Submit feedback / Report a bug</li>
+
+          <script>
+            function showSection(sectionId) {
+              const sections = document.querySelectorAll(".settings-section");
+              sections.forEach((section) => {
+                section.classList.add("hidden");
+              });
+              document.getElementById(sectionId).classList.remove("hidden");
+            }
+          
+            function confirmLogout() {
+              const confirmAction = confirm("Are you sure you want to log out?");
+              if (confirmAction) {
+                window.location.href = "Welcome.html";
+              } 
+              // else do nothing (stay)
+            }
+          </script>
+          
+  </body>
+</html>

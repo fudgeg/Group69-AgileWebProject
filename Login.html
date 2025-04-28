@@ -1,0 +1,71 @@
+<!-- Login page that allows existing user to log in-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="img/SoulMapsIcon.png" />
+  </head>
+
+  <body class="center-page">
+    <div class="login-container">
+      <div class="logo-section">
+        <img src="img/SoulMapsLogo.png" alt="Soul Maps Logo" class="logo" />
+      </div>
+      <div class="form-section">
+        <h2 class="form-title">Login</h2>
+        <form class="signup-form" onsubmit="return handleLogin()">
+          <input
+            type="email"
+            placeholder="Email"
+            class="input-field full-width"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Enter your password"
+            class="input-field full-width"
+            required
+          />
+          <button type="submit" class="btn create-account-btn">Login</button>
+        </form>
+        <p class="login-with-text">or login with</p>
+        <div class="social-login">
+          <button class="social-btn">
+            <img
+              src="img/googleLogo.png"
+              alt="Google logo"
+              class="social-icon"
+            />
+            Google
+          </button>
+          <button class="social-btn">
+            <img src="img/appleLogo.png" alt="Apple logo" class="social-icon" />
+            Apple
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      //simple javascript code to ensure user does not leave the input field empty
+      function handleLogin() {
+        var email = document.querySelector('input[placeholder="Email"]').value;
+        var password = document.querySelector(
+          'input[placeholder="Enter your password"]'
+        ).value;
+
+        if (!email || !password) {
+          alert("Please fill out all fields!");
+          return false; // block form submission
+        } else {
+          // Both fields filled → redirect to home page
+          window.location.href = "home.html";
+          return false; // prevent default form submission
+        }
+      }
+    </script>
+  </body>
+</html>
