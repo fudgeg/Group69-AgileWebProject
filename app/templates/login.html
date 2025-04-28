@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Soul Maps</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/css/styles.css') }}">
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="left-side">
+        <!-- Ignore logo for now -->
+    </div>
+
+    <div class="right-side">
+        <h2>Create an account</h2>
+        <form method="POST" action="/login">
+            <label for="first_name">First Name:</label><br>
+            <input type="text" id="first_name" name="first_name" required><br>
+
+            <label for="last_name">Last Name:</label><br>
+            <input type="text" id="last_name" name="last_name" required><br>
+
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br>
+
+            <button type="submit">Create account</button>
+        </form>
+
+        <p>Login in with</p>
+        <div class="social-login">
+            <img src="https://www.citypng.com/public/uploads/preview/google-logo-icon-gsuite-hd-701751694791470gzbayltphh.png" alt="Google" width="30">
+            <img src="https://purepng.com/public/uploads/large/purepng.com-apple-logologobrand-logoiconslogos-251519938788qhgdl.png" alt="Apple" width="30">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_de_Facebook.png/1203px-Logo_de_Facebook.png?20250202193440" alt="Facebook" width="30">
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+
