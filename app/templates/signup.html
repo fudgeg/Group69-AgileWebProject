@@ -3,35 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-
+    <title>Sign Up</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/SoulMapsIcon.png') }}" />
   </head>
-
   <body class="center-page">
     <div class="login-container">
       <div class="logo-section">
         <img src="{{ url_for('static', filename='media/SoulMapsLogo.png') }}" alt="Soul Maps Logo" class="logo" />
       </div>
+
       <div class="form-section">
-        <h2 class="form-title">Login</h2>
-        <form class="signup-form" onsubmit="return handleLogin()">
-          <input
-            type="email"
-            placeholder="Email"
-            class="input-field full-width"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Enter your password"
-            class="input-field full-width"
-            required
-          />
-          <button type="submit" class="btn create-account-btn">Login</button>
+        <h2 class="form-title">Create an account</h2>
+        <form class="signup-form" onsubmit="return checkPasswords()">
+          <div class="name-fields">
+            <input type="text" placeholder="First name" class="input-field" required />
+            <input type="text" placeholder="Last name" class="input-field" required />
+          </div>
+          <input type="email" placeholder="Email" class="input-field full-width" required />
+          <input type="password" placeholder="Enter your password" class="input-field full-width" required />
+          <input type="password" placeholder="Re-enter your password" class="input-field full-width" />
+          <button type="submit" class="btn create-account-btn">Create account</button>
         </form>
-        <p class="login-with-text">or login with</p>
+
+        <p class="login-with-text">or sign up with</p>
         <div class="social-login">
           <button class="social-btn">
             <img src="{{ url_for('static', filename='media/googleLogo.png') }}" alt="Google logo" class="social-icon" />
@@ -45,12 +44,11 @@
       </div>
     </div>
     <script>
-      function handleLogin() {
-        var email = document.querySelector('input[placeholder="Email"]').value;
+      function checkPasswords() {
         var password = document.querySelector('input[placeholder="Enter your password"]').value;
-
-        if (!email || !password) {
-          alert("Please fill out all fields!");
+        var confirmPassword = document.querySelector('input[placeholder="Re-enter your password"]').value;
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
           return false;
         } else {
           window.location.href = "{{ url_for('main.home') }}";
