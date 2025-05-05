@@ -103,7 +103,7 @@
   function confirmLogout() {
     const confirmAction = confirm("Are you sure you want to log out?");
     if (confirmAction) {
-      window.location.href = "{{ url_for('main.welcome') }}";
+      window.location.href = "{{ url_for('main.logout') }}"; // ✅ uses Flask logout route
     }
   }
 </script>
