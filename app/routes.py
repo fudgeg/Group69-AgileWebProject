@@ -22,9 +22,10 @@ def home():
 def friends():
     return render_template('friends.html')
 
-@main.route('/import')
-def import_page():
-    return render_template('import.html')
+@main.route('/upload')
+def upload_page():
+    return render_template('upload.html')
+
 
 @main.route('/settings')
 def settings():

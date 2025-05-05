@@ -1,13 +1,34 @@
 <div class="navbar">
     <div class="navbar-left">
-      <img src="{{ url_for('static', filename='media/SoulMapsIcon.png') }}" alt="SoulMapsIcon" class="navbar-icon" />
+      <img
+        src="{{ url_for('static', filename='media/SoulMapsIcon.png') }}"
+        alt="SoulMapsIcon"
+        class="navbar-icon"
+      />
       <div class="logo">Soul Maps</div>
     </div>
+  
     <div class="nav-icons">
-      <a href="{{ url_for('main.home') }}"><img src="{{ url_for('static', filename='media/homeIcon.png') }}" class="nav-icon"></a>
-      <a href="{{ url_for('main.for_you') }}"><img src="{{ url_for('static', filename='media/forYouIcon.png') }}" class="nav-icon"></a>
-      <a href="{{ url_for('main.friends') }}"><img src="{{ url_for('static', filename='media/friendsIcon.png') }}" class="nav-icon"></a>
-      <a href="{{ url_for('main.settings') }}"><img src="{{ url_for('static', filename='media/settingsIcon.png') }}" class="nav-icon"></a>
+      <a href="{{ url_for('main.home') }}">
+        <div class="nav-icon-button">
+          <img src="{{ url_for('static', filename='media/homeIcon.png') }}" alt="Home" class="nav-icon" />
+        </div>
+      </a>
+      <a href="{{ url_for('main.for_you') }}">
+        <div class="nav-icon-button">
+          <img src="{{ url_for('static', filename='media/forYouIcon.png') }}" alt="For You" class="nav-icon" />
+        </div>
+      </a>
+      <a href="{{ url_for('main.friends') }}">
+        <div class="nav-icon-button">
+          <img src="{{ url_for('static', filename='media/friendsIcon.png') }}" alt="Friends" class="nav-icon" />
+        </div>
+      </a>
+      <a href="{{ url_for('main.settings') }}">
+        <div class="nav-icon-button">
+          <img src="{{ url_for('static', filename='media/settingsIcon.png') }}" alt="Settings" class="nav-icon" />
+        </div>
+      </a>
     </div>
   </div>
   

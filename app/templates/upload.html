@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Upload – Soul Maps{% endblock %}
+
+{% block content %}
+<div class="home-container">
+  <h2>Upload Your Media</h2>
+
+  <div class="import-form">
+    <form>
+      <div class="form-group">
+        <label for="mediaType">Select Media Type:</label>
+        <select id="mediaType" required>
+          <option value="">-- Choose One --</option>
+          <option value="book">Book</option>
+          <option value="tvshow">TV Show</option>
+          <option value="movie">Movie</option>
+          <option value="music">Music</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="mediaTitle">Enter Title / Artist / Author:</label>
+        <input type="text" id="mediaTitle" placeholder="e.g. Taylor Swift, Inception, Mistborn" required />
+      </div>
+
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

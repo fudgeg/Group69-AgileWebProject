@@ -1,84 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>For You</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/SoulMapsIcon.png') }}" />
-  </head>
-  <body>
-    <!-- Top NavBar -->
-    <div class="navbar">
-      <div class="navbar-left">
-        <img src="{{ url_for('static', filename='media/SoulMapsIcon.png') }}" alt="SoulMapsIcon" class="navbar-icon" />
-        <div class="logo">Soul Maps</div>
-      </div>
+{% extends "base.html" %}
+{% block title %}For You – Soul Maps{% endblock %}
 
-      <div class="nav-icons">
-        <a href="{{ url_for('main.home') }}">
-          <div class="nav-icon-button">
-            <img src="{{ url_for('static', filename='media/homeIcon.png') }}" alt="Home" class="nav-icon" />
-          </div>
-        </a>
-        <a href="{{ url_for('main.for_you') }}">
-          <div class="nav-icon-button">
-            <img src="{{ url_for('static', filename='media/forYouIcon.png') }}" alt="For You" class="nav-icon" />
-          </div>
-        </a>
-        <a href="{{ url_for('main.friends') }}">
-          <div class="nav-icon-button">
-            <img src="{{ url_for('static', filename='media/friendsIcon.png') }}" alt="Friends" class="nav-icon" />
-          </div>
-        </a>
-        <a href="{{ url_for('main.settings') }}">
-          <div class="nav-icon-button">
-            <img src="{{ url_for('static', filename='media/settingsIcon.png') }}" alt="Settings" class="nav-icon" />
-          </div>
-        </a>
-      </div>
+{% block content %}
+<div class="home-container">
+  <h2>For You</h2>
+
+  <div class="content">
+    <div class="recommended-section">
+      <h3>Recommended Media Maps</h3>
+      <ul>
+        <li><b>Dark Matter</b> — trending sci-fi show map</li>
+        <li><b>Mistborn</b> — epic fantasy book journey</li>
+        <li><b>Everything Everywhere All At Once</b> — multiverse madness movie map</li>
+      </ul>
     </div>
 
-    <!-- For You Page Content -->
-    <div class="home-container">
-      <h2>For You</h2>
-
-      <div class="content">
-        <div class="recommended-section">
-          <h3>Recommended Media Maps</h3>
-          <ul>
-            <li><b>Dark Matter</b> — trending sci-fi show map</li>
-            <li><b>Mistborn</b> — epic fantasy book journey</li>
-            <li><b>Everything Everywhere All At Once</b> — multiverse madness movie map</li>
-          </ul>
-        </div>
-
-        <div class="brain-image">
-          <img src="{{ url_for('static', filename='media/brainNetwork.png') }}" alt="Brain Network" />
-        </div>
-
-        <div class="trending-section">
-          <h3>Trending in Your Network</h3>
-          <ul>
-            <li><b>Bob</b> recommends <i>The Three-Body Problem</i></li>
-            <li><b>Alice</b> is loving <i>Severance</i></li>
-            <li><b>Charlie</b> just finished <i>The Sandman</i></li>
-          </ul>
-        </div>
-
-        <div class="discover-section">
-          <h3>Discover New Maps</h3>
-          <ul>
-            <li><i>Arcane</i> — animation lovers’ favorite</li>
-            <li><i>Dune</i> — spice must flow 🌌</li>
-            <li><i>Project Hail Mary</i> — science survival story</li>
-          </ul>
-        </div>
-      </div>
+    <div class="brain-image">
+      <img src="{{ url_for('static', filename='media/brainNetwork.png') }}" alt="Brain Network" />
     </div>
-  </body>
-</html>
+
+    <div class="trending-section">
+      <h3>Trending in Your Network</h3>
+      <ul>
+        <li><b>Bob</b> recommends <i>The Three-Body Problem</i></li>
+        <li><b>Alice</b> is loving <i>Severance</i></li>
+        <li><b>Charlie</b> just finished <i>The Sandman</i></li>
+      </ul>
+    </div>
+
+    <div class="discover-section">
+      <h3>Discover New Maps</h3>
+      <ul>
+        <li><i>Arcane</i> — animation lovers’ favorite</li>
+        <li><i>Dune</i> — spice must flow 🌌</li>
+        <li><i>Project Hail Mary</i> — science survival story</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
