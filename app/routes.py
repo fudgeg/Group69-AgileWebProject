@@ -91,26 +91,80 @@ def home():
         flash("User not found.")
         return redirect(url_for('main.login'))
 
-    return render_template('home.html', user=user)
+    # Query the most recent media entries (e.g., last 5)
+    recent_entries = MediaEntry.query.order_by(MediaEntry.id.desc()).limit(5).all()
+
+    # ✅ Get media entries created by the user's friends (limit for performance)
+    friend_ids = [f.id for f in user.friends]
+    friend_entries = (
+        MediaEntry.query
+        .filter(MediaEntry.user_id.in_(friend_ids))
+        .order_by(MediaEntry.id.desc())
+        .limit(5)
+        .all()
+    )
+
+    return render_template('home.html', user=user, recent_entries=recent_entries, friend_entries=friend_entries)
 
 
 
-@main.route('/friends')
+@main.route('/friends', methods=['GET', 'POST'])
 def friends():
-    return render_template('friends.html')
+    user = User.query.get(session.get('user_id'))
+    if not user:
+        flash("Please log in to view friends.")
+        return redirect(url_for('main.login'))
+
+    # All users except the current user and existing friends
+    recommended = User.query.filter(
+        User.id != user.id,
+        ~User.id.in_([f.id for f in user.friends])
+    ).all()
+
+    return render_template('friends.html', user=user, friends=user.friends, recommended=recommended)
+
+
+@main.route('/add_friend/<int:friend_id>', methods=['POST'])
+def add_friend(friend_id):
+    user = User.query.get(session.get('user_id'))
+    friend = User.query.get(friend_id)
+
+    if not user or not friend or friend == user:
+        flash("Invalid request.")
+        return redirect(url_for('main.friends'))
+
+    if friend in user.friends:
+        flash("You're already friends.")
+        return redirect(url_for('main.friends'))
+
+    user.friends.append(friend)
+    friend.friends.append(user)
+    db.session.commit()
+
+    flash(f"You are now friends with {friend.name}!")
+    return redirect(url_for('main.friends'))
+
 
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to upload media.")
+        return redirect(url_for('main.login'))
+
     if request.method == 'POST':
         media_type = request.form.get('mediaType')
         title = request.form.get('mediaTitle')
         if media_type and title:
-            new_entry = MediaEntry(media_type=media_type, title=title)
+            new_entry = MediaEntry(media_type=media_type, title=title, user_id=user_id)
             db.session.add(new_entry)
             db.session.commit()
+            flash("Media entry added.")
+
         return redirect(url_for('main.upload_page'))
 
-    entries = MediaEntry.query.all()
+    # Show only the entries for the logged-in user only by filtering by user_id
+    entries = MediaEntry.query.filter_by(user_id=user_id).all()
     return render_template('upload.html', entries=entries)
 
 @main.route('/settings')

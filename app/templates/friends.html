@@ -9,39 +9,36 @@
     <div class="friends-section">
       <h3>Your Friends</h3>
       <div class="friends-list">
+        {% for friend in friends %}
         <div class="friend-card">
-          <img src="{{ url_for('static', filename='media/Alice.jpeg') }}" alt="Alice" class="friend-pfp" />
-          <div class="friend-name">Alice</div>
+          <img src="{{ url_for('static', filename='media/Alice.jpeg') }}" alt="{{ friend.name }}" class="friend-pfp" />
+          <div class="friend-name">{{ friend.name }}</div>
         </div>
-        <div class="friend-card">
-          <img src="{{ url_for('static', filename='media/Bob.jpeg') }}" alt="Bob" class="friend-pfp" />
-          <div class="friend-name">Bob</div>
-        </div>
-        <div class="friend-card">
-          <img src="{{ url_for('static', filename='media/Charlie.jpeg') }}" alt="Charlie" class="friend-pfp" />
-          <div class="friend-name">Charlie</div>
-        </div>
+        {% else %}
+        <p>You have no friends yet 😢</p>
+        {% endfor %}
       </div>
     </div>
+
 
     <!-- Recommended Friends -->
     <div class="recommended-section">
       <h3>Recommended Connections</h3>
       <div class="friends-list">
-        <div class="friend-card">
-          <img src="{{ url_for('static', filename='media/Daisy.jpeg') }}" alt="Daisy" class="friend-pfp" />
-          <div class="friend-name">Daisy</div>
-        </div>
-        <div class="friend-card">
-          <img src="{{ url_for('static', filename='media/Ethan.jpeg') }}" alt="Ethan" class="friend-pfp" />
-          <div class="friend-name">Ethan</div>
-        </div>
-        <div class="friend-card">
-          <img src="{{ url_for('static', filename='media/Fiona.jpeg') }}" alt="Fiona" class="friend-pfp" />
-          <div class="friend-name">Fiona</div>
-        </div>
+        {% for person in recommended %}
+          <div class="friend-card">
+            <img src="{{ url_for('static', filename='media/Daisy.jpeg') }}" alt="{{ person.name }}" class="friend-pfp" />
+            <div class="friend-name">{{ person.name }}</div>
+            <form method="POST" action="{{ url_for('main.add_friend', friend_id=person.id) }}">
+              <button type="submit">Add Friend</button>
+            </form>
+          </div>
+        {% else %}
+          <p>No more users to recommend!</p>
+        {% endfor %}
       </div>
     </div>
+    
   </div>
 </div>
 {% endblock %}
