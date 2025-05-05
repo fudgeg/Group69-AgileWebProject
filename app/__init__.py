@@ -15,7 +15,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-        # ✅ Add default user if it doesn't exist
+        # Add default user if it doesn't exist
         if not User.query.filter_by(email='admin@example.com').first():
             default_user = User(name='Admin', email='admin@example.com')
             default_user.set_password('password123')
