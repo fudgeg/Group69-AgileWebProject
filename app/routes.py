@@ -101,16 +101,24 @@ def friends():
 
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to upload media.")
+        return redirect(url_for('main.login'))
+
     if request.method == 'POST':
         media_type = request.form.get('mediaType')
         title = request.form.get('mediaTitle')
         if media_type and title:
-            new_entry = MediaEntry(media_type=media_type, title=title)
+            new_entry = MediaEntry(media_type=media_type, title=title, user_id=user_id)
             db.session.add(new_entry)
             db.session.commit()
+            flash("Media entry added.")
+
         return redirect(url_for('main.upload_page'))
 
-    entries = MediaEntry.query.all()
+    # Show only the entries for the logged-in user only by filtering by user_id
+    entries = MediaEntry.query.filter_by(user_id=user_id).all()
     return render_template('upload.html', entries=entries)
 
 @main.route('/settings')
