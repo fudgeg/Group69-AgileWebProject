@@ -1,0 +1,117 @@
+{% extends "base.html" %} {% block title %}Settings – Soul Maps{% endblock %} {%
+block content %}
+  <div class="settings-page">
+    <!-- Sidebar Navigation -->
+    <aside class="settings-sidebar">
+      <h2>Settings</h2>
+      <ul class="settings-nav">
+        <li onclick="showSection('account')">Account</li>
+        <li onclick="showSection('privacy')">Privacy</li>
+        <li onclick="showSection('map')">Map</li>
+        <li onclick="showSection('notifications')">Notifications</li>
+        <li onclick="showSection('connections')">Connections</li>
+        <li onclick="showSection('media')">Media</li>
+        <li onclick="showSection('about')">About</li>
+      </ul>
+      <button class="logout-button" onclick="confirmLogout()">Log Out</button>
+    </aside>
+
+    <!-- Main Settings Content -->
+    <main class="settings-content">
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+        <div class="flash">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <section id="account" class="settings-section active">
+        <h3>Account Settings</h3>
+        <ul>
+          <li>Username / Display Name</li>
+          <li>Profile Picture</li>
+          <li>Email</li>
+          <li>Password</li>
+          <li>Delete Account</li>
+        </ul>
+      </section>
+
+      <section id="privacy" class="settings-section hidden">
+        <h3>Privacy Settings</h3>
+        <ul>
+          <li>Map visibility</li>
+          <li>Friend request permissions</li>
+          <li>Hide specific media types</li>
+          <li>Hide specific items manually</li>
+        </ul>
+      </section>
+
+      <section id="map" class="settings-section hidden">
+        <h3>Map Customization</h3>
+        <ul>
+          <li>Map style</li>
+          <li>Color themes</li>
+          <li>Focus on media types</li>
+          <li>Node visibility settings</li>
+        </ul>
+      </section>
+
+      <section id="notifications" class="settings-section hidden">
+        <h3>Notifications</h3>
+        <ul>
+          <li>Connection requests</li>
+          <li>Shared media updates</li>
+          <li>Suggestions</li>
+          <li>Email vs Push notifications</li>
+        </ul>
+      </section>
+
+      <section id="connections" class="settings-section hidden">
+        <h3>Connections & Social</h3>
+        <ul>
+          <li>Manage friend requests</li>
+          <li>Blocked users</li>
+          <li>Connection history</li>
+          <li>Invite friends</li>
+        </ul>
+      </section>
+
+      <section id="media" class="settings-section hidden">
+        <h3>Media Sources</h3>
+        <ul>
+          <li>Connected apps</li>
+          <li>Re-sync libraries</li>
+          <li>Disconnect services</li>
+          <li>Set primary source</li>
+        </ul>
+      </section>
+
+      <section id="about" class="settings-section hidden">
+        <h3>About / Help / Legal</h3>
+        <ul>
+          <li>App version</li>
+          <li>Terms of Service</li>
+          <li>Privacy Policy</li>
+          <li>Contact Support</li>
+          <li>Send Feedback</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll(".settings-section");
+      sections.forEach((s) => s.classList.add("hidden"));
+      document.getElementById(sectionId).classList.remove("hidden");
+    }
+
+    function confirmLogout() {
+      if (confirm("Are you sure you want to log out?")) {
+        window.location.href = "{{ url_for('main.logout') }}";
+      }
+    }
+  </script>
+  {% endblock %}
+</div>

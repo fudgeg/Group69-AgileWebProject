@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% set hide_navbar = true %} {% block title %}Welcome
+– Soul Maps{% endblock %} {% block content %}
+<div class="center-page">
+  <div class="welcome-box">
+    <h1 class="title">Soul Maps</h1>
+    <p class="subtitle">
+      Create your own media maps and share it with your friends!
+    </p>
+
+    <div class="buttons vertical-buttons">
+      <a href="{{ url_for('main.login') }}" class="btn full-width-btn">Login</a>
+      <a href="{{ url_for('main.signup') }}" class="btn full-width-btn"
+        >Sign Up</a
+      >
+    </div>
+
+    <div class="icons">
+      <div class="icon-text">📚<br />Books</div>
+      <div class="icon-text">📺<br />Tv shows</div>
+      <div class="icon-text">🎬<br />Movies</div>
+      <div class="icon-text">🎵<br />Music</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
