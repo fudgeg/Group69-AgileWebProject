@@ -14,3 +14,20 @@ The creation of the web application should be done in a private GitHub repositor
   - instructions for how to launch the application.
   
   - instructions for how to run the tests for the application.
+
+
+## Instruction to run
+- git clone https://github.com/your-username/soulmaps.git
+- cd soulmaps
+- pip install -r requirements.txt
+- flask shell
+- Type "
+        from app import create_app
+        from app.models import db
+        app = create_app()
+
+        with app.app_context():
+            db.create_all()
+      "
+- flask run
+

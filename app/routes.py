@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
+from .models import db, MediaEntry
 
 main = Blueprint('main', __name__)
 
@@ -22,9 +23,19 @@ def home():
 def friends():
     return render_template('friends.html')
 
-@main.route('/upload')
+@main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
-    return render_template('upload.html')
+    if request.method == 'POST':
+        media_type = request.form.get('mediaType')
+        title = request.form.get('mediaTitle')
+        if media_type and title:
+            new_entry = MediaEntry(media_type=media_type, title=title)
+            db.session.add(new_entry)
+            db.session.commit()
+        return redirect(url_for('main.upload_page'))
+
+    entries = MediaEntry.query.all()
+    return render_template('upload.html', entries=entries)
 
 
 @main.route('/settings')

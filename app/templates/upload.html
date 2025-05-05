@@ -2,29 +2,34 @@
 {% block title %}Upload – Soul Maps{% endblock %}
 
 {% block content %}
-<div class="home-container">
+<div class="container mt-5">
   <h2>Upload Your Media</h2>
+  <form method="POST">
+    <div class="form-group">
+      <label for="mediaType">Media Type:</label>
+      <select id="mediaType" name="mediaType" required class="form-control">
+        <option value="">-- Choose One --</option>
+        <option value="Book">Book</option>
+        <option value="TV Show">TV Show</option>
+        <option value="Movie">Movie</option>
+        <option value="Music">Music</option>
+      </select>
+    </div>
 
-  <div class="import-form">
-    <form>
-      <div class="form-group">
-        <label for="mediaType">Select Media Type:</label>
-        <select id="mediaType" required>
-          <option value="">-- Choose One --</option>
-          <option value="book">Book</option>
-          <option value="tvshow">TV Show</option>
-          <option value="movie">Movie</option>
-          <option value="music">Music</option>
-        </select>
-      </div>
+    <div class="form-group">
+      <label for="mediaTitle">Title:</label>
+      <input type="text" id="mediaTitle" name="mediaTitle" class="form-control" placeholder="e.g. Dune, Reputation" required />
+    </div>
 
-      <div class="form-group">
-        <label for="mediaTitle">Enter Title / Artist / Author:</label>
-        <input type="text" id="mediaTitle" placeholder="e.g. Taylor Swift, Inception, Mistborn" required />
-      </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+  </form>
 
-      <button type="submit" class="submit-btn">Submit</button>
-    </form>
-  </div>
+  <hr />
+  <h3 class="mt-4">Submitted Entries</h3>
+  <ul>
+    {% for entry in entries %}
+      <li><strong>{{ entry.media_type }}:</strong> {{ entry.title }}</li>
+    {% endfor %}
+  </ul>
 </div>
 {% endblock %}
