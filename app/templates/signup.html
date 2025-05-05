@@ -9,14 +9,26 @@
 
   <div class="form-section">
     <h2 class="form-title">Create an account</h2>
-    <form class="signup-form" onsubmit="return checkPasswords()">
+
+    <!-- Flash message display -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form class="signup-form" method="POST" action="{{ url_for('main.signup') }}" onsubmit="return checkPasswords();">
       <div class="name-fields">
-        <input type="text" placeholder="First name" class="input-field" required />
-        <input type="text" placeholder="Last name" class="input-field" required />
+        <input type="text" name="first_name" placeholder="First name" class="input-field" required />
+        <input type="text" name="last_name" placeholder="Last name" class="input-field" required />
       </div>
-      <input type="email" placeholder="Email" class="input-field full-width" required />
-      <input type="password" placeholder="Enter your password" class="input-field full-width" required />
-      <input type="password" placeholder="Re-enter your password" class="input-field full-width" />
+      <input type="email" name="email" placeholder="Email" class="input-field full-width" required />
+      <input type="password" name="password" placeholder="Enter your password" id="password" class="input-field full-width" required />
+      <input type="password" placeholder="Re-enter your password" id="confirm_password" class="input-field full-width" required />
       <button type="submit" class="btn create-account-btn">Create account</button>
     </form>
 
@@ -33,17 +45,17 @@
     </div>
   </div>
 </div>
+
 <script>
   function checkPasswords() {
-    var password = document.querySelector('input[placeholder="Enter your password"]').value;
-    var confirmPassword = document.querySelector('input[placeholder="Re-enter your password"]').value;
-    if (password !== confirmPassword) {
+    const password = document.getElementById("password").value;
+    const confirm = document.getElementById("confirm_password").value;
+
+    if (password !== confirm) {
       alert("Passwords do not match!");
-      return false;
-    } else {
-      window.location.href = "{{ url_for('main.home') }}";
-      return false;
+      return false; // Prevent form submission
     }
+    return true; // Allow form to submit to Flask
   }
 </script>
 {% endblock %}

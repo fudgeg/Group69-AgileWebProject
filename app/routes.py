@@ -11,13 +11,16 @@ def welcome():
 @main.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        name = request.form.get('name')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
         email = request.form.get('email')
         password = request.form.get('password')
 
-        if not name or not email or not password:
+        if not first_name or not last_name or not email or not password:
             flash("All fields are required.")
             return redirect(url_for('main.signup'))
+
+        name = f"{first_name} {last_name}"
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
@@ -34,6 +37,7 @@ def signup():
         return redirect(url_for('main.login'))
 
     return render_template('signup.html')
+
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -68,7 +72,7 @@ def logout():
     user_id = session.pop('user_id', None)
     print(f"[LOGOUT] User ID {user_id} logged out.")
     flash('You have been logged out.')
-    return redirect(url_for('main.login'))
+    return redirect(url_for('main.welcome'))
 
 
 @main.route('/home')
