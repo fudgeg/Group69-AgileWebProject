@@ -2,9 +2,10 @@
 {% block title %}Settings – Soul Maps{% endblock %}
 
 {% block content %}
-<div class="settings-container">
-  <!-- Sidebar Navigation -->
-  <aside class="settings-sidebar">
+<div class="settings-page">  
+
+  <!-- Sidebar -->
+  <div class="settings-sidebar">
     <h2>Settings</h2>
     <ul class="settings-nav">
       <li onclick="showSection('account')">Account</li>
@@ -16,11 +17,10 @@
       <li onclick="showSection('about')">About</li>
     </ul>
     <button class="logout-button" onclick="confirmLogout()">Log Out</button>
-  </aside>
+  </div>
 
   <!-- Main Settings Content -->
-  <main class="settings-content">
-
+  <div class="settings-content">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <div class="flash-messages">
@@ -31,7 +31,7 @@
       {% endif %}
     {% endwith %}
 
-    <section id="account" class="settings-section active">
+    <section id="account" class="settings-section">
       <h3>Account Settings</h3>
       <ul>
         <li>Username / Display Name</li>
@@ -102,14 +102,18 @@
         <li>Send Feedback</li>
       </ul>
     </section>
-  </main>
+  </div>
 </div>
 
 <script>
   function showSection(sectionId) {
     const sections = document.querySelectorAll(".settings-section");
-    sections.forEach((s) => s.classList.add("hidden"));
-    document.getElementById(sectionId).classList.remove("hidden");
+    sections.forEach((section) => section.classList.add("hidden"));
+
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+      activeSection.classList.remove("hidden");
+    }
   }
 
   function confirmLogout() {
