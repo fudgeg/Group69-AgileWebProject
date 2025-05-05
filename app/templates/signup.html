@@ -1,19 +1,26 @@
 {% extends "base.html" %}
-{% block title %}Login – Soul Maps{% endblock %}
+{% block title %}Sign Up – Soul Maps{% endblock %}
 
 {% block content %}
 <div class="login-container">
   <div class="logo-section">
     <img src="{{ url_for('static', filename='media/SoulMapsLogo.png') }}" alt="Soul Maps Logo" class="logo" />
   </div>
+
   <div class="form-section">
-    <h2 class="form-title">Login</h2>
-    <form class="signup-form" onsubmit="return handleLogin()">
+    <h2 class="form-title">Create an account</h2>
+    <form class="signup-form" onsubmit="return checkPasswords()">
+      <div class="name-fields">
+        <input type="text" placeholder="First name" class="input-field" required />
+        <input type="text" placeholder="Last name" class="input-field" required />
+      </div>
       <input type="email" placeholder="Email" class="input-field full-width" required />
       <input type="password" placeholder="Enter your password" class="input-field full-width" required />
-      <button type="submit" class="btn create-account-btn">Login</button>
+      <input type="password" placeholder="Re-enter your password" class="input-field full-width" />
+      <button type="submit" class="btn create-account-btn">Create account</button>
     </form>
-    <p class="login-with-text">or login with</p>
+
+    <p class="login-with-text">or sign up with</p>
     <div class="social-login">
       <button class="social-btn">
         <img src="{{ url_for('static', filename='media/googleLogo.png') }}" alt="Google logo" class="social-icon" />
@@ -27,11 +34,11 @@
   </div>
 </div>
 <script>
-  function handleLogin() {
-    const email = document.querySelector('input[placeholder="Email"]').value;
-    const password = document.querySelector('input[placeholder="Enter your password"]').value;
-    if (!email || !password) {
-      alert("Please fill out all fields!");
+  function checkPasswords() {
+    var password = document.querySelector('input[placeholder="Enter your password"]').value;
+    var confirmPassword = document.querySelector('input[placeholder="Re-enter your password"]').value;
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
       return false;
     } else {
       window.location.href = "{{ url_for('main.home') }}";

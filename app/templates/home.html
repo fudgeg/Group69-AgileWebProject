@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Home – Soul Maps{% endblock %}
+
+{% block content %}
+<div class="home-container">
+  <h2>Welcome to your homepage!</h2>
+
+  <div class="content">
+    <div class="friends-activity">
+      <h3>Latest friends activity</h3>
+      <ul>
+        <li><b>Bob</b> added <i>Percy Jackson</i> to read list</li>
+        <li><b>Alice</b> added <i>Doomsday</i> to watch list</li>
+      </ul>
+    </div>
+
+    <div class="brain-image">
+      <img src="{{ url_for('static', filename='media/brainNetwork.png') }}" alt="Brain Network" />
+    </div>
+
+    <div class="recent-activity">
+      <h3>Most recent activity!</h3>
+      <ol>
+        <li>I'm Still Here</li>
+        <li>Spiderman: Far From Home</li>
+        <li>Mistborn</li>
+      </ol>
+    </div>
+  </div>
+
+  <a href="{{ url_for('main.upload_page') }}" class="import-btn">Import</a>
+</div>
+{% endblock %}

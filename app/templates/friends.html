@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Friends – Soul Maps{% endblock %}
+
+{% block content %}
+<div class="home-container">
+  <h2>Friends</h2>
+  <div class="friends-page">
+    <!-- Friends List -->
+    <div class="friends-section">
+      <h3>Your Friends</h3>
+      <div class="friends-list">
+        <div class="friend-card">
+          <img src="{{ url_for('static', filename='media/Alice.jpeg') }}" alt="Alice" class="friend-pfp" />
+          <div class="friend-name">Alice</div>
+        </div>
+        <div class="friend-card">
+          <img src="{{ url_for('static', filename='media/Bob.jpeg') }}" alt="Bob" class="friend-pfp" />
+          <div class="friend-name">Bob</div>
+        </div>
+        <div class="friend-card">
+          <img src="{{ url_for('static', filename='media/Charlie.jpeg') }}" alt="Charlie" class="friend-pfp" />
+          <div class="friend-name">Charlie</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommended Friends -->
+    <div class="recommended-section">
+      <h3>Recommended Connections</h3>
+      <div class="friends-list">
+        <div class="friend-card">
+          <img src="{{ url_for('static', filename='media/Daisy.jpeg') }}" alt="Daisy" class="friend-pfp" />
+          <div class="friend-name">Daisy</div>
+        </div>
+        <div class="friend-card">
+          <img src="{{ url_for('static', filename='media/Ethan.jpeg') }}" alt="Ethan" class="friend-pfp" />
+          <div class="friend-name">Ethan</div>
+        </div>
+        <div class="friend-card">
+          <img src="{{ url_for('static', filename='media/Fiona.jpeg') }}" alt="Fiona" class="friend-pfp" />
+          <div class="friend-name">Fiona</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}For You – Soul Maps{% endblock %}
+
+{% block content %}
+<div class="home-container">
+  <h2>For You</h2>
+
+  <div class="content">
+    <div class="recommended-section">
+      <h3>Recommended Media Maps</h3>
+      <ul>
+        <li><b>Dark Matter</b> — trending sci-fi show map</li>
+        <li><b>Mistborn</b> — epic fantasy book journey</li>
+        <li><b>Everything Everywhere All At Once</b> — multiverse madness movie map</li>
+      </ul>
+    </div>
+
+    <div class="brain-image">
+      <img src="{{ url_for('static', filename='media/brainNetwork.png') }}" alt="Brain Network" />
+    </div>
+
+    <div class="trending-section">
+      <h3>Trending in Your Network</h3>
+      <ul>
+        <li><b>Bob</b> recommends <i>The Three-Body Problem</i></li>
+        <li><b>Alice</b> is loving <i>Severance</i></li>
+        <li><b>Charlie</b> just finished <i>The Sandman</i></li>
+      </ul>
+    </div>
+
+    <div class="discover-section">
+      <h3>Discover New Maps</h3>
+      <ul>
+        <li><i>Arcane</i> — animation lovers’ favorite</li>
+        <li><i>Dune</i> — spice must flow 🌌</li>
+        <li><i>Project Hail Mary</i> — science survival story</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
