@@ -6,12 +6,16 @@
   <h2>Welcome to your homepage, {{ user.name }}!</h2>
   <div class="content">
     <div class="friends-activity">
-      <h3>Latest friends activity</h3>
+      <h3>Latest Friends Activity</h3>
       <ul>
-        <li><b>Bob</b> added <i>Percy Jackson</i> to read list</li>
-        <li><b>Alice</b> added <i>Doomsday</i> to watch list</li>
+        {% for entry in friend_entries %}
+          <li><b>{{ entry.user.name }}</b> added <i>{{ entry.title }}</i> to {{ entry.media_type.lower() }} list</li>
+        {% else %}
+          <li>No recent activity from friends.</li>
+        {% endfor %}
       </ul>
     </div>
+    
 
     <div class="brain-image">
       <img src="{{ url_for('static', filename='media/brainNetwork.png') }}" alt="Brain Network" />
@@ -20,9 +24,11 @@
     <div class="recent-activity">
       <h3>Most recent activity!</h3>
       <ol>
-        <li>I'm Still Here</li>
-        <li>Spiderman: Far From Home</li>
-        <li>Mistborn</li>
+        {% for entry in recent_entries %}
+          <li><strong>{{ entry.media_type }}</strong>: {{ entry.title }}</li>
+        {% else %}
+          <li>No recent entries yet.</li>
+        {% endfor %}
       </ol>
     </div>
   </div>
