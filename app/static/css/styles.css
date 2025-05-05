@@ -9,44 +9,68 @@ html, body {
 
 /* Center Content Pages like Welcome, Login, Sign Up */
 .center-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  background-color: #c2baba; 
+}
+
   
-  
+
 /* ====================== WELCOME PAGE STYLES ====================== */
+
+.container {
+  background-color: #efefe3;
+  width: 90%;
+  max-width: 600px;
+  padding: 40px ;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
 
 body {
   font-family: "Segoe UI", sans-serif;
-  background-color: #ffffff;
+  background-color: #dce9d5;
   margin: 0;
   padding: 0;
 }
 
+.welcome-box {
+  background-color: #f8f8e8;
+  width: 500px;   
+  padding: 30px 25px;                  
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+
 .login-container {
-  background-color: #f3f1e8;
+  background-color: #f8f8e8;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 50px;
   margin: 50px auto;
   border-radius: 12px;
-  width: 80%;
+  padding: 30px 25px;       
+  width: 40px;
   max-width: 1100px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .logo-section {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .logo {
-  min-width: 450px;
+  width: 300px;
   max-width: 100%;
-  height: auto;
 }
 .intro-content {
   flex: 1;
@@ -57,56 +81,64 @@ body {
 }
 
 .title {
-  font-size: 3.4rem;
-  color: #234620;
-  margin: 10px 0;
-  text-align: center;
+  font-size: 2.5rem;
+  color: #204118;
 }
 
 .subtitle {
+  margin: 15px 0 25px;
   font-size: 1rem;
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+  font-weight: 500;
 }
 
-.buttons {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
+.subtitle {
+  margin: 15px 0 25px;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .buttons .btn {
-  padding: 10px 20px;
-  border: none;
-  background-color: #234620;
+  background-color: #204118;
   color: white;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
+  padding: 12px;
+  border-radius: 8px;
   text-decoration: none;
-
+  font-weight: bold;
+  margin: 5px;
 }
 
+.vertical-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.full-width-btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 14px;
+  font-size: 1rem;
+  border-radius: 12px;
+}
+
+
 .buttons .btn:hover {
-  background-color: #1b3618;
+  background-color: #356630;
 }
 
 .icons {
   display: flex;
-  gap: 25px;
-  justify-content: flex-start;
+  justify-content: center;
+  gap: 35px;
   flex-wrap: wrap;
   margin-top: 20px;
-  
-
 }
 
 .icon-text {
-  font-size: 1.2rem;
   text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 
@@ -114,15 +146,17 @@ body {
   .login-container {
     background-color: #efefe3;
     width: 90%;
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 30px;
-    border-radius: 10px;
+    max-width: 950px;
+    height: auto;
+    padding: 40px;
+    border-radius: 12px;
     display: flex;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    gap: 30px;
     align-items: center;
+    justify-content: center;
+    gap: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
+  
   
   .logo-section {
     flex: 1;
@@ -137,10 +171,14 @@ body {
   .form-section {
     flex: 1;
     background-color: #204118;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 25px;
+    border-radius: 12px;
     color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
+  
   
   .form-title {
     margin-top: 0;
@@ -153,7 +191,8 @@ body {
     flex-direction: column;
     align-items: center; 
     gap: 10px;
-  }
+    width: 100%;
+  }  
   
   .name-fields {
     display: flex;
@@ -168,27 +207,32 @@ body {
     flex: 1;
     max-width: 380px; 
   }
+
+  .half-width {
+    width: 100%;
+  }  
   
   .full-width {
     width: 100%;
   }
   
   .create-account-btn {
-    padding: 12px;
-    background-color: #66e166;
-    color: #204118;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 8px;
+    padding: 12px!important;
+    background-color: #66e166!important;
+    color: #204118!important;
+    border: none!important;
+    border-radius: 8px!important;
+    font-size: 16px!important;
+    font-weight: bold!important;
+    cursor: pointer!important;
+    width: 100%!important;
+    margin-top: 8px!important;
+  }
+
+  .create-account-btn:hover {
+    background-color: #5bd15b!important;
   }
   
-  .create-account-btn:hover {
-    background-color: #5bd15b;
-  }
   
   .login-with-text {
     margin: 20px 0 10px;
@@ -225,7 +269,25 @@ body {
     height: auto;
   }
   
-
+  .back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: transparent;
+    color: #204118;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .back-button:hover {
+    color: #356630;
+  }
+  
 /* ====================== NAVBAR (for all pages after login) ====================== */
 .navbar {
     display: flex;
@@ -474,9 +536,10 @@ body {
   }
 
   /* ====================== Import Page====================== */
+
+  
 .import-form {
     margin-top: 50px;
-    background-color: #9ebf8f;
     padding: 40px;
     border-radius: 30px;
     width: 400px;
@@ -489,6 +552,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    align-items: center;
   }
   
   .form-group {
@@ -508,6 +572,10 @@ body {
     border: none;
     border-radius: 8px;
     font-size: 16px;
+    margin-bottom: 15px;
+    align-self: center;
+    width: 80%;       
+    align-self: center; 
   }
   
   .submit-btn {
@@ -523,5 +591,25 @@ body {
   
   .submit-btn:hover {
     background-color: #356630;
+  }
+
+  .page-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 50px; 
+  }
+  
+  .upload-box {
+    background-color: #f0f0e6;
+    width: 450px;
+    height: auto;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+  }
+  
+  .form-group label {
+    text-align: center;
   }
   
