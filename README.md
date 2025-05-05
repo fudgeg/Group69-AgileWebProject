@@ -17,17 +17,15 @@ The creation of the web application should be done in a private GitHub repositor
 
 
 ## Instruction to run
-- git clone https://github.com/your-username/soulmaps.git
-- cd soulmaps
+- git clone https://github.com/fudgeg/Group69-AgileWebProject/edit/main/README.md
+- cd Group69-AgileWebProject
 - pip install -r requirements.txt
 - flask shell
-- Type "
-        from app import create_app
-        from app.models import db
-        app = create_app()
-
-        with app.app_context():
-            db.create_all()
-      "
+- Type
+  - from app import create_app
+  - from app.models import db
+  - app = create_app()
+  - with app.app_context():
+    - db.create_all()
 - flask run
 
