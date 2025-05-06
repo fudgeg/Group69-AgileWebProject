@@ -1,527 +1,614 @@
 /* ====================== GENERAL GLOBAL STYLES (Apply to ALL Pages) ====================== */
 html, body {
-    margin: 0;
-    padding: 0;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background-color: #c2baba;
-    height: 100%;
-  }
+  margin: 0;
+  padding: 0;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  background-color: #c2baba;
+  height: 100%;
+}
 
 /* Center Content Pages like Welcome, Login, Sign Up */
 .center-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  
-/* ====================== WELCOME PAGE STYLES ====================== */
-
-body {
-  font-family: "Segoe UI", sans-serif;
-  background-color: #ffffff;
-  margin: 0;
-  padding: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh; 
+background-color: #c2baba; 
 }
 
+
+
+/* ====================== WELCOME PAGE STYLES ====================== */
+
+.container {
+background-color: #efefe3;
+width: 90%;
+max-width: 600px;
+padding: 40px ;
+border-radius: 10px;
+text-align: center;
+box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+
+body {
+font-family: "Segoe UI", sans-serif;
+background-color: #dce9d5;
+margin: 0;
+padding: 0;
+}
+
+.welcome-box {
+background-color: #f8f8e8;
+width: 500px;   
+padding: 30px 25px;                  
+border-radius: 12px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+text-align: center;
+}
+
+
 .login-container {
-  background-color: #f3f1e8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 50px;
-  margin: 50px auto;
-  border-radius: 12px;
-  width: 80%;
-  max-width: 1100px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+background-color: #f8f8e8;
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 50px auto;
+border-radius: 12px;
+padding: 30px 25px;       
+width: 40px;
+max-width: 1100px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .logo-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+flex: 1;
+display: flex;
+justify-content: center;
+align-items: center;
 }
 
 .logo {
-  min-width: 450px;
-  max-width: 100%;
-  height: auto;
+width: 300px;
+max-width: 100%;
 }
 .intro-content {
+flex: 1;
+padding-left: 40px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
+
+.title {
+font-size: 2.5rem;
+color: #204118;
+}
+
+.subtitle {
+margin: 15px 0 25px;
+font-size: 1rem;
+font-weight: 500;
+}
+
+.subtitle {
+margin: 15px 0 25px;
+font-size: 1rem;
+font-weight: 500;
+}
+
+.buttons .btn {
+background-color: #204118;
+color: white;
+padding: 12px;
+border-radius: 8px;
+text-decoration: none;
+font-weight: bold;
+margin: 5px;
+}
+
+.vertical-buttons {
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 100%;
+}
+
+.full-width-btn {
+width: 100%;
+max-width: 400px;
+padding: 14px;
+font-size: 1rem;
+border-radius: 12px;
+}
+
+
+.buttons .btn:hover {
+background-color: #356630;
+}
+
+.icons {
+display: flex;
+justify-content: center;
+gap: 35px;
+flex-wrap: wrap;
+margin-top: 20px;
+}
+
+.icon-text {
+text-align: center;
+font-size: 16px;
+line-height: 1.5;
+}
+
+
+/* ====================== LOGIN & SIGN UP PAGE STYLES  ====================== */
+.login-container {
+  background-color: #efefe3;
+  width: 90%;
+  max-width: 950px;
+  height: auto;
+  padding: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.logo-section {
   flex: 1;
-  padding-left: 40px;
+  text-align: center;
+}
+
+.logo {
+  width: 325px;
+  margin-bottom: 10px;
+}
+
+.form-section {
+  flex: 1;
+  background-color: #204118;
+  padding: 25px;
+  border-radius: 12px;
+  color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.title {
-  font-size: 3.4rem;
-  color: #234620;
-  margin: 10px 0;
-  text-align: center;
-}
 
-.subtitle {
-  font-size: 1rem;
-  color: #333;
+.form-title {
+  margin-top: 0;
   margin-bottom: 20px;
-  text-align: center;
+  font-size: 24px;
 }
 
-.buttons {
+.signup-form {
   display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center; 
+  gap: 10px;
+  width: 100%;
+}  
+
+.name-fields {
+  display: flex;
+  gap: 10px;
 }
 
-.buttons .btn {
-  padding: 10px 20px;
+.input-field {
+  padding: 10px;
   border: none;
-  background-color: #234620;
-  color: white;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 14px;
+  flex: 1;
+  max-width: 380px; 
+}
+
+.half-width {
+  width: 100%;
+}  
+
+.full-width {
+  width: 100%;
+}
+
+.create-account-btn {
+  padding: 12px!important;
+  background-color: #66e166!important;
+  color: #204118!important;
+  border: none!important;
+  border-radius: 8px!important;
+  font-size: 16px!important;
+  font-weight: bold!important;
+  cursor: pointer!important;
+  width: 100%!important;
+  margin-top: 8px!important;
+}
+
+.create-account-btn:hover {
+  background-color: #5bd15b!important;
+}
+
+
+.login-with-text {
+  margin: 20px 0 10px;
+  text-align: center;
+}
+
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.social-btn {
+  background-color: white;
+  color: #204118;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  text-decoration: none;
-
-}
-
-.buttons .btn:hover {
-  background-color: #1b3618;
-}
-
-.icons {
   display: flex;
-  gap: 25px;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  
-
+  align-items: center;
+  gap: 8px; 
+  font-size: small;
 }
 
-.icon-text {
-  font-size: 1.2rem;
-  text-align: center;
+.social-btn:hover {
+  background-color: #f0f0f0;
 }
 
+.social-icon {
+  max-height: 20px;
+  width: auto;
+  height: auto;
+}
 
-  /* ====================== LOGIN & SIGN UP PAGE STYLES  ====================== */
-  .login-container {
-    background-color: #efefe3;
-    width: 90%;
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 30px;
-    border-radius: 10px;
-    display: flex;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    gap: 30px;
-    align-items: center;
-  }
-  
-  .logo-section {
-    flex: 1;
-    text-align: center;
-  }
-  
-  .logo {
-    width: 325px;
-    margin-bottom: 10px;
-  }
-  
-  .form-section {
-    flex: 1;
-    background-color: #204118;
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
-  }
-  
-  .form-title {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 24px;
-  }
-  
-  .signup-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    gap: 10px;
-  }
-  
-  .name-fields {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .input-field {
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    flex: 1;
-    max-width: 380px; 
-  }
-  
-  .full-width {
-    width: 100%;
-  }
-  
-  .create-account-btn {
-    padding: 12px;
-    background-color: #66e166;
-    color: #204118;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 8px;
-  }
-  
-  .create-account-btn:hover {
-    background-color: #5bd15b;
-  }
-  
-  .login-with-text {
-    margin: 20px 0 10px;
-    text-align: center;
-  }
-  
-  .social-login {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .social-btn {
-    background-color: white;
-    color: #204118;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px; 
-    font-size: small;
-  }
-  
-  .social-btn:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .social-icon {
-    max-height: 20px;
-    width: auto;
-    height: auto;
-  }
-  
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: transparent;
+  color: #204118;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 16px;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.back-button:hover {
+  color: #356630;
+}
 
 /* ====================== NAVBAR (for all pages after login) ====================== */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #204118;
-    padding: 10px 20px;
-    color: white;
-  }
-  .navbar-left {
-    display:flex ;
-    align-items: center;
-    gap: 10px; 
-  }
-  
-  .navbar-icon{
-    width: 50px;
-    height: auto;
-  }
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #204118;
+  padding: 10px 20px;
+  color: white;
+}
+.navbar-left {
+  display:flex ;
+  align-items: center;
+  gap: 10px; 
+}
 
-  .nav-icon-button{
-    background-color: #9ebf8f; 
-    padding: 10px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .nav-icons {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .nav-icon {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    background-color: #9ebf8f;
-  }
-  
+.navbar-icon{
+  width: 50px;
+  height: auto;
+}
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-icon-button{
+  background-color: #9ebf8f; 
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-icon {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  background-color: #9ebf8f;
+}
+
 /* ====================== HOME PAGE ====================== */
-  .home-container {
-    position: relative; 
-    background-color: #dce9d5;
-    width: 100%;
-    height: 100vh;
-    padding: 50px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    overflow: hidden;
-    box-sizing: border-box; 
-    
-  }
+.home-container {
+  position: relative; 
+  background-color: #dce9d5;
+  width: 100%;
+  height: 100vh;
+  padding: 50px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  overflow: hidden;
+  box-sizing: border-box; 
   
-  .content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-top: 75px;
+}
 
-  }
-  
-  .friends-activity, .recent-activity {
-    background-color: #9ebf8f;
-    padding: 20px;
-    border-radius: 50px;
-    width: 250px;
-    text-align: center;
-    position: relative; 
-    z-index: 2; /* make the 2 boxes appear after the brain image */
-    
-  }
+.content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 75px;
 
-  .brain-image img {
-    width: 250%;
-    height: auto;
-  }
-  
-  .brain-image {
-    position: absolute; 
-    top: 50%; 
-    left: 34.5%;
-    transform: translate(-50%, -50%); 
-    width: 400px; 
-    opacity: 0.25; /* Make it transparent */
-    z-index: 1; /* make sure the image stay behind the elements */
-  }
-  
-  
-  /* ======================IMPORT BUTTON IN HOME PAGE ======================*/
-  .import-btn {
-    margin-top: 20px;
-    padding: 12px 24px;
-    background-color: #555;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    display: inline-block;
-    text-decoration: none; 
-    text-align: center;
-    position: relative; 
-    z-index: 2; /*make sure its one layer after the brain image*/
-  }
+}
 
+.friends-activity, .recent-activity {
+  background-color: #9ebf8f;
+  padding: 20px;
+  border-radius: 50px;
+  width: 250px;
+  text-align: center;
+  position: relative; 
+  z-index: 2; /* make the 2 boxes appear after the brain image */
   
-  .import-btn:hover {
-    background-color: #777;
-  }
+}
 
-  /* ======================Settings Page Layout====================== */
+.brain-image img {
+  width: 250%;
+  height: auto;
+}
+
+.brain-image {
+  position: absolute; 
+  top: 50%; 
+  left: 34.5%;
+  transform: translate(-50%, -50%); 
+  width: 400px; 
+  opacity: 0.25; /* Make it transparent */
+  z-index: 1; /* make sure the image stay behind the elements */
+}
+
+
+/* ======================IMPORT BUTTON IN HOME PAGE ======================*/
+.import-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none; 
+  text-align: center;
+  position: relative; 
+  z-index: 2; /*make sure its one layer after the brain image*/
+}
+
+
+.import-btn:hover {
+  background-color: #777;
+}
+
+/* ======================Settings Page Layout====================== */
 .settings-page {
-    display: flex;
-    height: calc(100vh - 70px); /* adjust based on your navbar height */
-  }
-  
-  .settings-sidebar {
-    background-color: #9ebf8f;
-    width: 250px;
-    padding: 30px 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-  }
-  
-  .settings-sidebar h3 {
-    margin-top: 0;
-    color: #204118;
-  }
-  
-  .settings-sidebar ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .settings-sidebar li {
-    margin: 15px 0;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 8px;
-    transition: background-color 0.3s;
-  }
-  
-  .settings-sidebar li:hover {
-    background-color: #7aa96c;
-  }
-  
-  .settings-content {
-    flex-grow: 1;
-    padding: 40px;
-    background-color: #dce9d5;
-    overflow-y: auto;
-  }
-  
-  .settings-section {
-    display: none;
-  }
-  
-  .settings-section h2 {
-    color: #204118;
-  }
-  
-  .settings-section ul {
-    list-style-type: disc;
-    padding-left: 20px;
-  }
-  
-  /* Show only the active section */
-  .settings-section:not(.hidden) {
-    display: block;
-  }
-  
-  /* Utility */
-  .hidden {
-    display: none;
-  }
+  display: flex;
+  height: calc(100vh - 70px); /* adjust based on your navbar height */
+}
+
+.settings-sidebar {
+  background-color: #9ebf8f;
+  width: 250px;
+  padding: 30px 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.settings-sidebar h3 {
+  margin-top: 0;
+  color: #204118;
+}
+
+.settings-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.settings-sidebar li {
+  margin: 15px 0;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.settings-sidebar li:hover {
+  background-color: #7aa96c;
+}
+
+.settings-content {
+  flex-grow: 1;
+  padding: 40px;
+  background-color: #dce9d5;
+  overflow-y: auto;
+}
+
+.settings-section {
+  display: none;
+}
+
+.settings-section h2 {
+  color: #204118;
+}
+
+.settings-section ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+/* Show only the active section */
+.settings-section:not(.hidden) {
+  display: block;
+}
+
+/* Utility */
+.hidden {
+  display: none;
+}
 
 .logout-button {
-    margin-top: 30px;
-    padding: 12px 20px;
-    background-color:#e00c14;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-  }  
+  margin-top: 30px;
+  padding: 12px 20px;
+  background-color:#e00c14;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}  
 
-  .logout-button:hover {
-    background-color: #c00a10;
-  }
-  
-  /* ====================== Friends Page ====================== */
+.logout-button:hover {
+  background-color: #c00a10;
+}
+
+/* ====================== Friends Page ====================== */
 .friends-page {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin-top: 50px;
-  }
-  
-  .friends-section, .recommended-section {
-    background-color: #9ebf8f;
-    padding: 20px;
-    border-radius: 30px;
-    width: 300px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  }
-  
-  .friends-list {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .friend-card {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background-color: #dce9d5;
-    padding: 10px;
-    border-radius: 20px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  }
-  
-  .friend-pfp {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid #204118;
-  }
-  
-  .friend-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #204118;
-  }
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
 
-  /* ====================== Import Page====================== */
+.friends-section, .recommended-section {
+  background-color: #9ebf8f;
+  padding: 20px;
+  border-radius: 30px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.friends-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.friend-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #dce9d5;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.friend-pfp {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #204118;
+}
+
+.friend-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #204118;
+}
+
+/* ====================== Import Page====================== */
+
+
 .import-form {
-    margin-top: 50px;
-    background-color: #9ebf8f;
-    padding: 40px;
-    border-radius: 30px;
-    width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  }
-  
-  .import-form form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-  }
-  
-  .form-group label {
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #204118;
-  }
-  
-  #mediaType, #mediaTitle {
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-  }
-  
-  .submit-btn {
-    padding: 12px 20px;
-    background-color: #204118;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  .submit-btn:hover {
-    background-color: #356630;
-  }
-  
+  margin-top: 50px;
+  padding: 40px;
+  border-radius: 30px;
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.import-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #204118;
+}
+
+#mediaType, #mediaTitle {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  align-self: center;
+  width: 80%;       
+  align-self: center; 
+}
+
+.submit-btn {
+  padding: 12px 20px;
+  background-color: #204118;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background-color: #356630;
+}
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 50px; 
+}
+
+.upload-box {
+  background-color: #f0f0e6;
+  width: 450px;
+  height: auto;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.form-group label {
+  text-align: center;
+}
