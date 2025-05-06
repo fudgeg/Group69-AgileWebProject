@@ -49,6 +49,7 @@ text-align: center;
 
 
 .login-container {
+position: static;
 background-color: #f8f8e8;
 display: flex;
 align-items: center;
@@ -300,7 +301,7 @@ line-height: 1.5;
 .navbar-left {
   display:flex ;
   align-items: center;
-  gap: 10px; 
+  gap: 60px; 
 }
 
 .navbar-icon{
@@ -323,7 +324,7 @@ line-height: 1.5;
 
 .nav-icons {
   display: flex;
-  gap: 20px;
+  gap: 15px;
 }
 
 .nav-icon {

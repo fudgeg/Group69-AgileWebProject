@@ -1,7 +1,5 @@
-{% extends "base.html" %}
-{% block title %}Friends – Soul Maps{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Friends – Soul Maps{% endblock %} {%
+block content %}
 <div class="home-container">
   <h2>Friends</h2>
   <div class="friends-page">
@@ -11,7 +9,11 @@
       <div class="friends-list">
         {% for friend in friends %}
         <div class="friend-card">
-          <img src="{{ url_for('static', filename='media/Alice.jpeg') }}" alt="{{ friend.name }}" class="friend-pfp" />
+          <img
+            src="{{ url_for('static', filename='media/Alice.jpeg') }}"
+            alt="{{ friend.name }}"
+            class="friend-pfp"
+          />
           <div class="friend-name">{{ friend.name }}</div>
         </div>
         {% else %}
@@ -20,25 +22,30 @@
       </div>
     </div>
 
-
     <!-- Recommended Friends -->
     <div class="recommended-section">
       <h3>Recommended Connections</h3>
       <div class="friends-list">
         {% for person in recommended %}
-          <div class="friend-card">
-            <img src="{{ url_for('static', filename='media/Daisy.jpeg') }}" alt="{{ person.name }}" class="friend-pfp" />
-            <div class="friend-name">{{ person.name }}</div>
-            <form method="POST" action="{{ url_for('main.add_friend', friend_id=person.id) }}">
-              <button type="submit">Add Friend</button>
-            </form>
-          </div>
+        <div class="friend-card">
+          <img
+            src="{{ url_for('static', filename='media/Daisy.jpeg') }}"
+            alt="{{ person.name }}"
+            class="friend-pfp"
+          />
+          <div class="friend-name">{{ person.name }}</div>
+          <form
+            method="POST"
+            action="{{ url_for('main.add_friend', friend_id=person.id) }}"
+          >
+            <button type="submit">Add Friend</button>
+          </form>
+        </div>
         {% else %}
-          <p>No more users to recommend!</p>
+        <p>No more users to recommend!</p>
         {% endfor %}
       </div>
     </div>
-    
   </div>
 </div>
 {% endblock %}
