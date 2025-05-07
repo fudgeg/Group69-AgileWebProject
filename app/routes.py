@@ -57,6 +57,7 @@ def login():
         # Validate password
         if user and user.check_password(password):
             session['user_id'] = user.id
+            flash("You are now logged in.")
             return redirect(url_for('main.home'))
         else:
             flash('Invalid email or password', 'error')
@@ -204,7 +205,7 @@ def update_username():
     
     # Verify password
     if not user.check_password(password):
-        flash("Incorrect password. Please try again.")
+        flash("Incorrect password. Please try again.","error")
         return redirect(url_for('main.settings'))
     
     # Check if the new username is valid
@@ -270,3 +271,73 @@ def update_email():
 @main.route('/foryou')
 def for_you():
     return render_template('foryou.html')
+
+@main.route('/update_password', methods=['POST'])
+def update_password():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to update your password.")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.login'))
+
+    # Get the current and new passwords from the form
+    current_password = request.form.get('current_password').strip()
+    new_password = request.form.get('new_password').strip()
+    confirm_password = request.form.get('confirm_password').strip()
+    
+    # Verify current password
+    if not user.check_password(current_password):
+        flash("Incorrect current password. Please try again.", "error")
+        return redirect(url_for('main.settings'))
+    
+    # Check if the new password matches the confirmation
+    if new_password != confirm_password:
+        flash("New passwords do not match. Please try again.", "error")
+        return redirect(url_for('main.settings'))
+    
+    # Update the password
+    user.set_password(new_password)
+    db.session.commit()
+    
+    # Provide user feedback
+    flash("Password updated successfully.", "success")
+    return redirect(url_for('main.settings'))
+
+
+@main.route('/delete_account', methods=['POST'])
+def delete_account():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to delete your account.")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.login'))
+
+    # Verify password
+    delete_password = request.form.get('delete_password').strip()
+    if not user.check_password(delete_password):
+        flash("Incorrect password. Please try again.", "error")
+        return redirect(url_for('main.settings'))
+    
+    # Remove all media entries associated with the user
+    MediaEntry.query.filter_by(user_id=user.id).delete()
+    
+    # Remove the user
+    db.session.delete(user)
+    db.session.commit()
+    
+    # Clear the session and redirect to the welcome page
+    session.clear()
+    flash("Your account has been permanently deleted.", "error")
+    return redirect(url_for('main.welcome'))
