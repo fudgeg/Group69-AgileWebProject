@@ -29,21 +29,21 @@
     {% endblock %}
 
     <script>
-            function showPopup(message, type = "success") {
-              const popup = document.createElement("div");
-              popup.classList.add("popup-message");
-              popup.classList.add(type);
-              popup.textContent = message;
-              document.body.appendChild(popup);
+                  function showPopup(message, type = "success") {
+                    const popup = document.createElement("div");
+                    popup.classList.add("popup-message");
+                    popup.classList.add(type);
+                    popup.textContent = message;
+                    document.body.appendChild(popup);
 
-              // Automatically remove the popup after 3 seconds
-              setTimeout(() => {
-                popup.classList.add("hide");
-                setTimeout(() => popup.remove(), 500);
-              }, 3000);
-            }
+                    // Automatically remove the popup after 3 seconds
+                    setTimeout(() => {
+                      popup.classList.add("hide");
+                      setTimeout(() => popup.remove(), 500);
+                    }, 3000);
+                  }
 
-            // Check for flash messages
+      // Check for flash messages
       document.addEventListener("DOMContentLoaded", () => {
         const flashMessages = {{ get_flashed_messages(with_categories=True) | tojson | safe }};
 

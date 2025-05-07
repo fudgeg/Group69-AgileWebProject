@@ -203,32 +203,6 @@ block content %}
         window.location.href = "{{ url_for('main.logout') }}"; // ✅ uses Flask logout route
       }
     }
-
-    function showPopup(message, type = "success") {
-      const popup = document.createElement("div");
-      popup.classList.add("popup-message");
-      popup.classList.add(type);
-      popup.textContent = message;
-      document.body.appendChild(popup);
-
-      // Automatically remove the popup after 3 seconds
-      setTimeout(() => {
-        popup.classList.add("hide");
-        setTimeout(() => popup.remove(), 500);
-      }, 3000);
-    }
-
-    // Check for flash messages
-    document.addEventListener("DOMContentLoaded", () => {
-      const flashMessage = "{{ get_flashed_messages()|safe }}";
-      if (flashMessage) {
-        if (flashMessage.includes("successfully")) {
-          showPopup(flashMessage, "success");
-        } else {
-          showPopup(flashMessage, "error");
-        }
-      }
-    });
   </script>
   {% endblock %}
 </div>
