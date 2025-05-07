@@ -13,11 +13,12 @@ Soul Maps{% endblock %} {% block content %}
   <div class="form-section">
     <h2 class="form-title">Login</h2>
 
-    <!--Flash message block -->
-    {% with messages = get_flashed_messages() %} {% if messages %}
+    <!-- Flash message block -->
+    {% with messages = get_flashed_messages(with_categories=True) %} {% if
+    messages %}
     <ul class="flash-messages">
-      {% for message in messages %}
-      <li>{{ message }}</li>
+      {% for category, message in messages %}
+      <li class="flash-message {{ category }}">{{ message }}</li>
       {% endfor %}
     </ul>
     {% endif %} {% endwith %}

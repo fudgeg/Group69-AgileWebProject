@@ -48,7 +48,7 @@ def login():
 
         # Check if the fields are empty
         if not email or not password:
-            flash("Email and password are required.")
+            flash("Email and password are required.", 'error')
             return redirect(url_for('main.login'))
 
         # Check if the user exists
@@ -60,7 +60,7 @@ def login():
             flash('Logged in successfully.')
             return redirect(url_for('main.home'))
         else:
-            flash('Invalid email or password.')
+            flash('Invalid email or password', 'error')
 
     return render_template('login.html')
 
@@ -69,7 +69,7 @@ def login():
 @main.route('/logout')
 def logout():
     session.clear()  # Clear all session data to avoid leftover messages
-    flash('You have been logged out.')
+    flash('You have been logged out')
     return redirect(url_for('main.welcome'))
 
 
