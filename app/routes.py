@@ -57,7 +57,6 @@ def login():
         # Validate password
         if user and user.check_password(password):
             session['user_id'] = user.id
-            flash('Logged in successfully')
             return redirect(url_for('main.home'))
         else:
             flash('Invalid email or password', 'error')
