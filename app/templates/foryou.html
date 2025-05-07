@@ -1,7 +1,5 @@
-{% extends "base.html" %}
-{% block title %}For You – Soul Maps{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}For You – Soul Maps{% endblock %} {%
+block content %}
 <div class="home-container">
   <h2>For You</h2>
 
@@ -11,12 +9,18 @@
       <ul>
         <li><b>Dark Matter</b> — trending sci-fi show map</li>
         <li><b>Mistborn</b> — epic fantasy book journey</li>
-        <li><b>Everything Everywhere All At Once</b> — multiverse madness movie map</li>
+        <li>
+          <b>Everything Everywhere All At Once</b> — multiverse madness movie
+          map
+        </li>
       </ul>
     </div>
 
     <div class="brain-image">
-      <img src="{{ url_for('static', filename='media/brainNetwork.png') }}" alt="Brain Network" />
+      <img
+        src="{{ url_for('static', filename='media/brainNetwork.png') }}"
+        alt="Brain Network"
+      />
     </div>
 
     <div class="trending-section">
