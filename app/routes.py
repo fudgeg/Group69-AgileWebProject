@@ -46,19 +46,17 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
+        # Check if the fields are empty
         if not email or not password:
             flash("Email and password are required.")
             return redirect(url_for('main.login'))
 
+        # Check if the user exists
         user = User.query.filter_by(email=email).first()
-        if user:
-            print(f"[LOGIN ATTEMPT] Found user: {user.email}")
-        else:
-            print(f"[LOGIN ATTEMPT] No user found with email: {email}")
 
+        # Validate password
         if user and user.check_password(password):
             session['user_id'] = user.id
-            print(f"[LOGIN SUCCESS] Logged in user: {user.name} ({user.email})")
             flash('Logged in successfully.')
             return redirect(url_for('main.home'))
         else:
@@ -67,12 +65,14 @@ def login():
     return render_template('login.html')
 
 
+
 @main.route('/logout')
 def logout():
-    user_id = session.pop('user_id', None)
-    print(f"[LOGOUT] User ID {user_id} logged out.")
+    session.clear()  # Clear all session data to avoid leftover messages
     flash('You have been logged out.')
     return redirect(url_for('main.welcome'))
+
+
 
 
 @main.route('/home')

@@ -289,6 +289,22 @@ line-height: 1.5;
   color: #356630;
 }
 
+.flash-messages {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.flash-message {
+  background-color: #f4f4f9;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+
 /* ====================== NAVBAR (for all pages after login) ====================== */
 .navbar {
   display: flex;
