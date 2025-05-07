@@ -17,14 +17,14 @@ def signup():
         password = request.form.get('password')
 
         if not first_name or not last_name or not email or not password:
-            flash("All fields are required.")
+            flash("All fields are required")
             return redirect(url_for('main.signup'))
 
         name = f"{first_name} {last_name}"
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash('Email already registered. Please log in.')
+            flash('Email already registered. Please log in')
             return redirect(url_for('main.login'))
 
         user = User(name=name, email=email)
@@ -33,7 +33,7 @@ def signup():
         db.session.commit()
 
         print(f"[SIGNUP] New user created: {user.name} | {user.email}")
-        flash('Signup successful. Please log in.')
+        flash('Signup successful. Please log in')
         return redirect(url_for('main.login'))
 
     return render_template('signup.html')
@@ -57,7 +57,7 @@ def login():
         # Validate password
         if user and user.check_password(password):
             session['user_id'] = user.id
-            flash('Logged in successfully.')
+            flash('Logged in successfully')
             return redirect(url_for('main.home'))
         else:
             flash('Invalid email or password', 'error')
