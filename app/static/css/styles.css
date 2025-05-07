@@ -709,3 +709,37 @@ line-height: 1.5;
 .form-group label {
   text-align: center;
 }
+
+/* Popup Message Styles */
+.popup-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #204118;
+  color: #ffffff;
+  padding: 15px 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  z-index: 9999;
+  font-weight: bold;
+  font-size: 16px;
+  opacity: 1;
+  transition: opacity 0.5s, top 0.5s;
+}
+
+/* Success Messages */
+.popup-message.success {
+  background-color: #28a745;
+}
+
+/* Error Messages */
+.popup-message.error {
+  background-color: #d9534f;
+}
+
+/* Hide Effect */
+.popup-message.hide {
+  top: 0;
+  opacity: 0;
+}
