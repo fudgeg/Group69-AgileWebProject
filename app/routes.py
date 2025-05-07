@@ -168,7 +168,104 @@ def upload_page():
 
 @main.route('/settings')
 def settings():
-    return render_template('settings.html')
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to access settings.")
+        return redirect(url_for('main.login'))
+    
+    # Get the current user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.login'))
+
+    # Pass the user to the template
+    return render_template('settings.html', user=user)
+
+
+@main.route('/update_username', methods=['POST'])
+def update_username():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to update your username.")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.login'))
+
+    # Get the new username and password from the form
+    new_username = request.form.get('username').strip()
+    password = request.form.get('password').strip()
+    
+    # Verify password
+    if not user.check_password(password):
+        flash("Incorrect password. Please try again.")
+        return redirect(url_for('main.settings'))
+    
+    # Check if the new username is valid
+    if not new_username:
+        flash("Username cannot be empty.")
+        return redirect(url_for('main.settings'))
+    
+    # Update the username
+    user.name = new_username
+    db.session.commit()
+    
+    # Provide user feedback
+    flash("Username updated successfully.")
+    return redirect(url_for('main.settings'))
+
+
+@main.route('/update_email', methods=['POST'])
+def update_email():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to update your email.")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('main.login'))
+
+    # Get the new email and password from the form
+    new_email = request.form.get('email').strip().lower()
+    password = request.form.get('password').strip()
+    
+    # Verify password
+    if not user.check_password(password):
+        flash("Incorrect password. Please try again.")
+        return redirect(url_for('main.settings'))
+    
+    # Check if the new email is valid
+    if not new_email:
+        flash("Email cannot be empty.")
+        return redirect(url_for('main.settings'))
+    
+    # Check if the new email is already taken
+    existing_user = User.query.filter_by(email=new_email).first()
+    if existing_user:
+        flash("This email is already registered. Please use a different email.")
+        return redirect(url_for('main.settings'))
+    
+    # Update the email
+    user.email = new_email
+    db.session.commit()
+    
+    # Log the user out to force re-login with the new email
+    session.clear()
+    flash("Email updated successfully. Please log in with your new email.")
+    return redirect(url_for('main.login'))
+
+
+
 
 @main.route('/foryou')
 def for_you():
