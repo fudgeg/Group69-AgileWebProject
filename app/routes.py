@@ -242,7 +242,7 @@ def update_email():
     
     # Verify password
     if not user.check_password(password):
-        flash("Incorrect password. Please try again.")
+        flash("Incorrect password. Please try again.","error")
         return redirect(url_for('main.settings'))
     
     # Check if the new email is valid
@@ -265,12 +265,6 @@ def update_email():
     flash("Email updated successfully. Please log in with your new email.")
     return redirect(url_for('main.login'))
 
-
-
-
-@main.route('/foryou')
-def for_you():
-    return render_template('foryou.html')
 
 @main.route('/update_password', methods=['POST'])
 def update_password():
@@ -305,9 +299,11 @@ def update_password():
     user.set_password(new_password)
     db.session.commit()
     
-    # Provide user feedback
-    flash("Password updated successfully.", "success")
-    return redirect(url_for('main.settings'))
+    # Log the user out to force re-login with the new email
+    session.clear()
+    flash("Password updated successfully. Please log in with your new email.")
+    return redirect(url_for('main.login'))
+    
 
 
 @main.route('/delete_account', methods=['POST'])
@@ -341,3 +337,7 @@ def delete_account():
     session.clear()
     flash("Your account has been permanently deleted.", "error")
     return redirect(url_for('main.welcome'))
+
+@main.route('/foryou')
+def for_you():
+    return render_template('foryou.html')
