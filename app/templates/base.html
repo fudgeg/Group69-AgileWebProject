@@ -29,30 +29,38 @@
     {% endblock %}
 
     <script>
-                  function showPopup(message, type = "success") {
-                    const popup = document.createElement("div");
-                    popup.classList.add("popup-message");
-                    popup.classList.add(type);
-                    popup.textContent = message;
-                    document.body.appendChild(popup);
+                        function showPopup(message, type = "success") {
+                          const popup = document.createElement("div");
+                          popup.classList.add("popup-message");
+                          popup.classList.add(type);
+                          popup.textContent = message;
+                          document.body.appendChild(popup);
 
-                    // Automatically remove the popup after 3 seconds
-                    setTimeout(() => {
-                      popup.classList.add("hide");
-                      setTimeout(() => popup.remove(), 500);
-                    }, 3000);
-                  }
+                          // Automatically remove the popup after 3 seconds
+                          setTimeout(() => {
+                            popup.classList.add("hide");
+                            setTimeout(() => popup.remove(), 500);
+                          }, 3000);
+                        }
 
       // Check for flash messages
       document.addEventListener("DOMContentLoaded", () => {
-        const flashMessages = {{ get_flashed_messages(with_categories=True) | tojson | safe }};
+          const flashMessages = {{ get_flashed_messages(with_categories=True) | tojson | safe }};
 
-        if (flashMessages.length) {
-          flashMessages.forEach(([category, message]) => {
-            const type = category === 'error' ? 'error' : 'success';
-            showPopup(message, type);
-          });
-        }
+          if (flashMessages.length) {
+              flashMessages.forEach(([category, message]) => {
+                  // Correctly handle "caution" messages
+                  let type;
+                  if (category === 'error') {
+                      type = 'error';
+                  } else if (category === 'caution') {
+                      type = 'caution';
+                  } else {
+                      type = 'success';
+                  }
+                  showPopup(message, type);
+              });
+          }
       });
     </script>
   </body>

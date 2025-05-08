@@ -30,12 +30,12 @@ text-align: center;
 box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-
 body {
-font-family: "Segoe UI", sans-serif;
-background-color: #dce9d5;
-margin: 0;
-padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #dce9d5 ;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
 .welcome-box {
@@ -198,11 +198,6 @@ line-height: 1.5;
   width: 100%;
 }  
 
-.name-fields {
-  display: flex;
-  gap: 10px;
-}
-
 .input-field {
   padding: 10px;
   border: none;
@@ -273,58 +268,35 @@ line-height: 1.5;
   height: auto;
 }
 
+/* Back Button Styles */
 .back-button {
   position: absolute;
   top: 20px;
   left: 20px;
-  background-color: transparent;
-  color: #204118;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: 16px;
+  background-color: #204118;
+  color: #ffffff;
   border: none;
-  padding: 6px 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
-  transition: color 0.3s;
+  text-decoration: none; /* Remove underline */
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .back-button:hover {
-  color: #356630;
+  background-color: #356630;
+  color: #ffffff;
 }
 
-/* Flash Message Styles */
-.flash-messages {
-  list-style-type: none;
-  padding: 0;
-  margin: 0 auto 20px auto;
-  width: 100%;
-}
-
-.flash-message {
-  background-color: #fff6e0; /* Soft pastel background */
-  color: #a05a2c; /* Dark, muted text */
-  border-left: 5px solid #a05a2c; /* Dark accent */
-  padding: 12px 20px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  font-weight: 500;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-
-/* Error Messages */
-.flash-message.error {
-  background-color: #8b1a1a; /* Light red */
-  color: #fbeaea;
-  border-left-color: #8b1a1a; /* Dark red */
-}
-
-/* Hover Effect */
-.flash-message:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+/* Remove the underline */
+.back-button a {
+  text-decoration: none;
+  color: inherit;
 }
 
 
@@ -466,11 +438,14 @@ line-height: 1.5;
 
 .user-info{
   text-align: center;
-  margin-bottom: 20px; /* Reduce the gap between profile info and links */
+
 }
 
 .user-info p {
-  margin-bottom: 2px; /* Reduce the gap between Username and Email */
+  font-size: 24px;
+  font-weight: bold;
+  color: #204118;
+  margin-bottom: 5px;
 }
 
 .settings-sidebar ul {
@@ -492,7 +467,7 @@ line-height: 1.5;
 
 .settings-content {
   flex-grow: 1;
-  padding: 40px;
+  padding: 60px 80px;
   background-color: #dce9d5;
   overflow-y: auto;
 }
@@ -502,7 +477,11 @@ line-height: 1.5;
 }
 
 .settings-section h2 {
+  font-size: 32px;
+  font-weight: bold;
   color: #204118;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .settings-section ul {
@@ -564,7 +543,7 @@ line-height: 1.5;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #204118;
+  background-color: #28a745;
   color: #ffffff;
   padding: 15px 30px;
   border-radius: 8px;
@@ -576,14 +555,14 @@ line-height: 1.5;
   transition: opacity 0.5s, top 0.5s;
 }
 
-/* Success Messages */
-.popup-message.success {
-  background-color: #28a745;
-}
-
 /* Error Messages */
 .popup-message.error {
   background-color: #d9534f;
+}
+
+/* Caution Messages */
+.popup-message.caution {
+  background-color: #ffb343;
 }
 
 /* Hide Effect */
@@ -593,19 +572,20 @@ line-height: 1.5;
 }
 
 .profile-picture {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  margin-bottom: 10px;
-  border: 4px solid #204118; 
+  margin-bottom: 20px;
+  border: 5px solid #204118; 
 }
 
 .change-username-link, .change-email-link{
   color: #204118;
   cursor: pointer;
-  display: block;
-  font-size: 12px;
+  font-size: 16px;
   text-decoration: underline;
+  display: block;
+  margin-bottom: 15px;
 }
 
 .change-username-link:hover, .change-email-link:hover {
@@ -618,6 +598,127 @@ line-height: 1.5;
   font-weight: bold;
   border-radius: 8px;
 }
+
+/* Consistent Input Field Styles */
+.settings-form input[type="text"],
+.settings-form input[type="password"],
+.settings-form input[type="email"] {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #efefe3;
+  font-size: 14px;
+  color: #204118;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.settings-form input[type="text"]:focus,
+.settings-form input[type="password"]:focus,
+.settings-form input[type="email"]:focus {
+  outline: none;
+  border: 2px solid #7aa96c;
+  background-color: #ffffff;
+}
+
+/* Button Styles */
+.btn.update-btn,
+.btn.delete-btn {
+  background-color: #204118;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+  font-weight: bold;
+  border: none;
+  transition: background-color 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn.update-btn:hover,
+.btn.delete-btn:hover {
+  background-color: #356630;
+}
+
+/* Center Align Buttons */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Label Spacing */
+.settings-form label {
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #204118;
+}
+
+/* Button Styles Consistency */
+.btn.update-btn{
+  background-color: #204118;
+  color: #ffffff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: auto;
+  transition: background-color 0.3s;
+}
+
+.btn.delete-btn{
+  background-color: #e00c14;
+  color: #ffffff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: auto;
+  transition: background-color 0.3s;
+}
+
+.btn.update-btn:hover {
+  background-color: #356630;
+}
+
+.btn.delete-btn:hover {
+  background-color: #c00a10;
+  color: white;
+}
+
+/* Back Button Styles */
+.back-button:hover {
+  background-color: #356630;
+  color: #ffffff;
+}
+
+/* Back Button Styles */
+.back_button_settings {
+  background-color: #204118;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.back_button_settings:hover {
+  background-color: #356630;
+  color: #ffffff;
+}
+
 
 
 
@@ -731,7 +832,10 @@ line-height: 1.5;
   display: flex;
   justify-content: center;
   padding-top: 50px; 
+  min-height: 100vh; /* Ensures the wrapper fills the entire viewport */
+  background-color: #dce9d5; /* Matches your main body background */
 }
+
 
 .upload-box {
   background-color: #f0f0e6;
@@ -747,36 +851,4 @@ line-height: 1.5;
   text-align: center;
 }
 
-/* Popup Message Styles */
-.popup-message {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #204118;
-  color: #ffffff;
-  padding: 15px 30px;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  z-index: 9999;
-  font-weight: bold;
-  font-size: 16px;
-  opacity: 1;
-  transition: opacity 0.5s, top 0.5s;
-}
 
-/* Success Messages */
-.popup-message.success {
-  background-color: #28a745;
-}
-
-/* Error Messages */
-.popup-message.error {
-  background-color: #d9534f;
-}
-
-/* Hide Effect */
-.popup-message.hide {
-  top: 0;
-  opacity: 0;
-}

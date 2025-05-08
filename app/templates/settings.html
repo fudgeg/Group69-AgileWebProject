@@ -41,6 +41,12 @@ block content %}
 
     <!-- Username Update Section -->
     <div id="username-section" class="settings-section hidden">
+      <div class="back_button_settings_container">
+        <button class="back_button_settings" onclick="showSection('account')">
+          &larr; Back to Account Settings
+        </button>
+      </div>
+
       <h2>Change Username</h2>
       <form
         method="POST"
@@ -69,13 +75,18 @@ block content %}
 
     <!-- Email Update Form with Password Verification -->
     <div id="email-section" class="settings-section hidden">
+      <div class="back_button_settings_container">
+        <button class="back_button_settings" onclick="showSection('account')">
+          &larr; Back to Account Settings
+        </button>
+      </div>
       <h2>Change Email</h2>
       <form
         method="POST"
         action="{{ url_for('main.update_email') }}"
         class="settings-form"
       >
-        <label for="email">Change Email</label>
+        <label for="email">New Email</label>
         <input
           type="email"
           id="email"
@@ -83,6 +94,7 @@ block content %}
           placeholder="Enter new email"
           required
         />
+        <label for="change_email_password">Password</label>
         <input
           type="password"
           name="password"

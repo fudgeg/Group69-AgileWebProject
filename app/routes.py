@@ -11,20 +11,18 @@ def welcome():
 @main.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
+        name = request.form.get('full_name')
         email = request.form.get('email')
         password = request.form.get('password')
 
-        if not first_name or not last_name or not email or not password:
-            flash("All fields are required")
+        if not name or not email or not password:
+            flash("All fields are required","error")
             return redirect(url_for('main.signup'))
 
-        name = f"{first_name} {last_name}"
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash('Email already registered. Please log in')
+            flash('Email already registered. Please log in',"caution")
             return redirect(url_for('main.login'))
 
         user = User(name=name, email=email)
@@ -69,7 +67,7 @@ def login():
 @main.route('/logout')
 def logout():
     session.clear()  # Clear all session data to avoid leftover messages
-    flash('You have been logged out')
+    flash('You have been logged out',"caution")
     return redirect(url_for('main.welcome'))
 
 
@@ -81,14 +79,14 @@ def home():
     print(f"[DEBUG] Session user_id: {user_id}")
 
     if not user_id:
-        flash("You must be logged in to view this page.")
+        flash("You must be logged in to view this page.","error")
         return redirect(url_for('main.login'))
 
     user = User.query.get(user_id)
     print(f"[DEBUG] User from DB: {user}")
 
     if not user:
-        flash("User not found.")
+        flash("User not found.","error")
         return redirect(url_for('main.login'))
 
     # Query the most recent media entries (e.g., last 5)
@@ -112,7 +110,7 @@ def home():
 def friends():
     user = User.query.get(session.get('user_id'))
     if not user:
-        flash("Please log in to view friends.")
+        flash("Please log in to view friends.","error")
         return redirect(url_for('main.login'))
 
     # All users except the current user and existing friends
@@ -130,11 +128,11 @@ def add_friend(friend_id):
     friend = User.query.get(friend_id)
 
     if not user or not friend or friend == user:
-        flash("Invalid request.")
+        flash("Invalid request.","error")
         return redirect(url_for('main.friends'))
 
     if friend in user.friends:
-        flash("You're already friends.")
+        flash("You're already friends.","caution")
         return redirect(url_for('main.friends'))
 
     user.friends.append(friend)
@@ -149,7 +147,7 @@ def add_friend(friend_id):
 def upload_page():
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to upload media.")
+        flash("You must be logged in to upload media.","error")
         return redirect(url_for('main.login'))
 
     if request.method == 'POST':
@@ -171,12 +169,12 @@ def upload_page():
 def settings():
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to access settings.")
+        flash("You must be logged in to access settings.","error")
         return redirect(url_for('main.login'))
 
     user = User.query.get(user_id)
     if not user:
-        flash("User not found.")
+        flash("User not found.","error")
         return redirect(url_for('main.login'))
 
     profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
@@ -189,13 +187,13 @@ def update_username():
     # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to update your username.")
+        flash("You must be logged in to update your username.","error")
         return redirect(url_for('main.login'))
     
     # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
-        flash("User not found.")
+        flash("User not found.","error")
         return redirect(url_for('main.login'))
 
     # Get the new username and password from the form
@@ -209,7 +207,7 @@ def update_username():
     
     # Check if the new username is valid
     if not new_username:
-        flash("Username cannot be empty.")
+        flash("Username cannot be empty.","error")
         return redirect(url_for('main.settings'))
     
     # Update the username
@@ -226,13 +224,13 @@ def update_email():
     # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to update your email.")
+        flash("You must be logged in to update your email.","error")
         return redirect(url_for('main.login'))
     
     # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
-        flash("User not found.")
+        flash("User not found.","error")
         return redirect(url_for('main.login'))
 
     # Get the new email and password from the form
@@ -246,14 +244,13 @@ def update_email():
     
     # Check if the new email is valid
     if not new_email:
-        flash("Email cannot be empty.")
+        flash("Email cannot be empty.","error")
         return redirect(url_for('main.settings'))
     
     # Check if the new email is already taken
     existing_user = User.query.filter_by(email=new_email).first()
     if existing_user:
-        flash("This email is already registered. Please use a different email.")
-        return redirect(url_for('main.settings'))
+        flash("This email is already registered. Please use a different email.","error")
     
     # Update the email
     user.email = new_email
@@ -261,7 +258,7 @@ def update_email():
     
     # Log the user out to force re-login with the new email
     session.clear()
-    flash("Email updated successfully. Please log in with your new email.")
+    flash("Email updated successfully. Please log in with your new email.","caution")
     return redirect(url_for('main.login'))
 
 
@@ -270,13 +267,13 @@ def update_password():
     # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to update your password.")
+        flash("You must be logged in to update your password.","error")
         return redirect(url_for('main.login'))
     
     # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
-        flash("User not found.")
+        flash("User not found.","error")
         return redirect(url_for('main.login'))
 
     # Get the current and new passwords from the form
@@ -300,7 +297,7 @@ def update_password():
     
     # Log the user out to force re-login with the new email
     session.clear()
-    flash("Password updated successfully. Please log in with your new email.")
+    flash("Password updated successfully. Please log in with your new email.","caution")
     return redirect(url_for('main.login'))
     
 
@@ -310,13 +307,13 @@ def delete_account():
     # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to delete your account.")
+        flash("You must be logged in to delete your account.","error")
         return redirect(url_for('main.login'))
     
     # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
-        flash("User not found.")
+        flash("User not found.","error")
         return redirect(url_for('main.login'))
 
     # Verify password
@@ -334,7 +331,7 @@ def delete_account():
     
     # Clear the session and redirect to the welcome page
     session.clear()
-    flash("Your account has been permanently deleted.", "error")
+    flash("Your account has been permanently deleted.", "caution")
     return redirect(url_for('main.welcome'))
 
 @main.route('/foryou')
