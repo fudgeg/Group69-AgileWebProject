@@ -405,7 +405,8 @@ left: 20px;
 
 .user-info{
   text-align: center;
-
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .user-info p {
@@ -542,8 +543,22 @@ left: 20px;
   width: 150px;
   height: 150px;
   border-radius: 50%;
+  margin-bottom: 15px;
+  border: 5px solid #204118;
+}
+
+.change-profile-picture-link {
+  display: block;
   margin-bottom: 20px;
-  border: 5px solid #204118; 
+  font-size: 18px;
+  font-weight: bold;
+  color: #204118;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.change-profile-picture-link:hover {
+  color: #7aa96c;
 }
 
 .change-username-link, .change-email-link{

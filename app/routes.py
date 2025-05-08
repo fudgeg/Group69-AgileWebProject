@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+import os
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from .models import db, MediaEntry, User
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
 main = Blueprint('main', __name__)
 
@@ -113,13 +115,17 @@ def friends():
         flash("Please log in to view friends.","error")
         return redirect(url_for('main.login'))
 
-    # All users except the current user and existing friends
+    # Fetch the current user's friends
+    friends = user.friends
+
+    # Fetch recommended connections (all users except current user and their friends)
     recommended = User.query.filter(
         User.id != user.id,
         ~User.id.in_([f.id for f in user.friends])
     ).all()
 
-    return render_template('friends.html', user=user, friends=user.friends, recommended=recommended)
+    return render_template('friends.html', user=user, friends=friends, recommended=recommended)
+
 
 
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
@@ -169,17 +175,63 @@ def upload_page():
 def settings():
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to access settings.","error")
+        flash("You must be logged in to access settings.", "error")
         return redirect(url_for('main.login'))
 
     user = User.query.get(user_id)
     if not user:
-        flash("User not found.","error")
+        flash("User not found.", "error")
         return redirect(url_for('main.login'))
 
     profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
     return render_template('settings.html', user=user, profile_picture_url=profile_picture_url)
 
+
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@main.route('/update_profile_picture', methods=['POST'])
+def update_profile_picture():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to update your profile picture.", "error")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('main.login'))
+    
+    # Check if a file is uploaded
+    if 'profile_picture' not in request.files:
+        flash("No file selected. Please try again.", "error")
+        return redirect(url_for('main.settings'))
+    
+    file = request.files['profile_picture']
+    
+    # Check if the file is valid
+    if file.filename == '' or not allowed_file(file.filename):
+        flash("Invalid file type. Please upload a PNG, JPG, JPEG, or GIF file.", "error")
+        return redirect(url_for('main.settings'))
+    
+    # Secure the filename and save the file
+    filename = secure_filename(file.filename)
+    upload_folder = os.path.join(current_app.static_folder, 'media')
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, filename)
+    file.save(file_path)
+    
+    # Update the user's profile picture
+    user.profile_picture = filename
+    db.session.commit()
+
+    flash("Profile picture updated successfully.")
+    return redirect(url_for('main.settings'))
 
 
 @main.route('/update_username', methods=['POST'])
