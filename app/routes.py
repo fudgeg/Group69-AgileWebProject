@@ -169,20 +169,19 @@ def upload_page():
 
 @main.route('/settings')
 def settings():
-    # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
         flash("You must be logged in to access settings.")
         return redirect(url_for('main.login'))
-    
-    # Get the current user
+
     user = User.query.get(user_id)
     if not user:
         flash("User not found.")
         return redirect(url_for('main.login'))
 
-    # Pass the user to the template
-    return render_template('settings.html', user=user)
+    profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
+    return render_template('settings.html', user=user, profile_picture_url=profile_picture_url)
+
 
 
 @main.route('/update_username', methods=['POST'])
