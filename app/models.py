@@ -14,6 +14,7 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    profile_picture = db.Column(db.String(100), default='user.png')
 
  # Symmetric friend relationship logic update (saves both directions)
     # Many-to-many relationship for friends

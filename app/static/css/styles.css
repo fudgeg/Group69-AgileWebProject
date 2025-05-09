@@ -1,10 +1,10 @@
 /* ====================== GENERAL GLOBAL STYLES (Apply to ALL Pages) ====================== */
-html, body {
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #dce9d5 ;
   margin: 0;
   padding: 0;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  background-color: #c2baba;
-  height: 100%;
+  min-height: 100vh;
 }
 
 /* Center Content Pages like Welcome, Login, Sign Up */
@@ -16,10 +16,7 @@ height: 100vh;
 background-color: #c2baba; 
 }
 
-
-
 /* ====================== WELCOME PAGE STYLES ====================== */
-
 .container {
 background-color: #efefe3;
 width: 90%;
@@ -28,14 +25,6 @@ padding: 40px ;
 border-radius: 10px;
 text-align: center;
 box-shadow: 0 0 10px rgba(0,0,0,0.2);
-}
-
-
-body {
-font-family: "Segoe UI", sans-serif;
-background-color: #dce9d5;
-margin: 0;
-padding: 0;
 }
 
 .welcome-box {
@@ -69,27 +58,16 @@ justify-content: center;
 align-items: center;
 }
 
+/*Base logo*/
 .logo {
-width: 300px;
 max-width: 100%;
+font-weight: bold;
 }
-.intro-content {
-flex: 1;
-padding-left: 40px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-}
+
 
 .title {
 font-size: 2.5rem;
 color: #204118;
-}
-
-.subtitle {
-margin: 15px 0 25px;
-font-size: 1rem;
-font-weight: 500;
 }
 
 .subtitle {
@@ -159,15 +137,12 @@ line-height: 1.5;
 }
 
 
-.logo-section {
+.logo-section .logo {
   flex: 1;
   text-align: center;
 }
 
-.logo {
-  width: 325px;
-  margin-bottom: 10px;
-}
+
 
 .form-section {
   flex: 1;
@@ -178,6 +153,9 @@ line-height: 1.5;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
 }
 
 
@@ -195,11 +173,6 @@ line-height: 1.5;
   width: 100%;
 }  
 
-.name-fields {
-  display: flex;
-  gap: 10px;
-}
-
 .input-field {
   padding: 10px;
   border: none;
@@ -208,10 +181,6 @@ line-height: 1.5;
   flex: 1;
   max-width: 380px; 
 }
-
-.half-width {
-  width: 100%;
-}  
 
 .full-width {
   width: 100%;
@@ -270,24 +239,34 @@ line-height: 1.5;
   height: auto;
 }
 
-.back-button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: transparent;
-  color: #204118;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: 16px;
+/* General Back Button Styles */
+.back-button, .back_button_settings {
+  background-color: #204118;
+  color: #ffffff;
   border: none;
-  padding: 6px 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
-  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.back-button:hover {
-  color: #356630;
+.back-button:hover, .back_button_settings:hover {
+  background-color: #356630;
 }
+
+/* ====================== specific back button position for login/signup page ====================== */
+.back-button{
+position: absolute;
+top: 20px;
+left: 20px;
+}
+
 
 /* ====================== NAVBAR (for all pages after login) ====================== */
 .navbar {
@@ -308,9 +287,9 @@ line-height: 1.5;
   width: 50px;
   height: auto;
 }
-.logo {
+
+.navbar .logo {
   font-size: 24px;
-  font-weight: bold;
 }
 
 .nav-icon-button{
@@ -424,6 +403,19 @@ line-height: 1.5;
   color: #204118;
 }
 
+.user-info{
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.user-info p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #204118;
+  margin-bottom: 5px;
+}
+
 .settings-sidebar ul {
   list-style: none;
   padding: 0;
@@ -443,7 +435,7 @@ line-height: 1.5;
 
 .settings-content {
   flex-grow: 1;
-  padding: 40px;
+  padding: 60px 80px;
   background-color: #dce9d5;
   overflow-y: auto;
 }
@@ -453,7 +445,11 @@ line-height: 1.5;
 }
 
 .settings-section h2 {
+  font-size: 32px;
+  font-weight: bold;
   color: #204118;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .settings-section ul {
@@ -487,6 +483,205 @@ line-height: 1.5;
 .logout-button:hover {
   background-color: #c00a10;
 }
+
+.settings-section ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.settings-section ul li {
+  margin-bottom: 20px; 
+  line-height: 1.6; 
+}
+
+.settings-section ul ul {
+  list-style-type: decimal;
+  margin: 10px 0 10px 20px; 
+  padding-left: 20px; 
+}
+
+.settings-section ul ul li {
+  margin-bottom: 5px; 
+  line-height: 1.4; 
+}
+
+/* Popup Message Styles */
+.popup-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #28a745;
+  color: #ffffff;
+  padding: 15px 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  z-index: 9999;
+  font-weight: bold;
+  font-size: 16px;
+  opacity: 1;
+  transition: opacity 0.5s, top 0.5s;
+}
+
+/* Error Messages */
+.popup-message.error {
+  background-color: #d9534f;
+}
+
+/* Caution Messages */
+.popup-message.caution {
+  background-color: #ffb343;
+}
+
+/* Hide Effect */
+.popup-message.hide {
+  top: 0;
+  opacity: 0;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 5px solid #204118;
+}
+
+.change-profile-picture-link {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #204118;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.change-profile-picture-link:hover {
+  color: #7aa96c;
+}
+
+.change-username-link, .change-email-link{
+  color: #204118;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: underline;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.change-username-link:hover, .change-email-link:hover {
+  color: #7aa96c;
+}
+
+.settings-sidebar ul li.active {
+  background-color: #7aa96c;
+  color: black;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+/* Consistent Input Field Styles */
+.settings-form input[type="text"],
+.settings-form input[type="password"],
+.settings-form input[type="email"] {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #efefe3;
+  font-size: 14px;
+  color: #204118;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.settings-form input[type="text"]:focus,
+.settings-form input[type="password"]:focus,
+.settings-form input[type="email"]:focus {
+  outline: none;
+  border: 2px solid #7aa96c;
+  background-color: #ffffff;
+}
+
+/* Button Styles */
+.btn.update-btn,
+.btn.delete-btn {
+  background-color: #204118;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+  font-weight: bold;
+  border: none;
+  transition: background-color 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn.update-btn:hover,
+.btn.delete-btn:hover {
+  background-color: #356630;
+}
+
+/* Center Align Buttons */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Label Spacing */
+.settings-form label {
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #204118;
+}
+
+/* Button Styles Consistency */
+.btn.update-btn{
+  background-color: #204118;
+  color: #ffffff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: auto;
+  transition: background-color 0.3s;
+}
+
+.btn.delete-btn{
+  background-color: #e00c14;
+  color: #ffffff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: auto;
+  transition: background-color 0.3s;
+}
+
+.btn.update-btn:hover {
+  background-color: #356630;
+}
+
+.btn.delete-btn:hover {
+  background-color: #c00a10;
+  color: white;
+}
+
+/* Back Button Styles */
+.back-button:hover {
+  background-color: #356630;
+  color: #ffffff;
+}
+
 
 /* ====================== Friends Page ====================== */
 .friends-page {
@@ -598,7 +793,10 @@ line-height: 1.5;
   display: flex;
   justify-content: center;
   padding-top: 50px; 
+  min-height: 100vh; /* Ensures the wrapper fills the entire viewport */
+  background-color: #dce9d5; /* Matches your main body background */
 }
+
 
 .upload-box {
   background-color: #f0f0e6;
@@ -613,3 +811,8 @@ line-height: 1.5;
 .form-group label {
   text-align: center;
 }
+
+
+
+
+

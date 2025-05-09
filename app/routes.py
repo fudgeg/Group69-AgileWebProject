@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+import os
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from .models import db, MediaEntry, User
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
 main = Blueprint('main', __name__)
 
@@ -11,20 +13,18 @@ def welcome():
 @main.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
+        name = request.form.get('full_name')
         email = request.form.get('email')
         password = request.form.get('password')
 
-        if not first_name or not last_name or not email or not password:
-            flash("All fields are required.")
+        if not name or not email or not password:
+            flash("All fields are required","error")
             return redirect(url_for('main.signup'))
 
-        name = f"{first_name} {last_name}"
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash('Email already registered. Please log in.')
+            flash('Email already registered. Please log in',"caution")
             return redirect(url_for('main.login'))
 
         user = User(name=name, email=email)
@@ -33,7 +33,7 @@ def signup():
         db.session.commit()
 
         print(f"[SIGNUP] New user created: {user.name} | {user.email}")
-        flash('Signup successful. Please log in.')
+        flash('Signup successful. Please log in')
         return redirect(url_for('main.login'))
 
     return render_template('signup.html')
@@ -46,33 +46,33 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
+        # Check if the fields are empty
         if not email or not password:
-            flash("Email and password are required.")
+            flash("Email and password are required.", 'error')
             return redirect(url_for('main.login'))
 
+        # Check if the user exists
         user = User.query.filter_by(email=email).first()
-        if user:
-            print(f"[LOGIN ATTEMPT] Found user: {user.email}")
-        else:
-            print(f"[LOGIN ATTEMPT] No user found with email: {email}")
 
+        # Validate password
         if user and user.check_password(password):
             session['user_id'] = user.id
-            print(f"[LOGIN SUCCESS] Logged in user: {user.name} ({user.email})")
-            flash('Logged in successfully.')
+            flash("You are now logged in.")
             return redirect(url_for('main.home'))
         else:
-            flash('Invalid email or password.')
+            flash('Invalid email or password', 'error')
 
     return render_template('login.html')
 
 
+
 @main.route('/logout')
 def logout():
-    user_id = session.pop('user_id', None)
-    print(f"[LOGOUT] User ID {user_id} logged out.")
-    flash('You have been logged out.')
+    session.clear()  # Clear all session data to avoid leftover messages
+    flash('You have been logged out',"caution")
     return redirect(url_for('main.welcome'))
+
+
 
 
 @main.route('/home')
@@ -81,14 +81,14 @@ def home():
     print(f"[DEBUG] Session user_id: {user_id}")
 
     if not user_id:
-        flash("You must be logged in to view this page.")
+        flash("You must be logged in to view this page.","error")
         return redirect(url_for('main.login'))
 
     user = User.query.get(user_id)
     print(f"[DEBUG] User from DB: {user}")
 
     if not user:
-        flash("User not found.")
+        flash("User not found.","error")
         return redirect(url_for('main.login'))
 
     # Query the most recent media entries (e.g., last 5)
@@ -112,16 +112,20 @@ def home():
 def friends():
     user = User.query.get(session.get('user_id'))
     if not user:
-        flash("Please log in to view friends.")
+        flash("Please log in to view friends.","error")
         return redirect(url_for('main.login'))
 
-    # All users except the current user and existing friends
+    # Fetch the current user's friends
+    friends = user.friends
+
+    # Fetch recommended connections (all users except current user and their friends)
     recommended = User.query.filter(
         User.id != user.id,
         ~User.id.in_([f.id for f in user.friends])
     ).all()
 
-    return render_template('friends.html', user=user, friends=user.friends, recommended=recommended)
+    return render_template('friends.html', user=user, friends=friends, recommended=recommended)
+
 
 
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
@@ -130,11 +134,11 @@ def add_friend(friend_id):
     friend = User.query.get(friend_id)
 
     if not user or not friend or friend == user:
-        flash("Invalid request.")
+        flash("Invalid request.","error")
         return redirect(url_for('main.friends'))
 
     if friend in user.friends:
-        flash("You're already friends.")
+        flash("You're already friends.","caution")
         return redirect(url_for('main.friends'))
 
     user.friends.append(friend)
@@ -149,7 +153,7 @@ def add_friend(friend_id):
 def upload_page():
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to upload media.")
+        flash("You must be logged in to upload media.","error")
         return redirect(url_for('main.login'))
 
     if request.method == 'POST':
@@ -169,7 +173,218 @@ def upload_page():
 
 @main.route('/settings')
 def settings():
-    return render_template('settings.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to access settings.", "error")
+        return redirect(url_for('main.login'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('main.login'))
+
+    profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
+    return render_template('settings.html', user=user, profile_picture_url=profile_picture_url)
+
+
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@main.route('/update_profile_picture', methods=['POST'])
+def update_profile_picture():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to update your profile picture.", "error")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('main.login'))
+    
+    # Check if a file is uploaded
+    if 'profile_picture' not in request.files:
+        flash("No file selected. Please try again.", "error")
+        return redirect(url_for('main.settings'))
+    
+    file = request.files['profile_picture']
+    
+    # Check if the file is valid
+    if file.filename == '' or not allowed_file(file.filename):
+        flash("Invalid file type. Please upload a PNG, JPG, JPEG, or GIF file.", "error")
+        return redirect(url_for('main.settings'))
+    
+    # Secure the filename and save the file
+    filename = secure_filename(file.filename)
+    upload_folder = os.path.join(current_app.static_folder, 'media')
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, filename)
+    file.save(file_path)
+    
+    # Update the user's profile picture
+    user.profile_picture = filename
+    db.session.commit()
+
+    flash("Profile picture updated successfully.")
+    return redirect(url_for('main.settings'))
+
+
+@main.route('/update_username', methods=['POST'])
+def update_username():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to update your username.","error")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.","error")
+        return redirect(url_for('main.login'))
+
+    # Get the new username and password from the form
+    new_username = request.form.get('username').strip()
+    password = request.form.get('password').strip()
+    
+    # Verify password
+    if not user.check_password(password):
+        flash("Incorrect password. Please try again.","error")
+        return redirect(url_for('main.settings'))
+    
+    # Check if the new username is valid
+    if not new_username:
+        flash("Username cannot be empty.","error")
+        return redirect(url_for('main.settings'))
+    
+    # Update the username
+    user.name = new_username
+    db.session.commit()
+    
+    # Provide user feedback
+    flash("Username updated successfully.")
+    return redirect(url_for('main.settings'))
+
+
+@main.route('/update_email', methods=['POST'])
+def update_email():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to update your email.","error")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.","error")
+        return redirect(url_for('main.login'))
+
+    # Get the new email and password from the form
+    new_email = request.form.get('email').strip().lower()
+    password = request.form.get('password').strip()
+    
+    # Verify password
+    if not user.check_password(password):
+        flash("Incorrect password. Please try again.","error")
+        return redirect(url_for('main.settings'))
+    
+    # Check if the new email is valid
+    if not new_email:
+        flash("Email cannot be empty.","error")
+        return redirect(url_for('main.settings'))
+    
+    # Check if the new email is already taken
+    existing_user = User.query.filter_by(email=new_email).first()
+    if existing_user:
+        flash("This email is already registered. Please use a different email.","error")
+    
+    # Update the email
+    user.email = new_email
+    db.session.commit()
+    
+    # Log the user out to force re-login with the new email
+    session.clear()
+    flash("Email updated successfully. Please log in with your new email.","caution")
+    return redirect(url_for('main.login'))
+
+
+@main.route('/update_password', methods=['POST'])
+def update_password():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to update your password.","error")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.","error")
+        return redirect(url_for('main.login'))
+
+    # Get the current and new passwords from the form
+    current_password = request.form.get('current_password').strip()
+    new_password = request.form.get('new_password').strip()
+    confirm_password = request.form.get('confirm_password').strip()
+    
+    # Verify current password
+    if not user.check_password(current_password):
+        flash("Incorrect current password. Please try again.", "error")
+        return redirect(url_for('main.settings'))
+    
+    # Check if the new password matches the confirmation
+    if new_password != confirm_password:
+        flash("New passwords do not match. Please try again.", "error")
+        return redirect(url_for('main.settings'))
+    
+    # Update the password
+    user.set_password(new_password)
+    db.session.commit()
+    
+    # Log the user out to force re-login with the new email
+    session.clear()
+    flash("Password updated successfully. Please log in with your new email.","caution")
+    return redirect(url_for('main.login'))
+    
+
+
+@main.route('/delete_account', methods=['POST'])
+def delete_account():
+    # Check if the user is logged in
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to delete your account.","error")
+        return redirect(url_for('main.login'))
+    
+    # Get the logged-in user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.","error")
+        return redirect(url_for('main.login'))
+
+    # Verify password
+    delete_password = request.form.get('delete_password').strip()
+    if not user.check_password(delete_password):
+        flash("Incorrect password. Please try again.", "error")
+        return redirect(url_for('main.settings'))
+    
+    # Remove all media entries associated with the user
+    MediaEntry.query.filter_by(user_id=user.id).delete()
+    
+    # Remove the user
+    db.session.delete(user)
+    db.session.commit()
+    
+    # Clear the session and redirect to the welcome page
+    session.clear()
+    flash("Your account has been permanently deleted.", "caution")
+    return redirect(url_for('main.welcome'))
 
 @main.route('/foryou')
 def for_you():

@@ -13,15 +13,6 @@ Soul Maps{% endblock %} {% block content %}
   <div class="form-section">
     <h2 class="form-title">Login</h2>
 
-    <!--Flash message block -->
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul class="flash-messages">
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %} {% endwith %}
-
     <form
       class="signup-form"
       method="POST"

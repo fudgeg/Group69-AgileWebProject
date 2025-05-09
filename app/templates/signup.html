@@ -13,37 +13,19 @@ Soul Maps{% endblock %} {% block content %}
   <div class="form-section">
     <h2 class="form-title">Create an account</h2>
 
-    <!-- Flash message display -->
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul class="flash-messages">
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %} {% endwith %}
-
     <form
       class="signup-form"
       method="POST"
       action="{{ url_for('main.signup') }}"
       onsubmit="return checkPasswords();"
     >
-      <div class="name-fields">
-        <input
-          type="text"
-          name="first_name"
-          placeholder="First name"
-          class="input-field"
-          required
-        />
-        <input
-          type="text"
-          name="last_name"
-          placeholder="Last name"
-          class="input-field"
-          required
-        />
-      </div>
+      <input
+        type="text"
+        name="full_name"
+        placeholder="Full Name"
+        class="input-field full-width"
+        required
+      />
       <input
         type="email"
         name="email"

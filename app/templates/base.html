@@ -19,9 +19,49 @@
     />
   </head>
   <body class="{% if hide_navbar %}center-page{% endif %}">
-    {% if not hide_navbar %} {% include "navbar.html" %} {% endif %} {% block
-    content %}
+    {% if not hide_navbar %} {% include "navbar.html" %} {% endif %}
+
+    <!-- Global Flash Messages -->
+    <div id="global-flash-messages"></div>
+
+    {% block content %}
     <!-- Page-specific content goes here -->
     {% endblock %}
+
+    <script>
+                        function showPopup(message, type = "success") {
+                          const popup = document.createElement("div");
+                          popup.classList.add("popup-message");
+                          popup.classList.add(type);
+                          popup.textContent = message;
+                          document.body.appendChild(popup);
+
+                          // Automatically remove the popup after 3 seconds
+                          setTimeout(() => {
+                            popup.classList.add("hide");
+                            setTimeout(() => popup.remove(), 500);
+                          }, 3000);
+                        }
+
+      // Check for flash messages
+      document.addEventListener("DOMContentLoaded", () => {
+          const flashMessages = {{ get_flashed_messages(with_categories=True) | tojson | safe }};
+
+          if (flashMessages.length) {
+              flashMessages.forEach(([category, message]) => {
+                  // Correctly handle "caution" messages
+                  let type;
+                  if (category === 'error') {
+                      type = 'error';
+                  } else if (category === 'caution') {
+                      type = 'caution';
+                  } else {
+                      type = 'success';
+                  }
+                  showPopup(message, type);
+              });
+          }
+      });
+    </script>
   </body>
 </html>
