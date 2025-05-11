@@ -21,30 +21,39 @@ def welcome():
 @main.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        name = request.form.get('full_name')
-        email = request.form.get('email')
-        password = request.form.get('password')
+        name = request.form.get('full_name').strip()
+        email = request.form.get('email').strip().lower()
+        password = request.form.get('password').strip()
 
+        # Check for empty fields
         if not name or not email or not password:
-            flash("All fields are required","error")
+            flash("All fields are required.", "error")
             return redirect(url_for('main.signup'))
 
+        # Check if the username is already taken
+        existing_username = User.query.filter_by(name=name).first()
+        if existing_username:
+            flash("Username already taken. Please choose a different one.", "error")
+            return redirect(url_for('main.signup'))
 
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            flash('Email already registered. Please log in',"caution")
+        # Check if the email is already registered
+        existing_email = User.query.filter_by(email=email).first()
+        if existing_email:
+            flash("Email already registered. Please log in.", "caution")
             return redirect(url_for('main.login'))
 
+        # Create the new user
         user = User(name=name, email=email)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
 
         print(f"[SIGNUP] New user created: {user.name} | {user.email}")
-        flash('Signup successful. Please log in')
+        flash("Signup successful. Please log in.", "success")
         return redirect(url_for('main.login'))
 
     return render_template('signup.html')
+
 
 
 
@@ -430,6 +439,12 @@ def update_username():
     new_username = request.form.get('username').strip()
     password = request.form.get('password').strip()
     
+    # Check if the username is already taken
+    existing_username = User.query.filter_by(name=new_username).first()
+    if existing_username:
+        flash("Username already taken. Please choose a different one.", "error")
+        return redirect(url_for('main.settings'))
+
     # Verify password
     if not user.check_password(password):
         flash("Incorrect password. Please try again.","error")
