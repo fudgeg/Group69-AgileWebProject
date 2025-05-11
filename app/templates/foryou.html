@@ -1,143 +1,116 @@
-{% extends "base.html" %} {% block title %}For You – Soul Maps{% endblock %} {%
-block content %}
+{% extends "base.html" %} {% block title %}For You – Soul Maps{% endblock %}
+{% block content %}
 <div class="home-container">
-  <h2>For You</h2>
 
-  <div class="content">
-    <div class="recommended-section">
-      <h3>Recommended Media Maps</h3>
-      <ul>
-        <li><b>Dark Matter</b> — trending sci-fi show map</li>
-        <li><b>Mistborn</b> — epic fantasy book journey</li>
-        <li>
-          <b>Everything Everywhere All At Once</b> — multiverse madness movie
-          map
-        </li>
-      </ul>
+  <div class="text-center">
+    <h2 class="fw-bold">Your Media Breakdown</h2>
+  </div>
+
+  <!-- Brain background image -->
+   <!--
+        <div class="brain-image my-4 d-flex justify-content-center">
+        <img 
+          src="{{ url_for('static', filename='media/brainNetwork.png') }}" 
+          alt="Brain Network"
+          class="img-fluid"
+          style="max-width: 2660;"
+        />
+        </div>
+    -->
+
+  <!-- Media type count display -->
+  <div class="row text-center justify-content-center mb-5" style="font-family: 'Comic Sans MS', cursive, sans-serif; font-size: 1.2rem;">
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename='media/books.png') }}" alt="Books" width="30" class="me-2">
+      <strong>Books:</strong> {{ media_counts['Books'] }}
     </div>
-
-    <div class="brain-image">
-      <img 
-      src="{{ url_for('static', filename='media/brainNetwork.png') }}" 
-      alt="Brain Network"
-      />
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename='media/movies.png') }}" alt="Movies" width="30" class="me-2">
+      <strong>Movies:</strong> {{ media_counts['Movies'] }}
     </div>
-
-    <div class="trending-section">
-      <h3>Trending in Your Network</h3>
-      <ul>
-        <li><b>Bob</b> recommends <i>The Three-Body Problem</i></li>
-        <li><b>Alice</b> is loving <i>Severance</i></li>
-        <li><b>Charlie</b> just finished <i>The Sandman</i></li>
-      </ul>
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename='media/tv.png') }}" alt="TV Shows" width="30" class="me-2">
+      <strong>TV Shows:</strong> {{ media_counts['TV Shows'] }}
     </div>
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename='media/music.png') }}" alt="Music" width="30" class="me-2">
+      <strong>Music:</strong> {{ media_counts['Music'] }}
+    </div>
+  </div>
 
-    <div class="discover-section">
-      <h3 class="text-center">Media Type Breakdown</h3>
+  <!-- Genre Pie Charts -->
+  <div class="text-center mb-4">
+    <h3>Top Genres </h3>
+  </div>
 
-      <!-- Main Pie Chart -->
-      <canvas id="mediaChart" width="400" height="400" class="d-block mx-auto"></canvas>
+  <div class="row text-center">
+    {% for media_type, genres in genre_breakdowns.items() %}
+      {% if genres %}
+        <div class="col-12 col-md-6 col-lg-3 mb-5">
+          <h5>{{ media_type }}</h5>
+          <canvas id="{{ media_type | replace(' ', '_') }}_genre_chart" width="250" height="250"></canvas>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
 
-      <!-- Embed media type counts as JSON for Chart.js to render the main pie chart -->
-      <div id="media-data" data-json='{{ media_counts | tojson | safe }}' style="display: none;"></div>
+  <!--  Embed genre breakdowns as JSON for each media type;
+        used by js to render labeled pie charts dynamically  -->
 
-      <!-- Mini Genre Chart -->
-      <div id="mini-chart-container" class="text-center mt-5" style="display: none;">
-        <h5 id="mini-chart-title"></h5>
-        <canvas id="miniChart" width="300" height="300" class="d-block mx-auto"></canvas>
-      </div>
+  <div id="genre-breakdowns" data-json='{{ genre_breakdowns | tojson | safe }}' style="display: none;"></div>
 
-      <!-- Embed genre breakdowns per media type as JSON for generating mini charts on user interaction -->
-      <div id="genre-breakdowns" data-json='{{ genre_breakdowns | tojson | safe }}' style="display: none;"></div>
+  <!--  Load Chart.js and the DataLabels plugin to render pie charts for genre breakdowns   
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <script>
+    const genreData = JSON.parse(document.getElementById("genre-breakdowns").dataset.json);
+    //colour palete for graph, rn its earthy tones
+    const colors = [
+      "#8d5524", "#c68642", "#e0ac69", "#f1c27d",
+      "#6b4226", "#a47551", "#967259", "#a37c27"
+    ];
 
-      <!-- Load Chart.js library for rendering visual analytics (media breakdown & genre charts) -->
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script>
-        const mediaData = JSON.parse(document.getElementById("media-data").dataset.json);
-        const genreBreakdowns = JSON.parse(document.getElementById("genre-breakdowns").dataset.json);
-        let miniChart = null;
+    // Loop through each media type (Books, Movies, etc.)
+    // and generate a corresponding pie chart showing its genre distribution.
+    // Each chart is drawn on a <canvas> with an ID based on the media type.
+    Object.entries(genreData).forEach(([mediaType, genres]) => {
+      const canvasId = `${mediaType.replace(/ /g, '_')}_genre_chart`;
+      const ctx = document.getElementById(canvasId);
+      if (!ctx) return;
 
-        const ctxMain = document.getElementById("mediaChart").getContext("2d");
-        const mainChart = new Chart(ctxMain, {
-          type: 'pie',
-          data: {
-            labels: Object.keys(mediaData),
-            datasets: [{
-              data: Object.values(mediaData),
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.6)",   // Books colour
-                "rgba(54, 162, 235, 0.6)",   // Movies colour
-                "rgba(255, 206, 86, 0.6)",   // TV Shows colour
-                "rgba(75, 192, 192, 0.6)"    // Music colour
-              ],
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: 'bottom' },
-              title: { display: false }
-            },
-            onClick: (event, elements) => {
-              if (elements.length > 0) {
-                const index = elements[0].index;
-                const mediaType = mainChart.data.labels[index];
-                const genreData = genreBreakdowns[mediaType];
-
-                if (!genreData || Object.keys(genreData).length === 0) return;
-
-                const miniCtx = document.getElementById("miniChart").getContext("2d");
-                if (miniChart) miniChart.destroy();
-
-                document.getElementById("mini-chart-title").textContent = `Genres in ${mediaType}`;
-                document.getElementById("mini-chart-container").style.display = "block";
-
-                miniChart = new Chart(miniCtx, {
-                  type: 'bar',
-                  data: {
-                    labels: Object.keys(genreData),
-                    datasets: [{
-                      label: 'Genre Count',
-                      data: Object.values(genreData),
-                      backgroundColor: "rgba(54, 162, 235, 0.6)",
-                      borderColor: "rgba(54, 162, 235, 1)",
-                      borderWidth: 1
-                    }]
-                  },
-                  options: {
-                    responsive: true,
-                    indexAxis: 'x',  //  makes it vertical
-                    scales: {
-                      x: {
-                        beginAtZero: true,
-                        title: {
-                          display: true,
-                          text: 'Entries'
-                        }
-                      },
-                      y: {
-                        title: {
-                          display: true,
-                          text: 'Genres'
-                        }
-                      }
-                    },
-                    plugins: {
-                      legend: { display: false },
-                      title: {
-                        display: false
-                      }
-                    }
-                  }
-                });
-
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(genres),
+          datasets: [{
+            data: Object.values(genres),
+            backgroundColor: colors.slice(0, Object.keys(genres).length),
+            borderColor: "#fff",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              color: '#fff',
+              font: {
+                family: 'Comic Sans MS',
+                weight: 'bold',
+                size: 18
+              },
+              formatter: (value, context) => {
+                return context.chart.data.labels[context.dataIndex];
               }
             }
-          }
-        });
-      </script>
-    </div>
-
-  </div>
+          },
+          responsive: true,
+          maintainAspectRatio: true
+        },
+        plugins: [ChartDataLabels]
+      });
+    });
+  </script>
 </div>
 {% endblock %}
