@@ -5,43 +5,139 @@ block content %}
     background-color: #dce9d5 !important; /* matches the Home page */
   }
 </style>
-<div class="page-wrapper">
-  <div class="upload-box">
-    <h2>Upload Your Media</h2>
+
+<div class="container py-5">
+  <div class="card p-4 shadow-lg">
+    <h2 class="mb-4 text-center">Upload Your Media</h2>
     <form method="POST">
+      <!-- Media Type Selection -->
       <div class="form-group">
         <label for="mediaType">Media Type:</label>
-        <select id="mediaType" name="mediaType" required class="form-control">
+        <select id="mediaType" name="media_type" class="form-control" required onchange="toggleFields()">
           <option value="">-- Choose One --</option>
-          <option value="Book">Book</option>
-          <option value="TV Show">TV Show</option>
-          <option value="Movie">Movie</option>
-          <option value="Music">Music</option>
+          <option value="book">Book</option>
+          <option value="tv_show">TV Show</option>
+          <option value="movie">Movie</option>
+          <option value="music">Music</option>
         </select>
       </div>
 
+      <!-- Shared Fields -->
       <div class="form-group">
         <label for="mediaTitle">Title:</label>
-        <input
-          type="text"
-          id="mediaTitle"
-          name="mediaTitle"
-          class="form-control"
-          placeholder="e.g. Dune, Reputation"
-          required
-        />
+        <input type="text" id="mediaTitle" name="title" class="form-control" required />
       </div>
 
-      <button type="submit" class="submit-btn">Submit</button>
+      <div class="form-group">
+        <label for="rating">Rating (1–5):</label>
+        <input type="number" id="rating" name="rating" class="form-control" min="1" max="5" />
+      </div>
+
+      <div class="form-group">
+        <label for="comment">Comment:</label>
+        <textarea id="comment" name="comment" class="form-control"></textarea>
+      </div>
+
+      <!-- Book-specific Fields -->
+      <div id="bookFields" style="display: none;">
+        <div class="form-group"><label>Author:</label><input type="text" name="author" class="form-control" /></div>
+        <div class="form-group">
+          <label>Genre:</label>
+          <select name="genre" class="form-control">
+            <option value="">-- Choose Genre --</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Sci-Fi">Sci-Fi</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Memoir">Memoir</option>
+            <option value="Non-Fiction">Non-Fiction</option>
+            <option value="Romance">Romance</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Historical">Historical</option>
+          </select>
+        </div>
+        
+        <div class="form-group"><label>Date Started:</label><input type="date" name="date_started" class="form-control" /></div>
+        <div class="form-group"><label>Date Finished:</label><input type="date" name="date_finished" class="form-control" /></div>
+        <div class="form-group">
+          <label>Status:</label>
+          <select name="status" class="form-control">
+            <option value="">-- Select Status --</option>
+            <option value="in_progress">In Progress</option>
+            <option value="finished">Finished</option>
+            <option value="abandoned">Abandoned</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Movie-specific Fields -->
+      <div id="movieFields" style="display: none;">
+        <div class="form-group">
+          <label>Genre:</label>
+          <select name="genre" class="form-control">
+            <option value="">-- Choose Genre --</option>
+            <option value="Drama">Drama</option>
+            <option value="Action">Action</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Thriller">Thriller</option>
+            <option value="Horror">Horror</option>
+            <option value="Documentary">Documentary</option>
+            <option value="Animation">Animation</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Watched Date:</label><input type="date" name="watched_date" class="form-control" /></div>
+      </div>
+
+      <!-- TV Show-specific Fields -->
+      <div id="tvShowFields" style="display: none;">
+        <div class="form-group">
+          <label>Genre:</label>
+          <select name="genre" class="form-control">
+            <option value="">-- Choose Genre --</option>
+            <option value="Drama">Drama</option>
+            <option value="Action">Action</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Thriller">Thriller</option>
+            <option value="Horror">Horror</option>
+            <option value="Documentary">Documentary</option>
+            <option value="Animation">Animation</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Watched Date:</label><input type="date" name="watched_date" class="form-control" /></div>
+      </div>
+
+      <!-- Music-specific Fields -->
+      <div id="musicFields" style="display: none;">
+        <div class="form-group"><label>Artist:</label><input type="text" name="artist" class="form-control" /></div>
+        <div class="form-group">
+          <label>Genre:</label>
+          <select name="genre" class="form-control">
+            <option value="">-- Choose Genre --</option>
+            <option value="Pop">Pop</option>
+            <option value="Rock">Rock</option>
+            <option value="Jazz">Jazz</option>
+            <option value="Classical">Classical</option>
+            <option value="Hip-Hop">Hip-Hop</option>
+            <option value="R&B">R&B</option>
+            <option value="Electronic">Electronic</option>
+            <option value="Indie">Indie</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-dark mt-3">Submit</button>
     </form>
 
     <hr />
     <h3 class="mt-4">Submitted Entries</h3>
     <ul>
       {% for entry in entries %}
-      <li><strong>{{ entry.media_type }}:</strong> {{ entry.title }}</li>
+        <li><strong>{{ entry.media_type|capitalize }}:</strong> {{ entry.title }}</li>
       {% endfor %}
     </ul>
   </div>
 </div>
+
+<!-- Load JavaScript logic from static file -->
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
 {% endblock %}
