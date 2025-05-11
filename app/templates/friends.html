@@ -52,7 +52,7 @@ block content %}
             method="POST"
             action="{{ url_for('main.add_friend', friend_id=person.id) }}"
           >
-            <button type="submit">Add Friend</button>
+            <button type="submit" class="friends-submit">Add</button>
           </form>
         </div>
         {% else %}

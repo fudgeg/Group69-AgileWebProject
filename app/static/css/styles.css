@@ -706,17 +706,22 @@ left: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  overflow: hidden;
+  max-height: 400px; 
+  padding-right: 10px;
+  overflow-y: hidden;
 }
 
 .friend-card {
   display: flex;
   align-items: center;
   gap: 15px;
-  background-color: #dce9d5;
-  padding: 10px;
+  background-color: #dce9d5; 
+  padding: 10px 20px;
   border-radius: 20px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  justify-content: space-between;
+  max-width: 600px;
+  width: 100%;
 }
 
 .friend-pfp {
@@ -727,39 +732,43 @@ left: 20px;
   border: 2px solid #204118;
 }
 
+.friend-card img {
+  flex-shrink: 0;
+}
+
 .friend-name {
   font-size: 18px;
   font-weight: bold;
   color: #204118;
+  flex-grow: 1;  
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Scrollable friends list */
-.scrollable-friends {
-  overflow-y: auto;
-  max-height: 400px;  /* Ensure this is smaller than the container height */
-  padding-right: 10px;
-}
-
-/* Hide scrollbar for a cleaner look */
-.scrollable-friends::-webkit-scrollbar {
+.friends-list::-webkit-scrollbar {
   width: 6px;
 }
 
-.scrollable-friends::-webkit-scrollbar-thumb {
+.friends-list::-webkit-scrollbar-thumb {
   background-color: #204118;
   border-radius: 10px;
 }
 
-.scrollable-friends::-webkit-scrollbar-thumb:hover {
+.friends-list::-webkit-scrollbar-thumb:hover {
   background-color: #376e35;
 }
 
-/* Keep the friend cards within the scrollable area */
-.scrollable-friends .friend-card {
+.recommended-section .friends-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.recommended-section .friend-card {
   flex-shrink: 0;
 }
 
-/* ====================== Friend Search ====================== */
 .friend-search-container {
   display: flex;
   justify-content: center;
@@ -775,12 +784,12 @@ left: 20px;
   font-size: 16px;
 }
 
-.friend-search-container button {
+.friend-search-container button, .friends-submit {
   background-color: #204118;
   color: #ffffff;
   border: none;
   border-radius: 20px;
-  padding: 10px 20px;
+  padding: 5px 20px;
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -789,6 +798,89 @@ left: 20px;
 
 .friend-search-container button:hover {
   background-color: #376e35;
+}
+
+/* ====================== Friend Search Page ====================== */
+.search-results-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+    min-height: 100vh;
+  background-color: #dce9d5;
+}
+
+.search-results-title {
+    margin-bottom: 30px;
+    color: #204118;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+.search-results-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+    padding: 0 20px;
+}
+
+.result-container {
+    background-color: #9ebf8f;
+    border-radius: 20px;
+    padding: 20px 30px;
+    width: 100%;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.result-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Profile Picture Styling */
+.result-container .friend-pfp {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #204118;
+    object-fit: cover;
+}
+
+/* Name Styling */
+.result-container .friend-name {
+    flex-grow: 1;
+    color: #204118;
+    font-size: 20px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Button Styling */
+.result-container .friends-submit {
+    background-color: #204118;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.result-container .friends-submit:hover {
+    background-color: #376e35;
+    color: #ffffff;
 }
 
 /* ====================== Import Page====================== */
