@@ -3,7 +3,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from .models import db, MediaEntry, User
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-
+from datetime import datetime
+from app.models import db, MediaEntry, Book, Movie, TVShow, Music
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -157,14 +158,64 @@ def upload_page():
         return redirect(url_for('main.login'))
 
     if request.method == 'POST':
-        media_type = request.form.get('mediaType')
-        title = request.form.get('mediaTitle')
-        if media_type and title:
-            new_entry = MediaEntry(media_type=media_type, title=title, user_id=user_id)
-            db.session.add(new_entry)
-            db.session.commit()
-            flash("Media entry added.")
+        media_type = request.form.get('media_type')
+        title = request.form.get('title')
+        rating = request.form.get('rating') or None
+        comment = request.form.get('comment') or None
 
+        def parse_date(val):
+            return datetime.strptime(val, '%Y-%m-%d') if val else None
+
+        if media_type == 'book':
+            entry = Book(
+                media_type='book',
+                title=title,
+                rating=rating,
+                comments=comment,
+                genre=request.form.get('genre'),
+                author=request.form.get('author'),
+                date_started=parse_date(request.form.get('date_started')),
+                date_finished=parse_date(request.form.get('date_finished')),
+                status=request.form.get('status'),
+                user_id=user_id
+            )
+        elif media_type == 'movie':
+            entry = Movie(
+                media_type='movie',
+                title=title,
+                rating=rating,
+                comments=comment,
+                genre=request.form.get('genre'),
+                consumed_date=parse_date(request.form.get('watched_date')),
+                user_id=user_id
+            )
+        elif media_type == 'tv_show':
+            entry = TVShow(
+                media_type='tv_show',
+                title=title,
+                rating=rating,
+                comments=comment,
+                genre=request.form.get('genre'),
+                consumed_date=parse_date(request.form.get('watched_date')),
+                user_id=user_id
+            )
+        elif media_type == 'music':
+            entry = Music(
+                media_type='music',
+                title=title,
+                rating=rating,
+                comments=comment,
+                genre=request.form.get('genre'),
+                artist=request.form.get('artist'),
+                user_id=user_id
+            )
+        else:
+            flash("Invalid media type selected.", "error")
+            return redirect(url_for('main.upload_page'))
+
+        db.session.add(entry)
+        db.session.commit()
+        flash("Media entry added successfully!", "success")
         return redirect(url_for('main.upload_page'))
 
     # Show only the entries for the logged-in user only by filtering by user_id

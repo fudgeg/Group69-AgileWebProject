@@ -38,13 +38,66 @@ class User(db.Model):
         return f"<User {self.email}>"
 
 class MediaEntry(db.Model):
+    __tablename__ = 'media_entry'
     id = db.Column(db.Integer, primary_key=True)
     media_type = db.Column(db.String(50), nullable=False)
-    title = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    rating = db.Column(db.Integer, nullable=True)
+    # Optional Comments Field
+    comments = db.Column(db.Text, nullable=True)
+    consumed_date = db.Column(db.Date, nullable=True)
+    is_favorite = db.Column(db.Boolean, default=False)
     # Foreign key to link media entry to the User
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     # Relationship to access User from MediaEntry (entry.user)
     user = db.relationship('User', backref='media_entries')
 
+    __mapper_args__ = {
+        'polymorphic_identity': 'media_entry',
+        'polymorphic_on': media_type
+    }
+
     def __repr__(self):
         return f"<{self.media_type}: {self.title}>"
+
+class Movie(MediaEntry):
+    __tablename__ = 'movies'
+    id = db.Column(db.Integer, db.ForeignKey('media_entry.id'), primary_key=True)
+    genre = db.Column(db.String(50), nullable=True)
+    watched_date = db.Column(db.Date, nullable=True)
+    # Relationship to access MediaEntry from Movie (movie.media_entry)
+   
+    __mapper_args__ = {'polymorphic_identity': 'movie'}
+
+    def __repr__(self):
+        return f"<Movie {self.title}, Genre: {self.genre}>"
+    
+class TVShow(MediaEntry):
+    __tablename__ = 'tv_shows'
+    id = db.Column(db.Integer, db.ForeignKey('media_entry.id'), primary_key=True)
+    genre= db.Column(db.String(50), nullable=True)
+    watched_date = db.Column(db.Date, nullable=True)
+    __mapper_args__ = {'polymorphic_identity': 'tv_show'}
+    def __repr__(self):
+        return f"<TVShow {self.title}, Genre: {self.genre}>"
+class Music(MediaEntry):
+    __tablename__ = 'music'
+    id = db.Column(db.Integer, db.ForeignKey('media_entry.id'), primary_key=True)
+    genre = db.Column(db.String(50), nullable=True)
+    artist = db.Column(db.String(100), nullable=True)
+    __mapper_args__ = {'polymorphic_identity': 'music'}
+    def __repr__(self):
+        return f"<Music {self.title}, Artist: {self.artist}>"
+
+class Book(MediaEntry):
+    __tablename__ = 'books'
+    id = db.Column(db.Integer, db.ForeignKey('media_entry.id'), primary_key=True)
+    genre = db.Column(db.String(50), nullable=True)
+    author = db.Column(db.String(100), nullable=True)
+    date_started = db.Column(db.Date, nullable=True)
+    date_finished = db.Column(db.Date, nullable=True)
+    status = db.Column(db.String(20), nullable=True) # e.g., "reading", "completed", "on hold"
+    # Relationship to access MediaEntry from Book (book.media_entry)
+    __mapper_args__ = {'polymorphic_identity': 'book'}
+    def __repr__(self):
+        return f"<Book {self.title}, Author: {self.author}>"
