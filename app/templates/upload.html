@@ -43,7 +43,7 @@ block content %}
         <div class="form-group"><label>Author:</label><input type="text" name="author" class="form-control" /></div>
         <div class="form-group">
           <label>Genre:</label>
-          <select name="genre" class="form-control">
+          <select name="book_genre" class="form-control">
             <option value="">-- Choose Genre --</option>
             <option value="Fiction">Fiction</option>
             <option value="Sci-Fi">Sci-Fi</option>
@@ -73,7 +73,7 @@ block content %}
       <div id="movieFields" style="display: none;">
         <div class="form-group">
           <label>Genre:</label>
-          <select name="genre" class="form-control">
+          <select name="movie_genre" class="form-control">
             <option value="">-- Choose Genre --</option>
             <option value="Drama">Drama</option>
             <option value="Action">Action</option>
@@ -91,7 +91,7 @@ block content %}
       <div id="tvShowFields" style="display: none;">
         <div class="form-group">
           <label>Genre:</label>
-          <select name="genre" class="form-control">
+          <select name="tvshow_genre" class="form-control">
             <option value="">-- Choose Genre --</option>
             <option value="Drama">Drama</option>
             <option value="Action">Action</option>
@@ -110,7 +110,7 @@ block content %}
         <div class="form-group"><label>Artist:</label><input type="text" name="artist" class="form-control" /></div>
         <div class="form-group">
           <label>Genre:</label>
-          <select name="genre" class="form-control">
+          <select name="music_genre" class="form-control">
             <option value="">-- Choose Genre --</option>
             <option value="Pop">Pop</option>
             <option value="Rock">Rock</option>
@@ -131,7 +131,8 @@ block content %}
     <h3 class="mt-4">Submitted Entries</h3>
     <ul>
       {% for entry in entries %}
-        <li><strong>{{ entry.media_type|capitalize }}:</strong> {{ entry.title }}</li>
+      <!-- shows media entry plus genre -->
+      <li><strong>{{ entry.media_type|capitalize }}:</strong> {{ entry.title }} {% if entry.genre %}— <em>{{ entry.genre }}</em>{% endif %}</li>
       {% endfor %}
     </ul>
   </div>

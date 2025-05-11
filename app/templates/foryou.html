@@ -17,9 +17,9 @@ block content %}
     </div>
 
     <div class="brain-image">
-      <img
-        src="{{ url_for('static', filename='media/brainNetwork.png') }}"
-        alt="Brain Network"
+      <img 
+      src="{{ url_for('static', filename='media/brainNetwork.png') }}" 
+      alt="Brain Network"
       />
     </div>
 
@@ -33,13 +33,111 @@ block content %}
     </div>
 
     <div class="discover-section">
-      <h3>Discover New Maps</h3>
-      <ul>
-        <li><i>Arcane</i> — animation lovers’ favorite</li>
-        <li><i>Dune</i> — spice must flow 🌌</li>
-        <li><i>Project Hail Mary</i> — science survival story</li>
-      </ul>
+      <h3 class="text-center">Media Type Breakdown</h3>
+
+      <!-- Main Pie Chart -->
+      <canvas id="mediaChart" width="400" height="400" class="d-block mx-auto"></canvas>
+
+      <!-- Embed media type counts as JSON for Chart.js to render the main pie chart -->
+      <div id="media-data" data-json='{{ media_counts | tojson | safe }}' style="display: none;"></div>
+
+      <!-- Mini Genre Chart -->
+      <div id="mini-chart-container" class="text-center mt-5" style="display: none;">
+        <h5 id="mini-chart-title"></h5>
+        <canvas id="miniChart" width="300" height="300" class="d-block mx-auto"></canvas>
+      </div>
+
+      <!-- Embed genre breakdowns per media type as JSON for generating mini charts on user interaction -->
+      <div id="genre-breakdowns" data-json='{{ genre_breakdowns | tojson | safe }}' style="display: none;"></div>
+
+      <!-- Load Chart.js library for rendering visual analytics (media breakdown & genre charts) -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+        const mediaData = JSON.parse(document.getElementById("media-data").dataset.json);
+        const genreBreakdowns = JSON.parse(document.getElementById("genre-breakdowns").dataset.json);
+        let miniChart = null;
+
+        const ctxMain = document.getElementById("mediaChart").getContext("2d");
+        const mainChart = new Chart(ctxMain, {
+          type: 'pie',
+          data: {
+            labels: Object.keys(mediaData),
+            datasets: [{
+              data: Object.values(mediaData),
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.6)",   // Books colour
+                "rgba(54, 162, 235, 0.6)",   // Movies colour
+                "rgba(255, 206, 86, 0.6)",   // TV Shows colour
+                "rgba(75, 192, 192, 0.6)"    // Music colour
+              ],
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' },
+              title: { display: false }
+            },
+            onClick: (event, elements) => {
+              if (elements.length > 0) {
+                const index = elements[0].index;
+                const mediaType = mainChart.data.labels[index];
+                const genreData = genreBreakdowns[mediaType];
+
+                if (!genreData || Object.keys(genreData).length === 0) return;
+
+                const miniCtx = document.getElementById("miniChart").getContext("2d");
+                if (miniChart) miniChart.destroy();
+
+                document.getElementById("mini-chart-title").textContent = `Genres in ${mediaType}`;
+                document.getElementById("mini-chart-container").style.display = "block";
+
+                miniChart = new Chart(miniCtx, {
+                  type: 'bar',
+                  data: {
+                    labels: Object.keys(genreData),
+                    datasets: [{
+                      label: 'Genre Count',
+                      data: Object.values(genreData),
+                      backgroundColor: "rgba(54, 162, 235, 0.6)",
+                      borderColor: "rgba(54, 162, 235, 1)",
+                      borderWidth: 1
+                    }]
+                  },
+                  options: {
+                    responsive: true,
+                    indexAxis: 'x',  //  makes it vertical
+                    scales: {
+                      x: {
+                        beginAtZero: true,
+                        title: {
+                          display: true,
+                          text: 'Entries'
+                        }
+                      },
+                      y: {
+                        title: {
+                          display: true,
+                          text: 'Genres'
+                        }
+                      }
+                    },
+                    plugins: {
+                      legend: { display: false },
+                      title: {
+                        display: false
+                      }
+                    }
+                  }
+                });
+
+              }
+            }
+          }
+        });
+      </script>
     </div>
+
   </div>
 </div>
 {% endblock %}

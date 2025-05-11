@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from app.models import db, MediaEntry, Book, Movie, TVShow, Music
+from collections import Counter
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -166,13 +167,27 @@ def upload_page():
         def parse_date(val):
             return datetime.strptime(val, '%Y-%m-%d') if val else None
 
+        #  Get genre from the correct field based on media_type
+        if media_type == 'book':
+            genre = request.form.get('book_genre')
+        elif media_type == 'movie':
+            genre = request.form.get('movie_genre')
+        elif media_type == 'tv_show':
+            genre = request.form.get('tvshow_genre')
+        elif media_type == 'music':
+            genre = request.form.get('music_genre')
+        else:
+            genre = None  # Fallback
+
+        genre = genre.strip().title() if genre else "Unknown"
+
         if media_type == 'book':
             entry = Book(
                 media_type='book',
                 title=title,
                 rating=rating,
                 comments=comment,
-                genre=request.form.get('genre'),
+                genre=genre,
                 author=request.form.get('author'),
                 date_started=parse_date(request.form.get('date_started')),
                 date_finished=parse_date(request.form.get('date_finished')),
@@ -185,7 +200,7 @@ def upload_page():
                 title=title,
                 rating=rating,
                 comments=comment,
-                genre=request.form.get('genre'),
+                genre=genre,
                 consumed_date=parse_date(request.form.get('watched_date')),
                 user_id=user_id
             )
@@ -195,8 +210,8 @@ def upload_page():
                 title=title,
                 rating=rating,
                 comments=comment,
-                genre=request.form.get('genre'),
-                consumed_date=parse_date(request.form.get('watched_date')),
+                genre=genre,
+                watched_date=parse_date(request.form.get('watched_date')),
                 user_id=user_id
             )
         elif media_type == 'music':
@@ -205,7 +220,7 @@ def upload_page():
                 title=title,
                 rating=rating,
                 comments=comment,
-                genre=request.form.get('genre'),
+                genre=genre,
                 artist=request.form.get('artist'),
                 user_id=user_id
             )
@@ -221,6 +236,7 @@ def upload_page():
     # Show only the entries for the logged-in user only by filtering by user_id
     entries = MediaEntry.query.filter_by(user_id=user_id).all()
     return render_template('upload.html', entries=entries)
+
 
 @main.route('/settings')
 def settings():
@@ -439,4 +455,37 @@ def delete_account():
 
 @main.route('/foryou')
 def for_you():
-    return render_template('foryou.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You must be logged in to access this page.", "error")
+        return redirect(url_for('main.login'))
+
+    def get_genre_counts(queryset):
+        counts = {}
+        for entry in queryset:
+            if entry.genre:
+                counts[entry.genre] = counts.get(entry.genre, 0) + 1
+        return counts
+
+    books = Book.query.filter_by(user_id=user_id).all()
+    movies = Movie.query.filter_by(user_id=user_id).all()
+    tv_shows = TVShow.query.filter_by(user_id=user_id).all()
+    music = Music.query.filter_by(user_id=user_id).all()
+
+    media_counts = {
+        "Books": len(books),
+        "Movies": len(movies),
+        "TV Shows": len(tv_shows),
+        "Music": len(music),
+    }
+
+    genre_breakdowns = {
+        "Books": get_genre_counts(books),
+        "Movies": get_genre_counts(movies),
+        "TV Shows": get_genre_counts(tv_shows),
+        "Music": get_genre_counts(music),
+    }
+
+    return render_template("foryou.html", media_counts=media_counts, genre_breakdowns=genre_breakdowns)
+
+
