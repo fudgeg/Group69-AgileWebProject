@@ -149,6 +149,33 @@ def friends():
     return render_template('friends.html', user=user, friends=friends, recommended=recommended,user_media=user_media)
 
 
+@main.route('/search', methods=['GET'])
+def search_users():
+    # Ensure the user is logged in
+    user = User.query.get(session.get('user_id'))
+    if not user:
+        flash("Please log in to search for friends.", "error")
+        return redirect(url_for('main.login'))
+
+    # Get the search query from the URL
+    query = request.args.get('query', '').strip()
+    
+    # Make sure the query is not empty
+    if not query:
+        flash("Please enter a valid username to search.", "error")
+        return redirect(url_for('main.friends'))
+
+    # Fetch users whose names contain the search term, excluding the current user and existing friends
+    search_results = User.query.filter(
+        User.name.ilike(f"%{query}%"),
+        User.id != user.id,
+        ~User.id.in_([f.id for f in user.friends])
+    ).all()
+
+    # Render the search results
+    return render_template('friends_search.html', user=user, search_results=search_results)
+
+
 
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
 def add_friend(friend_id):

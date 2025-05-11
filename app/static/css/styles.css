@@ -698,6 +698,7 @@ left: 20px;
   width: 300px;
   text-align: center;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  height: 500px;  /* Fixed height */
 }
 
 .friends-list {
@@ -705,6 +706,7 @@ left: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow: hidden;
 }
 
 .friend-card {
@@ -729,6 +731,64 @@ left: 20px;
   font-size: 18px;
   font-weight: bold;
   color: #204118;
+}
+
+/* Scrollable friends list */
+.scrollable-friends {
+  overflow-y: auto;
+  max-height: 400px;  /* Ensure this is smaller than the container height */
+  padding-right: 10px;
+}
+
+/* Hide scrollbar for a cleaner look */
+.scrollable-friends::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-friends::-webkit-scrollbar-thumb {
+  background-color: #204118;
+  border-radius: 10px;
+}
+
+.scrollable-friends::-webkit-scrollbar-thumb:hover {
+  background-color: #376e35;
+}
+
+/* Keep the friend cards within the scrollable area */
+.scrollable-friends .friend-card {
+  flex-shrink: 0;
+}
+
+/* ====================== Friend Search ====================== */
+.friend-search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.friend-search-container input {
+  width: 300px;
+  padding: 10px;
+  border-radius: 20px;
+  border: 2px solid #204118;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.friend-search-container button {
+  background-color: #204118;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  transition: background-color 0.3s;
+}
+
+.friend-search-container button:hover {
+  background-color: #376e35;
 }
 
 /* ====================== Import Page====================== */

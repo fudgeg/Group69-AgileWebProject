@@ -2,11 +2,23 @@
 block content %}
 <div class="home-container">
   <h2>Friends</h2>
+
+  <!-- Friend Search Section -->
+  <div class="friend-search-container">
+    <input
+      type="text"
+      id="friend-search-input"
+      placeholder="Enter Username"
+      onkeyup="searchFriends()"
+    />
+    <button onclick="submitFriendSearch()">Search</button>
+  </div>
+
   <div class="friends-page">
     <!-- Friends List -->
     <div class="friends-section">
       <h3>Your Friends</h3>
-      <div class="friends-list">
+      <div class="friends-list scrollable-friends">
         {% for friend in friends %}
         <div class="friend-card">
           <img
@@ -27,7 +39,7 @@ block content %}
     <div class="recommended-section">
       <h3>Recommended Connections</h3>
       <div class="friends-list">
-        {% for person in recommended %}
+        {% for person in recommended[:4] %}
         <div class="friend-card">
           <img
             src="{{ url_for('static', filename='media/' + person.profile_picture) }}"
@@ -50,4 +62,13 @@ block content %}
     </div>
   </div>
 </div>
+
+<script>
+  function submitFriendSearch() {
+    const query = document.getElementById("friend-search-input").value;
+    if (query.trim() !== "") {
+      window.location.href = "/search?query=" + encodeURIComponent(query);
+    }
+  }
+</script>
 {% endblock %}
