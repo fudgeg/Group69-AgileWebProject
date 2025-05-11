@@ -286,7 +286,7 @@ def upload_page():
         flash("Media entry added successfully!", "success")
         return redirect(url_for('main.upload_page'))
 
-    # Handle Media Sharing (merged from friend's code)
+    # Handle Media Sharing
     if request.method == 'POST' and 'media_id' in request.form and 'friend_id' in request.form:
         media_id = request.form.get('media_id')
         friend_id = request.form.get('friend_id')

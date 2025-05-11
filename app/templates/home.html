@@ -2,21 +2,33 @@
 block content %}
 <div class="home-container">
   <h2>Welcome to your homepage, {{ user.name }}!</h2>
+
   <div class="content">
+    <!-- Latest Friends Activity -->
     <div class="friends-activity">
       <h3>Latest Friends Activity</h3>
-      <ul>
-        {% for entry in friend_entries %}
+      <ul class="list-unstyled">
+        {% for entry in friend_entries %} {% set clean_title =
+        entry.title.replace(' (shared)', '') %} {% if '(shared)' in entry.title
+        %}
         <li>
-          <b>{{ entry.user.name }}</b> added <i>{{ entry.title }}</i> to {{
-          entry.media_type.lower() }} list
+          <strong>{{ entry.user.name }}</strong>
+          shared <em>{{ clean_title }}</em>
+          to their {{ entry.media_type.lower() }} list
         </li>
         {% else %}
+        <li>
+          <strong>{{ entry.user.name }}</strong>
+          added <em>{{ entry.title }}</em>
+          to their {{ entry.media_type.lower() }} list
+        </li>
+        {% endif %} {% else %}
         <li>No recent activity from friends.</li>
         {% endfor %}
       </ul>
     </div>
 
+    <!-- Brain Image -->
     <div class="brain-image">
       <img
         src="{{ url_for('static', filename='media/brainNetwork.png') }}"
@@ -24,12 +36,23 @@ block content %}
       />
     </div>
 
+    <!-- Most Recent Activity -->
     <div class="recent-activity">
       <h3>Most recent activity!</h3>
       <ol>
-        {% for entry in recent_entries %}
-        <li><strong>{{ entry.media_type }}</strong>: {{ entry.title }}</li>
+        {% for entry in recent_entries %} {% set clean_title =
+        entry.title.replace(' (shared)', '') %} {% if '(shared)' in entry.title
+        %}
+        <li>
+          <strong>{{ entry.media_type|capitalize }}:</strong> {{ clean_title }}
+          (shared)
+        </li>
         {% else %}
+        <li>
+          <strong>{{ entry.media_type|capitalize }}:</strong> {{ entry.title }}
+          (uploaded)
+        </li>
+        {% endif %} {% else %}
         <li>No recent entries yet.</li>
         {% endfor %}
       </ol>
