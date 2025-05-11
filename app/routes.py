@@ -1,11 +1,18 @@
 import os
+import io
+import base64
+import networkx as nx
+import matplotlib.pyplot as plt
+
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from .models import db, MediaEntry, User
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from app.models import db, MediaEntry, Book, Movie, TVShow, Music
+
 main = Blueprint('main', __name__)
+
 
 @main.route('/')
 def welcome():
@@ -116,6 +123,17 @@ def friends():
         flash("Please log in to view friends.","error")
         return redirect(url_for('main.login'))
 
+    # Handle Add Friend by name
+    if request.method == 'POST' and 'username_search' in request.form:
+        name_query = request.form['username_search'].strip()
+        if name_query:
+            other = User.query.filter_by(name=name_query).first()
+            if other and other.id != user.id and other not in user.friends:
+                user.friends.append(other)
+                other.friends.append(user)
+                db.session.commit()
+        return redirect(url_for('main.friends'))
+
     # Fetch the current user's friends
     friends = user.friends
 
@@ -125,7 +143,10 @@ def friends():
         ~User.id.in_([f.id for f in user.friends])
     ).all()
 
-    return render_template('friends.html', user=user, friends=friends, recommended=recommended)
+    # Fetch the user's own media entries for sharing
+    user_media = MediaEntry.query.filter_by(user_id=user.id).all()
+
+    return render_template('friends.html', user=user, friends=friends, recommended=recommended,user_media=user_media)
 
 
 
@@ -150,14 +171,60 @@ def add_friend(friend_id):
     return redirect(url_for('main.friends'))
 
 
+@main.route('/share_media', methods=['POST'])
+def share_media():
+    """Share one of the current user's media entries with a friend."""
+    user = User.query.get(session.get('user_id'))
+    if not user:
+        flash("Please log in to share media.","error")
+        return redirect(url_for('main.login'))
+
+    media_id  = request.form.get('media_id')
+    friend_id = request.form.get('friend_id')
+    media     = MediaEntry.query.get(media_id)
+    friend    = User.query.get(friend_id)
+
+    # Validate
+    if not media or not friend or friend not in user.friends:
+        flash("Invalid share request.","error")
+        return redirect(url_for('main.friends'))
+
+    # Prevent duplicates
+    exists = MediaEntry.query.filter_by(
+        user_id=friend.id,
+        media_type=media.media_type,
+        title=media.title
+    ).first()
+
+    if exists:
+        flash(f"{friend.name} already has “{media.title}”","caution")
+    else:
+        new_entry = MediaEntry(
+            media_type=media.media_type,
+            title=media.title,
+            user_id=friend.id
+        )
+        db.session.add(new_entry)
+        db.session.commit()
+        flash(f"Shared “{media.title}” with {friend.name}","success")
+
+    return redirect(url_for('main.friends'))
+
+
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to upload media.","error")
+        flash("You must be logged in to upload media.", "error")
+        return redirect(url_for('main.login'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
         return redirect(url_for('main.login'))
 
     if request.method == 'POST':
+        # Handle Media Upload
         media_type = request.form.get('media_type')
         title = request.form.get('title')
         rating = request.form.get('rating') or None
@@ -166,6 +233,7 @@ def upload_page():
         def parse_date(val):
             return datetime.strptime(val, '%Y-%m-%d') if val else None
 
+        # Create the correct media type
         if media_type == 'book':
             entry = Book(
                 media_type='book',
@@ -218,9 +286,43 @@ def upload_page():
         flash("Media entry added successfully!", "success")
         return redirect(url_for('main.upload_page'))
 
-    # Show only the entries for the logged-in user only by filtering by user_id
+    # Handle Media Sharing (merged from friend's code)
+    if request.method == 'POST' and 'media_id' in request.form and 'friend_id' in request.form:
+        media_id = request.form.get('media_id')
+        friend_id = request.form.get('friend_id')
+        media = MediaEntry.query.get(media_id)
+        friend = User.query.get(friend_id)
+
+        # Validate
+        if not media or not friend or friend not in user.friends:
+            flash("Invalid share request.", "error")
+            return redirect(url_for('main.friends'))
+
+        # Prevent duplicates
+        exists = MediaEntry.query.filter_by(
+            user_id=friend.id,
+            media_type=media.media_type,
+            title=media.title
+        ).first()
+
+        if exists:
+            flash(f"{friend.name} already has “{media.title}”", "caution")
+        else:
+            # Create a copy of the shared entry
+            new_entry = MediaEntry(
+                media_type=media.media_type,
+                title=media.title,
+                user_id=friend.id
+            )
+            db.session.add(new_entry)
+            db.session.commit()
+            flash(f"Shared “{media.title}” with {friend.name}", "success")
+        return redirect(url_for('main.friends'))
+
+    # Show only the entries for the logged-in user
     entries = MediaEntry.query.filter_by(user_id=user_id).all()
-    return render_template('upload.html', entries=entries)
+    return render_template('upload.html', user=user, entries=entries)
+
 
 @main.route('/settings')
 def settings():
@@ -236,8 +338,6 @@ def settings():
 
     profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
     return render_template('settings.html', user=user, profile_picture_url=profile_picture_url)
-
-
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
