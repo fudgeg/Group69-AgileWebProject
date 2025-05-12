@@ -478,11 +478,14 @@ def for_you():
         "TV Shows": len(tv_shows),
         "Music": len(music),
     }
-
+    movies = Movie.query.filter_by(user_id=user_id).all()
+    tv_shows = TVShow.query.filter_by(user_id=user_id).all()
+    combined_screen = movies + tv_shows
     genre_breakdowns = {
         "Books": get_genre_counts(books),
-        "Movies": get_genre_counts(movies),
-        "TV Shows": get_genre_counts(tv_shows),
+        #"Movies": get_genre_counts(movies),
+        #"TV Shows": get_genre_counts(tv_shows),
+        "Tv/Movies": get_genre_counts(combined_screen),  # combined category tv and movies 
         "Music": get_genre_counts(music),
     }
 
