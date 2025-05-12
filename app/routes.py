@@ -5,7 +5,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from app.models import db, MediaEntry, Book, Movie, TVShow, Music
+from app.utils import get_media_type_breakdown, get_user_media_identity
 main = Blueprint('main', __name__)
+
+
 
 @main.route('/')
 def welcome():
@@ -439,4 +442,11 @@ def delete_account():
 
 @main.route('/foryou')
 def for_you():
-    return render_template('foryou.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Please log in to access your dashboard.", "error")
+        return redirect(url_for('main.login'))
+
+    media_counts = get_media_type_breakdown(user_id)
+    identity_label = get_user_media_identity(media_counts)
+    return render_template("foryou.html", identity=identity_label, breakdown=media_counts)
