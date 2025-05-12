@@ -1,20 +1,123 @@
-{% extends "base.html" %}
-{% block title %} For You – Soul Maps{% endblock %}
 
+{% extends "base.html" %} {% block title %}For You – Soul Maps{% endblock %}
 {% block content %}
-<div class="container py-4">
-  <div class="card p-4 shadow-sm text-center">
-    <h2 class="mb-3">{{ identity }}</h2>
-    <p class="lead">Here's a summary of your media journey:</p>
+<div class="home-container">
 
-    <ul class="list-group list-group-flush mt-4">
-      {% for type, count in breakdown.items() %}
-      <li class="list-group-item d-flex justify-content-between">
-        <span class="text-capitalize">{{ type.replace('_', ' ') }}</span>
-        <span>{{ count }}</span>
-      </li>
-      {% endfor %}
-    </ul>
+  <div class="text-center">
+    <h2 class="mb-3">{{ identity }}</h2>
+     <p class="lead">Here's a summary of your media journey:</p>
   </div>
+
+  <!-- Brain background image -->
+   <!--
+        <div class="brain-image my-4 d-flex justify-content-center">
+        <img 
+          src="{{ url_for('static', filename='media/brainNetwork.png') }}" 
+          alt="Brain Network"
+          class="img-fluid"
+          style="max-width: 2660;"
+        />
+        </div>
+    -->
+
+  <!-- Media type count display -->
+  <div class="row text-center justify-content-center mb-5" style="font-family: 'Comic Sans MS', cursive, sans-serif; font-size: 1.2rem;">
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename='media/books.png') }}" alt="Books" width="30" class="me-2">
+      <strong>Books:</strong> {{ media_counts['Books'] }}
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename='media/movies.png') }}" alt="Movies" width="30" class="me-2">
+      <strong>Movies:</strong> {{ media_counts['Movies'] }}
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename='media/tv.png') }}" alt="TV Shows" width="30" class="me-2">
+      <strong>TV Shows:</strong> {{ media_counts['TV Shows'] }}
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename='media/music.png') }}" alt="Music" width="30" class="me-2">
+      <strong>Music:</strong> {{ media_counts['Music'] }}
+    </div>
+  </div>
+
+  <!-- Genre Pie Charts -->
+  <div class="text-center mb-4">
+    <h3>Top Genres </h3>
+  </div>
+
+  <div class="row justify-content-center text-center">
+    {% for media_type, genres in genre_breakdowns.items() %}
+      {% if genres %}
+        <div class="col-12 col-md-6 col-lg-3 mb-5">
+          <h5>{{ media_type }}</h5>
+          <canvas id="{{ media_type | replace(' ', '_') }}_genre_chart" 
+          style= "width: 450px ; height: 450px "
+          class="d-block mx-auto">
+        </canvas>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+
+
+  <!--  Embed genre breakdowns as JSON for each media type;
+        used by js to render labeled pie charts dynamically  -->
+
+  <div id="genre-breakdowns" data-json='{{ genre_breakdowns | tojson | safe }}' style="display: none;"></div>
+
+  <!--  Load Chart.js and the DataLabels plugin to render pie charts for genre breakdowns   
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <script>
+    const genreData = JSON.parse(document.getElementById("genre-breakdowns").dataset.json);
+    //colour palete for graph, rn its earthy tones
+    const colors = [
+      "#8d5524", "#c68642", "#e0ac69", "#f1c27d",
+      "#6b4226", "#a47551", "#967259", "#a37c27"
+    ];
+
+    // Loop through each media type (Books, Movies, etc.)
+    // and generate a corresponding pie chart showing its genre distribution.
+    // Each chart is drawn on a <canvas> with an ID based on the media type.
+    Object.entries(genreData).forEach(([mediaType, genres]) => {
+      const canvasId = `${mediaType.replace(/ /g, '_')}_genre_chart`;
+      const ctx = document.getElementById(canvasId);
+      if (!ctx) return;
+
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(genres),
+          datasets: [{
+            data: Object.values(genres),
+            backgroundColor: colors.slice(0, Object.keys(genres).length),
+            borderColor: "#fff",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              color: '#fff',
+              font: {
+                family: 'Comic Sans MS',
+                weight: 'bold',
+                size: 14
+              },
+              formatter: (value, context) => {
+                return context.chart.data.labels[context.dataIndex];
+              }
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: true
+        },
+        plugins: [ChartDataLabels]
+      });
+    });
+  </script>
 </div>
 {% endblock %}
