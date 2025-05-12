@@ -5,8 +5,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from app.models import db, MediaEntry, Book, Movie, TVShow, Music
+from app.utils import get_media_type_breakdown, get_user_media_identity
 from collections import Counter
 main = Blueprint('main', __name__)
+
+
 
 @main.route('/')
 def welcome():
@@ -478,17 +481,18 @@ def for_you():
         "TV Shows": len(tv_shows),
         "Music": len(music),
     }
-    movies = Movie.query.filter_by(user_id=user_id).all()
-    tv_shows = TVShow.query.filter_by(user_id=user_id).all()
+    
     combined_screen = movies + tv_shows
     genre_breakdowns = {
         "Books": get_genre_counts(books),
         #"Movies": get_genre_counts(movies),
         #"TV Shows": get_genre_counts(tv_shows),
-        "Tv/Movies": get_genre_counts(combined_screen),  # combined category tv and movies 
+        "Tv&Movies": get_genre_counts(combined_screen),  # combined category tv and movies 
         "Music": get_genre_counts(music),
     }
-
-    return render_template("foryou.html", media_counts=media_counts, genre_breakdowns=genre_breakdowns)
-
-
+    
+    
+    
+    identity_label = get_user_media_identity(media_counts)
+    
+    return render_template("foryou.html", identity=identity_label, media_counts=media_counts, genre_breakdowns=genre_breakdowns)
