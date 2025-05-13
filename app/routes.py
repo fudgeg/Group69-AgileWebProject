@@ -1,4 +1,4 @@
-import os
+import os 
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from .models import db, MediaEntry, User
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,13 +7,14 @@ from datetime import datetime
 from app.models import db, MediaEntry, Book, Movie, TVShow, Music
 from app.utils import get_media_type_breakdown, get_user_media_identity
 from collections import Counter
-main = Blueprint('main', __name__)
 
+main = Blueprint('main', __name__)
 
 
 @main.route('/')
 def welcome():
     return render_template('welcome.html')
+
 
 @main.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -25,7 +26,6 @@ def signup():
         if not name or not email or not password:
             flash("All fields are required","error")
             return redirect(url_for('main.signup'))
-
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
@@ -42,7 +42,6 @@ def signup():
         return redirect(url_for('main.login'))
 
     return render_template('signup.html')
-
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -70,14 +69,11 @@ def login():
     return render_template('login.html')
 
 
-
 @main.route('/logout')
 def logout():
     session.clear()  # Clear all session data to avoid leftover messages
     flash('You have been logged out',"caution")
     return redirect(url_for('main.welcome'))
-
-
 
 
 @main.route('/home')
@@ -96,10 +92,10 @@ def home():
         flash("User not found.","error")
         return redirect(url_for('main.login'))
 
-    # Query the most recent media entries (e.g., last 5)
+    # Query the most recent media entries 
     recent_entries = MediaEntry.query.order_by(MediaEntry.id.desc()).limit(5).all()
 
-    # ✅ Get media entries created by the user's friends (limit for performance)
+    # Get media entries created by the user's friends 
     friend_ids = [f.id for f in user.friends]
     friend_entries = (
         MediaEntry.query
@@ -109,8 +105,10 @@ def home():
         .all()
     )
 
-    return render_template('home.html', user=user, recent_entries=recent_entries, friend_entries=friend_entries)
-
+    return render_template('home.html',
+                           user=user,
+                           recent_entries=recent_entries,
+                           friend_entries=friend_entries)
 
 
 @main.route('/friends', methods=['GET', 'POST'])
@@ -120,17 +118,35 @@ def friends():
         flash("Please log in to view friends.","error")
         return redirect(url_for('main.login'))
 
-    # Fetch the current user's friends
+    # Handle Add-by-Username form
+    if request.method == 'POST' and 'username_search' in request.form:
+        name_query = request.form['username_search'].strip()
+        if name_query:
+            other = User.query.filter_by(name=name_query).first()
+            if other and other.id != user.id and other not in user.friends:
+                user.friends.append(other)
+                other.friends.append(user)
+                db.session.commit()
+                flash(f"Friend request sent to {other.name}!", "success")
+        return redirect(url_for('main.friends'))
+
+    # Confirmed friends
     friends = user.friends
 
-    # Fetch recommended connections (all users except current user and their friends)
+    # Recommended connections
     recommended = User.query.filter(
         User.id != user.id,
-        ~User.id.in_([f.id for f in user.friends])
+        ~User.id.in_([f.id for f in friends])
     ).all()
 
-    return render_template('friends.html', user=user, friends=friends, recommended=recommended)
+    # Fetch this user's own media entries for sharing
+    user_media = MediaEntry.query.filter_by(user_id=user.id).all()
 
+    return render_template('friends.html',
+                           user=user,
+                           friends=friends,
+                           recommended=recommended,
+                           user_media=user_media)
 
 
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
@@ -154,23 +170,67 @@ def add_friend(friend_id):
     return redirect(url_for('main.friends'))
 
 
+@main.route('/share_media', methods=['POST'])
+def share_media():
+    """Share one of the current user's media entries with a friend."""
+    user      = User.query.get(session.get('user_id'))
+    if not user:
+        flash("Please log in to share media.", "error")
+        return redirect(url_for('main.login'))
+
+    media_id  = request.form.get('media_id', type=int)
+    friend_id = request.form.get('friend_id', type=int)
+    media     = MediaEntry.query.get(media_id)
+    friend    = User.query.get(friend_id)
+
+    # Validate inputs & friendship
+    if not media or not friend or friend not in user.friends:
+        flash("Invalid share request.", "error")
+        return redirect(url_for('main.friends'))
+
+    # Build a shared title so it can be flagged in templates
+    shared_title = f"{media.title} (shared)"
+
+    # Prevent duplicate shares of the same shared entry
+    exists = MediaEntry.query.filter_by(
+        user_id=friend.id,
+        media_type=media.media_type,
+        title=shared_title
+    ).first()
+
+    if exists:
+        flash(f"{friend.name} already has “{media.title}”", "caution")
+    else:
+        new_entry = MediaEntry(
+            media_type=media.media_type,
+            title=shared_title,
+            user_id=friend.id
+        )
+        db.session.add(new_entry)
+        db.session.commit()
+        flash(f"Shared “{media.title}” with {friend.name}", "success")
+
+    return redirect(url_for('main.friends'))
+
+
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
     user_id = session.get('user_id')
     if not user_id:
-        flash("You must be logged in to upload media.","error")
+        flash("You must be logged in to upload media.", "error")
         return redirect(url_for('main.login'))
 
     if request.method == 'POST':
+        # these names match your upload.html:
         media_type = request.form.get('media_type')
-        title = request.form.get('title')
-        rating = request.form.get('rating') or None
-        comment = request.form.get('comment') or None
+        title      = request.form.get('title')
+        rating     = request.form.get('rating')  or None
+        comment    = request.form.get('comment') or None
 
         def parse_date(val):
             return datetime.strptime(val, '%Y-%m-%d') if val else None
 
-        #  Get genre from the correct field based on media_type
+        # pick the right genre field
         if media_type == 'book':
             genre = request.form.get('book_genre')
         elif media_type == 'movie':
@@ -180,10 +240,17 @@ def upload_page():
         elif media_type == 'music':
             genre = request.form.get('music_genre')
         else:
-            genre = None  # Fallback
+            genre = None
 
-        genre = genre.strip().title() if genre else "Unknown"
+        # normalize genre
+        genre = (genre or "").strip().title() or None
 
+        # validate that we have at least type and title
+        if not media_type or not title:
+            flash("Please select a media type and enter a title.", "error")
+            return redirect(url_for('main.upload_page'))
+
+        # Construct the correct subclass based on media_type
         if media_type == 'book':
             entry = Book(
                 media_type='book',
@@ -228,7 +295,7 @@ def upload_page():
                 user_id=user_id
             )
         else:
-            flash("Invalid media type selected.", "error")
+            flash("Invalid media type.", "error")
             return redirect(url_for('main.upload_page'))
 
         db.session.add(entry)
@@ -236,7 +303,7 @@ def upload_page():
         flash("Media entry added successfully!", "success")
         return redirect(url_for('main.upload_page'))
 
-    # Show only the entries for the logged-in user only by filtering by user_id
+    # GET: show only this user's entries
     entries = MediaEntry.query.filter_by(user_id=user_id).all()
     return render_template('upload.html', entries=entries)
 
@@ -255,8 +322,6 @@ def settings():
 
     profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
     return render_template('settings.html', user=user, profile_picture_url=profile_picture_url)
-
-
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
