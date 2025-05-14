@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% block title %}Home – Soul Maps{% endblock %}
 {% block content %}
@@ -8,53 +9,45 @@
     <div class="friends-activity">
       <h3>Latest Friends Activity</h3>
       <ul class="list-unstyled">
-        {% for m in friend_entries %}
-          {% set clean_title = m.title.replace(' (shared)', '') %}
-          {% if '(shared)' in m.title %}
+        {% if friend_entries %}
+          {% for m in friend_entries %}
+            {# strip the “ (shared)” suffix #}
+            {% set clean = m.title.replace(' (shared)', '') %}
             <li>
-              <strong>{{ m.user.name }}</strong>
-              shared <em>{{ clean_title }}</em>
-              to {{ m.media_type }} list
+              <strong>{{ m.media_type|capitalize }}:</strong>
+              {{ m.sharer_name }} shared <em>{{ clean }}</em> with you
             </li>
-          {% else %}
-            <li>
-              <strong>{{ m.user.name }}</strong>
-              added <em>{{ m.title }}</em>
-              to {{ m.media_type }} list
-            </li>
-          {% endif %}
-        {% endfor %}
-        {% if not friend_entries %}
+          {% endfor %}
+        {% else %}
           <li>No recent friend activity.</li>
         {% endif %}
       </ul>
     </div>
-
     <!-- Most Recent Activity -->
     <div class="recent-activity">
       <h3>Most recent activity!</h3>
       <ol>
-        {% for m in recent_entries %}
-          {% set clean_title = m.title.replace(' (shared)', '') %}
-          {% if '(shared)' in m.title %}
-            <li>
-              <strong>{{ m.media_type|capitalize }}:</strong>
-              {{ clean_title }} (shared)
-            </li>
-          {% else %}
-            <li>
-              <strong>{{ m.media_type|capitalize }}:</strong>
-              {{ m.title }} (uploaded)
-            </li>
-          {% endif %}
-        {% endfor %}
-        {% if not recent_entries %}
+        {% if recent_entries %}
+          {% for m in recent_entries %}
+            {% set clean = m.title.replace(' (shared)', '') %}
+            {% if '(shared)' in m.title %}
+              <li>
+                <strong>{{ m.media_type|capitalize }}:</strong>
+                {{ clean }} <span class="text-muted">(shared)</span>
+              </li>
+            {% else %}
+              <li>
+                <strong>{{ m.media_type|capitalize }}:</strong>
+                {{ m.title }} <span class="text-muted">(uploaded)</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        {% else %}
           <li>No recent entries yet.</li>
         {% endif %}
       </ol>
     </div>
   </div>
-
   <!-- Import button (upload GET) -->
   <a href="{{ url_for('main.upload_page') }}" class="import-btn">Import</a>
 </div>

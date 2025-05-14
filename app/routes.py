@@ -29,50 +29,43 @@ from app.utils import get_media_type_breakdown, get_user_media_identity
 
 main = Blueprint('main', __name__)
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @main.route('/')
 def welcome():
     return render_template('welcome.html')
 
-
 @main.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        name = request.form.get('full_name')
-        email = request.form.get('email')
+        name     = request.form.get('full_name')
+        email    = request.form.get('email')
         password = request.form.get('password')
-
         if not name or not email or not password:
             flash("All fields are required", "error")
             return redirect(url_for('main.signup'))
-
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             flash('Email already registered. Please log in', "caution")
             return redirect(url_for('main.login'))
-
         user = User(name=name, email=email)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
-
-        print(f"[SIGNUP] New user created: {user.name} | {user.email}")
         flash('Signup successful. Please log in')
         return redirect(url_for('main.login'))
-
     return render_template('signup.html')
-
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
+        email    = request.form.get('email')
         password = request.form.get('password')
-
         if not email or not password:
             flash("Email and password are required.", 'error')
             return redirect(url_for('main.login'))
-
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
             session['user_id'] = user.id
@@ -80,16 +73,14 @@ def login():
             return redirect(url_for('main.home'))
         else:
             flash('Invalid email or password', 'error')
-
     return render_template('login.html')
-
 
 @main.route('/logout')
 def logout():
-    session.clear()  # Clear all session data to avoid leftover messages
+    # only log out the user, leave session['your_shares'] intact
+    session.pop('user_id', None)
     flash('You have been logged out', "caution")
     return redirect(url_for('main.welcome'))
-
 
 @main.route('/home')
 def home():
@@ -97,26 +88,62 @@ def home():
     if not user_id:
         flash("You must be logged in to view this page.", "error")
         return redirect(url_for('main.login'))
-
     user = User.query.get(user_id)
     if not user:
         flash("User not found.", "error")
         return redirect(url_for('main.login'))
 
-    # Query the most recent media entries 
-    recent_entries = MediaEntry.query.order_by(
-        MediaEntry.id.desc()
-    ).limit(5).all()
+    # — MOST RECENT ACTIVITY: your own uploads (strip out "(shared)" you received) —
+    db_entries = (
+        MediaEntry.query
+        .filter_by(user_id=user.id)
+        .order_by(MediaEntry.id.desc())
+        .limit(10)
+        .all()
+    )
+    recent_entries = [m for m in db_entries if "(shared)" not in m.title][:5]
 
-    # Get media entries created by the user's friends 
-    friend_ids = [f.id for f in user.friends]
+    # — prepend any shares *you* have made (persisted in session) —
+    all_shares = session.get('your_shares', [])
+    mine = [s for s in all_shares if s.get('sharer_id') == user.id]
+    if mine:
+        class TempEntry:
+            def __init__(self, media_type, title):
+                self.media_type = media_type
+                self.title      = title + " (shared)"
+        for share in reversed(mine):
+            recent_entries.insert(0, TempEntry(share['media_type'], share['title']))
+        recent_entries = recent_entries[:5]
+
+    # — LATEST FRIENDS ACTIVITY: entries shared *to you* by friends —
     friend_entries = (
         MediaEntry.query
-        .filter(MediaEntry.user_id.in_(friend_ids))
+        .filter_by(user_id=user.id)
+        .filter(MediaEntry.title.contains('(shared)'))
         .order_by(MediaEntry.id.desc())
         .limit(5)
         .all()
     )
+
+    # Attach real sharer_name, drop unmatched
+    friend_ids   = [f.id for f in user.friends]
+    real_friends = []
+    for entry in friend_entries:
+        clean = entry.title.rsplit(' (shared)', 1)[0]
+        sharer = (
+            MediaEntry.query
+            .filter(
+                MediaEntry.user_id.in_(friend_ids),
+                MediaEntry.media_type == entry.media_type,
+                MediaEntry.title == clean
+            )
+            .order_by(MediaEntry.id.desc())
+            .first()
+        )
+        if sharer:
+            entry.sharer_name = sharer.user.name
+            real_friends.append(entry)
+    friend_entries = real_friends
 
     return render_template(
         'home.html',
@@ -125,7 +152,6 @@ def home():
         friend_entries=friend_entries
     )
 
-
 @main.route('/friends', methods=['GET', 'POST'])
 def friends():
     user = User.query.get(session.get('user_id'))
@@ -133,7 +159,6 @@ def friends():
         flash("Please log in to view friends.", "error")
         return redirect(url_for('main.login'))
 
-    # Handle “Add Friend by Username” form 
     if request.method == 'POST' and 'username_search' in request.form:
         name_query = request.form['username_search'].strip()
         if name_query:
@@ -145,18 +170,12 @@ def friends():
                 flash(f"Friend request sent to {other.name}!", "success")
         return redirect(url_for('main.friends'))
 
-
-    # Confirmed friends
-    friends = user.friends
-
-    # Recommended connections
+    friends     = user.friends
     recommended = User.query.filter(
         User.id != user.id,
         ~User.id.in_([f.id for f in friends])
     ).all()
-
-    # Fetch this user's own media entries for sharing dropdown 
-    user_media = MediaEntry.query.filter_by(user_id=user.id).all()
+    user_media  = MediaEntry.query.filter_by(user_id=user.id).all()
 
     return render_template(
         'friends.html',
@@ -166,50 +185,40 @@ def friends():
         user_media=user_media
     )
 
-
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
 def add_friend(friend_id):
-    user = User.query.get(session.get('user_id'))
+    user   = User.query.get(session.get('user_id'))
     friend = User.query.get(friend_id)
-
     if not user or not friend or friend == user:
         flash("Invalid request.", "error")
         return redirect(url_for('main.friends'))
-
     if friend in user.friends:
         flash("You're already friends.", "caution")
         return redirect(url_for('main.friends'))
-
     user.friends.append(friend)
     friend.friends.append(user)
     db.session.commit()
-
     flash(f"You are now friends with {friend.name}!")
     return redirect(url_for('main.friends'))
 
-
 @main.route('/share_media', methods=['POST'])
 def share_media():
-    """Share one of the current user's media entries with a friend."""
-    user = User.query.get(session.get('user_id'))
+    """Share one of your media entries with a friend."""
+    user      = User.query.get(session.get('user_id'))
     if not user:
         flash("Please log in to share media.", "error")
         return redirect(url_for('main.login'))
 
-    media_id = request.form.get('media_id', type=int)
+    media_id  = request.form.get('media_id', type=int)
     friend_id = request.form.get('friend_id', type=int)
-    media = MediaEntry.query.get(media_id)
-    friend = User.query.get(friend_id)
+    media     = MediaEntry.query.get(media_id)
+    friend    = User.query.get(friend_id)
 
-    # Validate inputs & friendship
     if not media or not friend or friend not in user.friends:
         flash("Invalid share request.", "error")
         return redirect(url_for('main.friends'))
 
-    # Build a shared title so it can be flagged in templates
     shared_title = f"{media.title} (shared)"
-
-    # Prevent duplicate shares
     exists = MediaEntry.query.filter_by(
         user_id=friend.id,
         media_type=media.media_type,
@@ -219,17 +228,27 @@ def share_media():
     if exists:
         flash(f"{friend.name} already has “{media.title}”", "caution")
     else:
-        new_entry = MediaEntry(
+        # 1) insert into friend’s list
+        friend_entry = MediaEntry(
             media_type=media.media_type,
             title=shared_title,
             user_id=friend.id
         )
-        db.session.add(new_entry)
+        db.session.add(friend_entry)
         db.session.commit()
+
+        # 2) record *your* share in session (with sharer_id)
+        shares = session.get('your_shares', [])
+        shares.append({
+            'media_type': media.media_type,
+            'title':      media.title,
+            'sharer_id':  user.id
+        })
+        session['your_shares'] = shares
+
         flash(f"Shared “{media.title}” with {friend.name}", "success")
 
     return redirect(url_for('main.friends'))
-
 
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
@@ -240,41 +259,20 @@ def upload_page():
 
     if request.method == 'POST':
         media_type = request.form.get('media_type')
-        title = request.form.get('title')
-        rating = request.form.get('rating') or None
-        comment = request.form.get('comment') or None
+        title      = request.form.get('title')
+        rating     = request.form.get('rating') or None
+        comment    = request.form.get('comment') or None
 
         def parse_date(val):
             return datetime.strptime(val, '%Y-%m-%d') if val else None
 
-        # pick the right genre field
-        if media_type == 'book':
-            genre = request.form.get('book_genre')
-        elif media_type == 'movie':
-            genre = request.form.get('movie_genre')
-        elif media_type == 'tv_show':
-            genre = request.form.get('tvshow_genre')
-        elif media_type == 'music':
-            genre = request.form.get('music_genre')
-        else:
-            genre = None
-
-        # normalize genre
-        genre = (genre or "").strip().title() or None
-
-        # validate that we have at least type and title
-        if not media_type or not title:
-            flash("Please select a media type and enter a title.", "error")
-            return redirect(url_for('main.upload_page'))
-
-        # Construct the correct subclass based on media_type
         if media_type == 'book':
             entry = Book(
                 media_type='book',
                 title=title,
                 rating=rating,
                 comments=comment,
-                genre=genre,
+                genre=(request.form.get('book_genre') or "").title() or None,
                 author=request.form.get('author'),
                 date_started=parse_date(request.form.get('date_started')),
                 date_finished=parse_date(request.form.get('date_finished')),
@@ -287,7 +285,7 @@ def upload_page():
                 title=title,
                 rating=rating,
                 comments=comment,
-                genre=genre,
+                genre=(request.form.get('movie_genre') or "").title() or None,
                 consumed_date=parse_date(request.form.get('watched_date')),
                 user_id=user_id
             )
@@ -297,7 +295,7 @@ def upload_page():
                 title=title,
                 rating=rating,
                 comments=comment,
-                genre=genre,
+                genre=(request.form.get('tvshow_genre') or "").title() or None,
                 watched_date=parse_date(request.form.get('watched_date')),
                 user_id=user_id
             )
@@ -307,7 +305,7 @@ def upload_page():
                 title=title,
                 rating=rating,
                 comments=comment,
-                genre=genre,
+                genre=(request.form.get('music_genre') or "").title() or None,
                 artist=request.form.get('artist'),
                 user_id=user_id
             )
@@ -320,10 +318,8 @@ def upload_page():
         flash("Media entry added successfully!", "success")
         return redirect(url_for('main.upload_page'))
 
-    # GET: show only this user's entries
     entries = MediaEntry.query.filter_by(user_id=user_id).all()
     return render_template('upload.html', entries=entries)
-
 
 @main.route('/settings')
 def settings():
@@ -331,263 +327,167 @@ def settings():
     if not user_id:
         flash("You must be logged in to access settings.", "error")
         return redirect(url_for('main.login'))
-
     user = User.query.get(user_id)
     if not user:
         flash("User not found.", "error")
         return redirect(url_for('main.login'))
-
     profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
     return render_template('settings.html', user=user, profile_picture_url=profile_picture_url)
 
-
-
-
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @main.route('/update_profile_picture', methods=['POST'])
 def update_profile_picture():
-    # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
         flash("You must be logged in to update your profile picture.", "error")
         return redirect(url_for('main.login'))
-    
-    # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
         flash("User not found.", "error")
         return redirect(url_for('main.login'))
-    
-    # Check if a file is uploaded
     if 'profile_picture' not in request.files:
         flash("No file selected. Please try again.", "error")
         return redirect(url_for('main.settings'))
-    
     file = request.files['profile_picture']
-    
-    # Check if the file is valid
     if file.filename == '' or not allowed_file(file.filename):
         flash("Invalid file type. Please upload a PNG, JPG, JPEG, or GIF file.", "error")
         return redirect(url_for('main.settings'))
-    
-    # Secure the filename and save the file
     filename = secure_filename(file.filename)
     upload_folder = os.path.join(current_app.static_folder, 'media')
     os.makedirs(upload_folder, exist_ok=True)
     file_path = os.path.join(upload_folder, filename)
     file.save(file_path)
-    
-    # Update the user's profile picture
     user.profile_picture = filename
     db.session.commit()
-
     flash("Profile picture updated successfully.")
     return redirect(url_for('main.settings'))
-
-
 @main.route('/update_username', methods=['POST'])
 def update_username():
-    # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
         flash("You must be logged in to update your username.","error")
         return redirect(url_for('main.login'))
-    
-    # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
         flash("User not found.","error")
         return redirect(url_for('main.login'))
-
-    # Get the new username and password from the form
     new_username = request.form.get('username').strip()
-    password = request.form.get('password').strip()
-    
-    # Verify password
+    password     = request.form.get('password').strip()
     if not user.check_password(password):
         flash("Incorrect password. Please try again.","error")
         return redirect(url_for('main.settings'))
-    
-    # Check if the new username is valid
     if not new_username:
         flash("Username cannot be empty.","error")
         return redirect(url_for('main.settings'))
-    
-    # Update the username
     user.name = new_username
     db.session.commit()
-    
-    # Provide user feedback
     flash("Username updated successfully.")
     return redirect(url_for('main.settings'))
-
-
 @main.route('/update_email', methods=['POST'])
 def update_email():
-    # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
         flash("You must be logged in to update your email.","error")
         return redirect(url_for('main.login'))
-    
-    # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
         flash("User not found.","error")
         return redirect(url_for('main.login'))
-
-    # Get the new email and password from the form
     new_email = request.form.get('email').strip().lower()
-    password = request.form.get('password').strip()
-    
-    # Verify password
+    password  = request.form.get('password').strip()
     if not user.check_password(password):
         flash("Incorrect password. Please try again.","error")
         return redirect(url_for('main.settings'))
-    
-    # Check if the new email is valid
     if not new_email:
         flash("Email cannot be empty.","error")
         return redirect(url_for('main.settings'))
-    
-    # Check if the new email is already taken
     existing_user = User.query.filter_by(email=new_email).first()
     if existing_user:
         flash("This email is already registered. Please use a different email.","error")
-    
-    # Update the email
+        return redirect(url_for('main.settings'))
     user.email = new_email
     db.session.commit()
-    
-    # Log the user out to force re-login with the new email
     session.clear()
     flash("Email updated successfully. Please log in with your new email.","caution")
     return redirect(url_for('main.login'))
-
-
 @main.route('/update_password', methods=['POST'])
 def update_password():
-    # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
         flash("You must be logged in to update your password.","error")
         return redirect(url_for('main.login'))
-    
-    # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
         flash("User not found.","error")
         return redirect(url_for('main.login'))
-
-    # Get the current and new passwords from the form
     current_password = request.form.get('current_password').strip()
-    new_password = request.form.get('new_password').strip()
+    new_password     = request.form.get('new_password').strip()
     confirm_password = request.form.get('confirm_password').strip()
-    
-    # Verify current password
     if not user.check_password(current_password):
         flash("Incorrect current password. Please try again.", "error")
         return redirect(url_for('main.settings'))
-    
-    # Check if the new password matches the confirmation
     if new_password != confirm_password:
         flash("New passwords do not match. Please try again.", "error")
         return redirect(url_for('main.settings'))
-    
-    # Update the password
     user.set_password(new_password)
     db.session.commit()
-    
-    # Log the user out to force re-login with the new email
     session.clear()
-    flash("Password updated successfully. Please log in with your new email.","caution")
+    flash("Password updated successfully. Please log in with your new credentials.", "caution")
     return redirect(url_for('main.login'))
-    
-
-
 @main.route('/delete_account', methods=['POST'])
 def delete_account():
-    # Check if the user is logged in
     user_id = session.get('user_id')
     if not user_id:
         flash("You must be logged in to delete your account.","error")
         return redirect(url_for('main.login'))
-    
-    # Get the logged-in user
     user = User.query.get(user_id)
     if not user:
         flash("User not found.","error")
         return redirect(url_for('main.login'))
-
-    # Verify password
     delete_password = request.form.get('delete_password').strip()
     if not user.check_password(delete_password):
         flash("Incorrect password. Please try again.", "error")
         return redirect(url_for('main.settings'))
-    
-    # Remove all media entries associated with the user
     MediaEntry.query.filter_by(user_id=user.id).delete()
-    
-    # Remove the user
     db.session.delete(user)
     db.session.commit()
-    
-    # Clear the session and redirect to the welcome page
     session.clear()
     flash("Your account has been permanently deleted.", "caution")
     return redirect(url_for('main.welcome'))
-
 @main.route('/foryou')
 def for_you():
     user_id = session.get('user_id')
     if not user_id:
         flash("You must be logged in to access this page.", "error")
         return redirect(url_for('main.login'))
-
     def get_genre_counts(queryset):
         counts = {}
         for entry in queryset:
             if entry.genre:
                 counts[entry.genre] = counts.get(entry.genre, 0) + 1
         return counts
-
-    # Fetch media entries
-    books = Book.query.filter_by(user_id=user_id).all()
-    movies = Movie.query.filter_by(user_id=user_id).all()
+    books    = Book.query.filter_by(user_id=user_id).all()
+    movies   = Movie.query.filter_by(user_id=user_id).all()
     tv_shows = TVShow.query.filter_by(user_id=user_id).all()
-    music = Music.query.filter_by(user_id=user_id).all()
-
-    # For internal identity logic (lowercase keys)
+    music    = Music.query.filter_by(user_id=user_id).all()
     raw_media_counts = {
-        "book": len(books),
-        "movie": len(movies),
+        "book":    len(books),
+        "movie":   len(movies),
         "tv_show": len(tv_shows),
-        "music": len(music),
+        "music":   len(music),
     }
-
-    # For display in the template (title-case keys)
     display_media_counts = {
-        "Books": raw_media_counts["book"],
-        "Movies": raw_media_counts["movie"],
+        "Books":    raw_media_counts["book"],
+        "Movies":   raw_media_counts["movie"],
         "TV Shows": raw_media_counts["tv_show"],
-        "Music": raw_media_counts["music"],
+        "Music":    raw_media_counts["music"],
     }
-
-    # Genre breakdowns
     combined_screen = movies + tv_shows
     genre_breakdowns = {
-        "Books": get_genre_counts(books),
-        "Tv&Movies": get_genre_counts(combined_screen),  # merged for screen content
-        "Music": get_genre_counts(music),
+        "Books":    get_genre_counts(books),
+        "Tv&Movies": get_genre_counts(combined_screen),
+        "Music":    get_genre_counts(music),
     }
-
-    # Determine user's media identity
     identity_label = get_user_media_identity(raw_media_counts)
-
     return render_template(
         "foryou.html",
         identity=identity_label,
