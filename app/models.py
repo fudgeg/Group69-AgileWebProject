@@ -85,6 +85,7 @@ class Music(MediaEntry):
     id = db.Column(db.Integer, db.ForeignKey('media_entry.id'), primary_key=True)
     genre = db.Column(db.String(50), nullable=True)
     artist = db.Column(db.String(100), nullable=True)
+    listened_date = db.Column(db.Date, nullable=True)
     __mapper_args__ = {'polymorphic_identity': 'music'}
     def __repr__(self):
         return f"<Music {self.title}, Artist: {self.artist}>"
