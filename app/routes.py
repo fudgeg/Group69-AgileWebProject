@@ -545,41 +545,58 @@ def for_you():
     if not user_id:
         flash("You must be logged in to access this page.", "error")
         return redirect(url_for('main.login'))
+
+    # Fetch the current user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('main.login'))
+
+    # Media data
+    books = Book.query.filter_by(user_id=user_id).all()
+    movies = Movie.query.filter_by(user_id=user_id).all()
+    tv_shows = TVShow.query.filter_by(user_id=user_id).all()
+    music = Music.query.filter_by(user_id=user_id).all()
+
+    raw_media_counts = {
+        "book": len(books),
+        "movie": len(movies),
+        "tv_show": len(tv_shows),
+        "music": len(music),
+    }
+
+    display_media_counts = {
+        "Books": raw_media_counts["book"],
+        "Movies": raw_media_counts["movie"],
+        "TV Shows": raw_media_counts["tv_show"],
+        "Music": raw_media_counts["music"],
+    }
+
     def get_genre_counts(queryset):
         counts = {}
         for entry in queryset:
             if entry.genre:
                 counts[entry.genre] = counts.get(entry.genre, 0) + 1
         return counts
-    books    = Book.query.filter_by(user_id=user_id).all()
-    movies   = Movie.query.filter_by(user_id=user_id).all()
-    tv_shows = TVShow.query.filter_by(user_id=user_id).all()
-    music    = Music.query.filter_by(user_id=user_id).all()
-    raw_media_counts = {
-        "book":    len(books),
-        "movie":   len(movies),
-        "tv_show": len(tv_shows),
-        "music":   len(music),
-    }
-    display_media_counts = {
-        "Books":    raw_media_counts["book"],
-        "Movies":   raw_media_counts["movie"],
-        "TV Shows": raw_media_counts["tv_show"],
-        "Music":    raw_media_counts["music"],
-    }
-    combined_screen = movies + tv_shows
+
     genre_breakdowns = {
-        "Books":    get_genre_counts(books),
-        "Tv&Movies": get_genre_counts(combined_screen),
-        "Music":    get_genre_counts(music),
+        "Books": get_genre_counts(books),
+        "Tv&Movies": get_genre_counts(movies + tv_shows),
+        "Music": get_genre_counts(music),
     }
+
     identity_label = get_user_media_identity(raw_media_counts)
+
+    # ✅ Pass the username to the template
     return render_template(
         "foryou.html",
         identity=identity_label,
         media_counts=display_media_counts,
-        genre_breakdowns=genre_breakdowns
+        genre_breakdowns=genre_breakdowns,
+        username=user.name  # Correctly reference the 'user' variable
     )
+
+    
 @main.route('/notifications')
 def notifications():
     user_id = session.get('user_id')
@@ -613,7 +630,7 @@ def notifications():
         'notifications.html',
         user=user,
         friend_requests=friend_requests,
-        activities=activities  # Use "activities" here
+        activities=activities,  # Use "activities" here
     )
 
 

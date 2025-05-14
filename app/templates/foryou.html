@@ -63,8 +63,11 @@ block content %}
   </div>
 
   <!-- Embed data as JSON directly -->
+  <!-- Embed data as JSON directly -->
   <script>
     const genreData = {{ genre_breakdowns | tojson | safe }};
+    const identity = "{{ identity | e }}"; // Add this line
+    const username = "{{ username | e }}";  // Add the username here
   </script>
 
   <!-- Chart.js libraries -->
@@ -140,8 +143,11 @@ block content %}
     }
 
     function shareToEmail() {
+      // Remove "You are a" prefix if present
+      const cleanIdentity = identity.replace(/^You are a\s*/i, "");
+
       const subject = "Check out my Media Stats on Soul Maps!";
-      const body = `Hey, I just found out my media consumption profile on Soul Maps and I'm a ${identity}! Check out my top genres and more!`;
+      const body = `Hey, I just found out my media consumption profile on Soul Maps and I'm a ${cleanIdentity}! Add me on Soul Maps now to check out my top genres and more! My username is @${username}.`;
 
       const mailtoLink = `mailto:?subject=${encodeURIComponent(
         subject
