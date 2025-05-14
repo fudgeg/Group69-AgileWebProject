@@ -1,4 +1,4 @@
-import os
+import os, json, uuid
 from datetime import datetime
 from collections import Counter
 
@@ -11,6 +11,7 @@ from flask import (
     session,
     flash,
     current_app,
+    jsonify
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -25,7 +26,8 @@ from app.models import (
     TVShow,
     Music,
     FriendRequest,
-    UserActivity
+    UserActivity,
+    MediaSnapshot
 )
 from app.utils import get_media_type_breakdown, get_user_media_identity
 
@@ -34,6 +36,7 @@ main = Blueprint('main', __name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @main.route('/')
 def welcome():
@@ -552,6 +555,9 @@ def for_you():
         flash("User not found.", "error")
         return redirect(url_for('main.login'))
 
+    # Fetch the user's friends
+    friends = user.friends
+
     # Media data
     books = Book.query.filter_by(user_id=user_id).all()
     movies = Movie.query.filter_by(user_id=user_id).all()
@@ -572,6 +578,7 @@ def for_you():
         "Music": raw_media_counts["music"],
     }
 
+    # Add genre breakdowns
     def get_genre_counts(queryset):
         counts = {}
         for entry in queryset:
@@ -581,20 +588,25 @@ def for_you():
 
     genre_breakdowns = {
         "Books": get_genre_counts(books),
-        "Tv&Movies": get_genre_counts(movies + tv_shows),
+        "Movies": get_genre_counts(movies),
+        "TV Shows": get_genre_counts(tv_shows),
         "Music": get_genre_counts(music),
     }
 
+    # Generate the identity label
     identity_label = get_user_media_identity(raw_media_counts)
 
-    # ✅ Pass the username to the template
+    # ✅ Pass the required variables to the template
     return render_template(
         "foryou.html",
         identity=identity_label,
+        username=user.name,
         media_counts=display_media_counts,
         genre_breakdowns=genre_breakdowns,
-        username=user.name  # Correctly reference the 'user' variable
+        friends=friends
     )
+
+
 
     
 @main.route('/notifications')
@@ -619,19 +631,34 @@ def notifications():
         UserActivity.seen == False
     ).order_by(UserActivity.timestamp.desc()).all()
 
-    # Mark all as seen
+    # Retrieve media snapshots and parse the JSON data for template use
+    snapshots = MediaSnapshot.query.filter_by(receiver_id=user.id, seen=False).all()
+    for snapshot in snapshots:
+        try:
+            # ✅ Attach parsed data to a temporary attribute for rendering
+            snapshot.parsed_data = json.loads(snapshot.snapshot_data)
+        except json.JSONDecodeError:
+            # Handle corrupted data gracefully
+            snapshot.parsed_data = {"error": "Invalid snapshot data"}
+
+    # Mark all as seen (without modifying snapshot_data)
     for req in friend_requests:
         req.seen = True
     for activity in activities:
         activity.seen = True
+    for snapshot in snapshots:
+        snapshot.seen = True
+
     db.session.commit()
 
     return render_template(
         'notifications.html',
         user=user,
         friend_requests=friend_requests,
-        activities=activities,  # Use "activities" here
+        activities=activities,
+        snapshots=snapshots  # Pass parsed snapshots
     )
+
 
 
 
@@ -699,17 +726,53 @@ def reject_friend_request(request_id):
 def inject_unread_notifications():
     user_id = session.get('user_id')
     if user_id:
-        # Exclude the current user's own activities from the unread count
+        # Count unseen snapshots, friend requests, and activities
+        snapshot_unread = MediaSnapshot.query.filter_by(receiver_id=user_id, seen=False).count()
         activity_unread = UserActivity.query.filter(
             UserActivity.user_id != user_id,
             UserActivity.seen == False
         ).count()
-        
-        # Include friend requests
         unread_requests = FriendRequest.query.filter_by(receiver_id=user_id, status="pending", seen=False).count()
         
-        return dict(unread_notifications=activity_unread + unread_requests)
+        return dict(unread_notifications=snapshot_unread + activity_unread + unread_requests)
     
     return dict(unread_notifications=0)
 
+
+@main.route('/send_snapshot', methods=['POST'])
+def send_snapshot():
+    user = User.query.get(session.get('user_id'))
+    if not user:
+        return jsonify({"success": False, "message": "Please log in to share your media snapshot."})
+
+    receiver_id = request.form.get('receiver_id', type=int)
+    receiver = User.query.get(receiver_id)
+    if not receiver or receiver == user or receiver not in user.friends:
+        return jsonify({"success": False, "message": "Invalid receiver."})
+
+    # Check if the file part is present
+    if 'snapshot' not in request.files:
+        return jsonify({"success": False, "message": "No snapshot file found."})
+
+    file = request.files['snapshot']
+    if not allowed_file(file.filename):
+        return jsonify({"success": False, "message": "Invalid file type. Please upload a PNG, JPG, JPEG, or GIF file."})
+
+    # Generate a unique filename to prevent collisions
+    filename = f"{uuid.uuid4().hex}.png"
+    upload_folder = os.path.join(current_app.static_folder, 'snapshots')
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, filename)
+    file.save(file_path)
+
+    # Save the snapshot entry in the database
+    snapshot = MediaSnapshot(
+        sender_id=user.id,
+        receiver_id=receiver.id,
+        snapshot_data=filename  # Store just the filename
+    )
+    db.session.add(snapshot)
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "Snapshot sent successfully!"})
 

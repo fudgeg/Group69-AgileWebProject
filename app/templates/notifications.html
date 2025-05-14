@@ -3,6 +3,7 @@
 <div class="home-container">
   <h2>Notifications</h2>
   <ul class="notifications-list">
+    <!-- Friend Requests -->
     {% if friend_requests %} {% for request in friend_requests %}
     <li class="notification-item">
       <div class="notification-text">
@@ -25,9 +26,10 @@
         </form>
       </div>
     </li>
+    {% endfor %} {% endif %}
 
-    {% endfor %} {% endif %} {% if activities %} {% for activity in activities
-    %}
+    <!-- User Activities -->
+    {% if activities %} {% for activity in activities %}
     <li class="notification-item">
       <div class="notification-text">
         <strong>{{ activity.user.name }}</strong> changed their {{
@@ -36,8 +38,28 @@
         >" to "<strong>{{ activity.new_value }}</strong>".
       </div>
     </li>
+    {% endfor %} {% endif %} {% if snapshots %}
+    <ul class="notifications-list">
+      {% for snapshot in snapshots %}
+      <li class="notification-item">
+        <div class="notification-text">
+          <strong>{{ snapshot.sender.name }}</strong> shared their media stats
+          with you!
+        </div>
+        <div class="notification-details">
+          <img
+            src="{{ url_for('static', filename='snapshots/' ~ snapshot.snapshot_data) }}"
+            alt="Snapshot"
+            style="max-width: 100%; border-radius: 10px"
+          />
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
 
-    {% endfor %} {% endif %} {% if not friend_requests and not activities %}
+    <!-- No Notifications Fallback -->
+    {% if not friend_requests and not activities and not snapshots %}
     <li>No new notifications.</li>
     {% endif %}
   </ul>

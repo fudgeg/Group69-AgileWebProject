@@ -64,6 +64,21 @@ class FriendRequest(db.Model):
     sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_requests')
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_requests')
 
+class MediaSnapshot(db.Model):
+    __tablename__ = 'media_snapshots'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    snapshot_data = db.Column(db.String(255), nullable=False)  # Store the filename here
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    seen = db.Column(db.Boolean, default=False)
+
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_snapshots')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_snapshots')
+
+
+
+
 class MediaEntry(db.Model):
     __tablename__ = 'media_entry'
     id = db.Column(db.Integer, primary_key=True)
