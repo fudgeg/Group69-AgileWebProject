@@ -77,7 +77,7 @@ def login():
 
 @main.route('/logout')
 def logout():
-    # only log out the user, leave session['your_shares'] intact
+    # only log out the user
     session.pop('user_id', None)
     flash('You have been logged out', "caution")
     return redirect(url_for('main.welcome'))
@@ -93,7 +93,7 @@ def home():
         flash("User not found.", "error")
         return redirect(url_for('main.login'))
 
-    # — MOST RECENT ACTIVITY: your own uploads (strip out "(shared)" you received) —
+    # MOST RECENT ACTIVITY: your own uploads 
     db_entries = (
         MediaEntry.query
         .filter_by(user_id=user.id)
@@ -103,7 +103,7 @@ def home():
     )
     recent_entries = [m for m in db_entries if "(shared)" not in m.title][:5]
 
-    # — prepend any shares *you* have made (persisted in session) —
+    # prepend any shares you have made 
     all_shares = session.get('your_shares', [])
     mine = [s for s in all_shares if s.get('sharer_id') == user.id]
     if mine:
@@ -115,7 +115,7 @@ def home():
             recent_entries.insert(0, TempEntry(share['media_type'], share['title']))
         recent_entries = recent_entries[:5]
 
-    # — LATEST FRIENDS ACTIVITY: entries shared *to you* by friends —
+    # LATEST FRIENDS ACTIVITY: entries shared to you by friends
     friend_entries = (
         MediaEntry.query
         .filter_by(user_id=user.id)
@@ -125,7 +125,7 @@ def home():
         .all()
     )
 
-    # Attach real sharer_name, drop unmatched
+    # Add the friend’s name who shared it and skip any we can’t match
     friend_ids   = [f.id for f in user.friends]
     real_friends = []
     for entry in friend_entries:
@@ -228,7 +228,7 @@ def share_media():
     if exists:
         flash(f"{friend.name} already has “{media.title}”", "caution")
     else:
-        # 1) insert into friend’s list
+        # insert into friend’s list
         friend_entry = MediaEntry(
             media_type=media.media_type,
             title=shared_title,
@@ -237,7 +237,7 @@ def share_media():
         db.session.add(friend_entry)
         db.session.commit()
 
-        # 2) record *your* share in session (with sharer_id)
+        # record your share in session (with sharer_id)
         shares = session.get('your_shares', [])
         shares.append({
             'media_type': media.media_type,
