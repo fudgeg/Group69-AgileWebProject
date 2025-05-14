@@ -470,29 +470,42 @@ def for_you():
                 counts[entry.genre] = counts.get(entry.genre, 0) + 1
         return counts
 
+    # Fetch media entries
     books = Book.query.filter_by(user_id=user_id).all()
     movies = Movie.query.filter_by(user_id=user_id).all()
     tv_shows = TVShow.query.filter_by(user_id=user_id).all()
     music = Music.query.filter_by(user_id=user_id).all()
 
-    media_counts = {
-        "Books": len(books),
-        "Movies": len(movies),
-        "TV Shows": len(tv_shows),
-        "Music": len(music),
+    # For internal identity logic (lowercase keys)
+    raw_media_counts = {
+        "book": len(books),
+        "movie": len(movies),
+        "tv_show": len(tv_shows),
+        "music": len(music),
     }
-    
+
+    # For display in the template (title-case keys)
+    display_media_counts = {
+        "Books": raw_media_counts["book"],
+        "Movies": raw_media_counts["movie"],
+        "TV Shows": raw_media_counts["tv_show"],
+        "Music": raw_media_counts["music"],
+    }
+
+    # Genre breakdowns
     combined_screen = movies + tv_shows
     genre_breakdowns = {
         "Books": get_genre_counts(books),
-        #"Movies": get_genre_counts(movies),
-        #"TV Shows": get_genre_counts(tv_shows),
-        "Tv&Movies": get_genre_counts(combined_screen),  # combined category tv and movies 
+        "Tv&Movies": get_genre_counts(combined_screen),  # merged for screen content
         "Music": get_genre_counts(music),
     }
-    
-    
-    
-    identity_label = get_user_media_identity(media_counts)
-    
-    return render_template("foryou.html", identity=identity_label, media_counts=media_counts, genre_breakdowns=genre_breakdowns)
+
+    # Determine user's media identity
+    identity_label = get_user_media_identity(raw_media_counts)
+
+    return render_template(
+        "foryou.html",
+        identity=identity_label,
+        media_counts=display_media_counts,
+        genre_breakdowns=genre_breakdowns
+    )
