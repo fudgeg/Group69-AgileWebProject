@@ -676,13 +676,13 @@ left: 20px;
 }
 
 .friends-list {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-height: 400px; 
-  padding-right: 10px;
-  overflow-y: hidden;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 400px; 
+    padding-right: 10px;
+    overflow-y: auto;
 }
 
 .friend-card {
@@ -722,16 +722,16 @@ left: 20px;
 }
 
 .friends-list::-webkit-scrollbar {
-  width: 6px;
+    width: 6px;
 }
 
 .friends-list::-webkit-scrollbar-thumb {
-  background-color: #204118;
-  border-radius: 10px;
+    background-color: #204118;
+    border-radius: 10px;
 }
 
 .friends-list::-webkit-scrollbar-thumb:hover {
-  background-color: #376e35;
+    background-color: #376e35;
 }
 
 .recommended-section .friends-list {
@@ -744,10 +744,11 @@ left: 20px;
 }
 
 .friend-search-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
 }
+
 
 .friend-search-container input {
   width: 300px;
@@ -756,6 +757,15 @@ left: 20px;
   border: 2px solid #204118;
   margin-right: 10px;
   font-size: 16px;
+}
+
+.friend-search-input {
+    width: 300px;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px solid #204118;
+    margin-right: 10px;
+    font-size: 16px;
 }
 
 .friend-search-container button, .friends-submit {
