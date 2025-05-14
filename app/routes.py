@@ -46,6 +46,10 @@ def signup():
         if not name or not email or not password:
             flash("All fields are required", "error")
             return redirect(url_for('main.signup'))
+        existing_username = User.query.filter_by(name=name).first()
+        if existing_username:
+            flash("Username already taken. Please choose a different one.", "error")
+            return redirect(url_for('main.signup'))
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             flash('Email already registered. Please log in', "caution")
@@ -405,6 +409,10 @@ def update_username():
         return redirect(url_for('main.login'))
     new_username = request.form.get('username').strip()
     password     = request.form.get('password').strip()
+    existing_username = User.query.filter_by(name=new_username).first()
+    if existing_username:
+        flash("Username already taken. Please choose a different one.", "error")
+        return redirect(url_for('main.settings'))
     if not user.check_password(password):
         flash("Incorrect password. Please try again.","error")
         return redirect(url_for('main.settings'))
