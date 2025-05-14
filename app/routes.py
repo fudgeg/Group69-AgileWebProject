@@ -152,13 +152,15 @@ def home():
         friend_entries=friend_entries
     )
 
+
 @main.route('/friends', methods=['GET', 'POST'])
 def friends():
     user = User.query.get(session.get('user_id'))
     if not user:
-        flash("Please log in to view friends.", "error")
+        flash("Please log in to view friends.","error")
         return redirect(url_for('main.login'))
 
+    # Handle Add Friend by name
     if request.method == 'POST' and 'username_search' in request.form:
         name_query = request.form['username_search'].strip()
         if name_query:
@@ -167,37 +169,68 @@ def friends():
                 user.friends.append(other)
                 other.friends.append(user)
                 db.session.commit()
-                flash(f"Friend request sent to {other.name}!", "success")
         return redirect(url_for('main.friends'))
 
-    friends     = user.friends
+    # Fetch the current user's friends
+    friends = user.friends
+
+    # Fetch recommended connections (all users except current user and their friends)
     recommended = User.query.filter(
         User.id != user.id,
-        ~User.id.in_([f.id for f in friends])
+        ~User.id.in_([f.id for f in user.friends])
     ).all()
-    user_media  = MediaEntry.query.filter_by(user_id=user.id).all()
 
-    return render_template(
-        'friends.html',
-        user=user,
-        friends=friends,
-        recommended=recommended,
-        user_media=user_media
-    )
+    # Fetch the user's own media entries for sharing
+    user_media = MediaEntry.query.filter_by(user_id=user.id).all()
+
+    return render_template('friends.html', user=user, friends=friends, recommended=recommended,user_media=user_media)
+
+
+@main.route('/search', methods=['GET'])
+def search_users():
+    # Ensure the user is logged in
+    user = User.query.get(session.get('user_id'))
+    if not user:
+        flash("Please log in to search for friends.", "error")
+        return redirect(url_for('main.login'))
+
+    # Get the search query from the URL
+    query = request.args.get('query', '').strip()
+    
+    # Make sure the query is not empty
+    if not query:
+        flash("Please enter a valid username to search.", "error")
+        return redirect(url_for('main.friends'))
+
+    # Fetch users whose names contain the search term, excluding the current user and existing friends
+    search_results = User.query.filter(
+        User.name.ilike(f"%{query}%"),
+        User.id != user.id,
+        ~User.id.in_([f.id for f in user.friends])
+    ).all()
+
+    # Render the search results
+    return render_template('friends_search.html', user=user, search_results=search_results)
+
+
 
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
 def add_friend(friend_id):
-    user   = User.query.get(session.get('user_id'))
+    user = User.query.get(session.get('user_id'))
     friend = User.query.get(friend_id)
+
     if not user or not friend or friend == user:
-        flash("Invalid request.", "error")
+        flash("Invalid request.","error")
         return redirect(url_for('main.friends'))
+
     if friend in user.friends:
-        flash("You're already friends.", "caution")
+        flash("You're already friends.","caution")
         return redirect(url_for('main.friends'))
+
     user.friends.append(friend)
     friend.friends.append(user)
     db.session.commit()
+
     flash(f"You are now friends with {friend.name}!")
     return redirect(url_for('main.friends'))
 

@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Search Results – Soul Maps{% endblock
+%} {% block content %}
+<div class="search-results-page">
+  <h2 class="search-results-title">Search Results</h2>
+
+  <div class="search-results-list">
+    {% if search_results %} {% for person in search_results %}
+    <div class="result-container">
+      <img
+        src="{{ url_for('static', filename='media/' + person.profile_picture) }}"
+        alt="{{ person.name }}"
+        class="friend-pfp"
+        onerror="this.onerror=null;this.src='{{ url_for('static', filename='media/user.png') }}';"
+      />
+      <div class="friend-name">{{ person.name }}</div>
+      <form
+        method="POST"
+        action="{{ url_for('main.add_friend', friend_id=person.id) }}"
+      >
+        <button type="submit" class="friends-submit">Add</button>
+      </form>
+    </div>
+    {% endfor %} {% else %}
+    <p>No users found for "{{ request.args.get('query') }}"</p>
+    {% endif %}
+  </div>
+
+  {% endblock %}
+</div>
