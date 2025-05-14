@@ -62,12 +62,10 @@ block content %}
     {% endif %} {% endfor %}
   </div>
 
-  <!-- Embed data as JSON -->
-  <div
-    id="genre-breakdowns"
-    data-json="{{ genre_breakdowns | tojson | safe }}"
-    style="display: none"
-  ></div>
+  <!-- Embed data as JSON directly -->
+  <script>
+    const genreData = {{ genre_breakdowns | tojson | safe }};
+  </script>
 
   <!-- Chart.js libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -88,9 +86,6 @@ block content %}
 
   <!-- JS to Render Pie Charts -->
   <script>
-    const genreData = JSON.parse(
-      document.getElementById("genre-breakdowns").dataset.json
-    );
     const colors = [
       "#006633",
       "#4c9900",
@@ -146,9 +141,7 @@ block content %}
 
     function shareToEmail() {
       const subject = "Check out my Media Stats on Soul Maps!";
-      const body =
-        "Hey, I just found out my media consumption profile on Soul Maps and I'm a " +
-        "{{ identity }}! Check out my top genres and more!";
+      const body = `Hey, I just found out my media consumption profile on Soul Maps and I'm a ${identity}! Check out my top genres and more!`;
 
       const mailtoLink = `mailto:?subject=${encodeURIComponent(
         subject
@@ -167,4 +160,5 @@ block content %}
     }
   </script>
 </div>
+
 {% endblock %}
