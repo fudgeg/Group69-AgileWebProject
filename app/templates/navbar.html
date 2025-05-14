@@ -27,6 +27,15 @@
         />
       </div>
     </a>
+    <a href="{{ url_for('main.notifications') }}">
+      <div class="nav-icon-button">
+        <img
+          src="{{ url_for('static', filename='media/bell.png') }}"
+          alt="Notifications"
+          class="nav-icon"
+        />
+      </div>
+    </a>
     <a href="{{ url_for('main.friends') }}">
       <div class="nav-icon-button">
         <img
@@ -36,6 +45,7 @@
         />
       </div>
     </a>
+
     <a href="{{ url_for('main.settings') }}">
       <div class="nav-icon-button">
         <img

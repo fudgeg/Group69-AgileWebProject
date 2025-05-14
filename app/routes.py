@@ -535,3 +535,19 @@ def for_you():
         media_counts=display_media_counts,
         genre_breakdowns=genre_breakdowns
     )
+@main.route('/notifications')
+def notifications():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Please log in to view notifications.", "error")
+        return redirect(url_for('main.login'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('main.login'))
+
+    # Retrieve pending friend requests (replace this with actual logic)
+    friend_requests = []  # Placeholder for now
+
+    return render_template('notifications.html', user=user, friend_requests=friend_requests)
