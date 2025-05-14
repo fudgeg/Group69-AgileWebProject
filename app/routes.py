@@ -576,12 +576,15 @@ def notifications():
         return redirect(url_for('main.login'))
 
     # Retrieve pending friend requests sent to the current user
-    friend_requests = FriendRequest.query.filter_by(
-        receiver_id=user.id,
-        status="pending"
-    ).all()
+    friend_requests = FriendRequest.query.filter_by(receiver_id=user.id, status="pending").all()
+
+    # Mark all as seen
+    for req in friend_requests:
+        req.seen = True
+    db.session.commit()
 
     return render_template('notifications.html', user=user, friend_requests=friend_requests)
+
 
 @main.route('/respond_friend_request/<int:request_id>/<action>', methods=['POST'])
 def respond_friend_request(request_id, action):
@@ -641,3 +644,11 @@ def reject_friend_request(request_id):
         flash("Friend request not found.", "error")
     
     return redirect(url_for('main.notifications'))
+
+@main.app_context_processor
+def inject_unread_notifications():
+    user_id = session.get('user_id')
+    if user_id:
+        unread_count = FriendRequest.query.filter_by(receiver_id=user_id, status="pending", seen=False).count()
+        return dict(unread_notifications=unread_count)
+    return dict(unread_notifications=0)

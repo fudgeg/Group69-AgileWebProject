@@ -43,15 +43,11 @@ class FriendRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    status = db.Column(db.String(20), nullable=False, default="pending")
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(20), default="pending")
+    seen = db.Column(db.Boolean, default=False)  # New field
 
-    # Relationships to access sender and receiver
     sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_requests')
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_requests')
-
-    def __repr__(self):
-        return f"<FriendRequest from {self.sender.name} to {self.receiver.name} - Status: {self.status}>"
 
 
 class MediaEntry(db.Model):

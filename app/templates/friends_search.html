@@ -15,7 +15,7 @@
       <div class="friend-name">{{ person.name }}</div>
       <form
         method="POST"
-        action="{{ url_for('main.add_friend', friend_id=person.id) }}"
+        action="{{ url_for('main.send_friend_request', receiver_id=person.id) }}"
       >
         <button type="submit" class="friends-submit">Add</button>
       </form>

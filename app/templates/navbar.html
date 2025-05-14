@@ -34,8 +34,12 @@
           alt="Notifications"
           class="nav-icon"
         />
+        {% if unread_notifications > 0 %}
+        <span class="notification-badge">{{ unread_notifications }}</span>
+        {% endif %}
       </div>
     </a>
+
     <a href="{{ url_for('main.friends') }}">
       <div class="nav-icon-button">
         <img
