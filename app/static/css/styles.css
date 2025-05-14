@@ -13,7 +13,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 height: 100vh; 
-background-color: #ffffff; 
+background-color: #c2baba; 
 }
 
 /* ====================== WELCOME PAGE STYLES ====================== */
@@ -201,42 +201,6 @@ line-height: 1.5;
 
 .create-account-btn:hover {
   background-color: #5bd15b!important;
-}
-
-
-.login-with-text {
-  margin: 20px 0 10px;
-  text-align: center;
-}
-
-.social-login {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.social-btn {
-  background-color: white;
-  color: #204118;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px; 
-  font-size: small;
-}
-
-.social-btn:hover {
-  background-color: #f0f0f0;
-}
-
-.social-icon {
-  max-height: 20px;
-  width: auto;
-  height: auto;
 }
 
 /* General Back Button Styles */
