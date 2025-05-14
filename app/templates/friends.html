@@ -1,7 +1,50 @@
-{% extends "base.html" %} {% block title %}Friends – Soul Maps{% endblock %} {%
-block content %}
+{% extends "base.html" %}
+{% block title %}Friends – Soul Maps{% endblock %}
+{% block content %}
 <div class="home-container">
   <h2>Friends</h2>
+
+  <!-- ADD BY USERNAME FORM -->
+  <div class="mb-4">
+    <form method="post" action="{{ url_for('main.friends') }}" class="d-flex gap-2">
+      <input
+        type="text"
+        name="username_search"
+        class="form-control w-75"
+        placeholder="Friend’s username"
+        required
+      />
+      <button class="btn btn-primary">Send Request</button>
+    </form>
+  </div>
+
+  <!-- SHARE MEDIA SECTION -->
+  <div class="share-section mb-4 p-3 border rounded">
+    <h4>Share Media with a Friend</h4>
+    <form
+      method="post"
+      action="{{ url_for('main.share_media') }}"
+      class="d-flex gap-2 align-items-center"
+    >
+      <select name="media_id" class="form-select w-50" required>
+        <option value="" disabled selected>Choose media...</option>
+        {% for m in user_media %}
+          <option value="{{ m.id }}">
+            {{ m.media_type|capitalize }} – {{ m.title.replace(' (shared)', '') }}
+          </option>
+        {% endfor %}
+      </select>
+      <select name="friend_id" class="form-select w-50" required>
+        <option value="" disabled selected>Choose friend...</option>
+        {% for f in friends %}
+          <option value="{{ f.id }}">{{ f.name }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-success">Share</button>
+    </form>
+  </div>
+
+
   <div class="friends-page">
     <!-- Friends List -->
     <div class="friends-section">
@@ -36,10 +79,7 @@ block content %}
             onerror="this.onerror=null;this.src='{{ url_for('static', filename='media/user.png') }}';"
           />
           <div class="friend-name">{{ person.name }}</div>
-          <form
-            method="POST"
-            action="{{ url_for('main.add_friend', friend_id=person.id) }}"
-          >
+          <form method="POST" action="{{ url_for('main.add_friend', friend_id=person.id) }}">
             <button type="submit">Add Friend</button>
           </form>
         </div>

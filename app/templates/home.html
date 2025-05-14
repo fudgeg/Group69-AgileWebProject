@@ -1,35 +1,61 @@
-{% extends "base.html" %} {% block title %}Home – Soul Maps{% endblock %} {%
-block content %}
+{% extends "base.html" %}
+{% block title %}Home – Soul Maps{% endblock %}
+{% block content %}
 <div class="home-container">
   <h2>Welcome to your homepage, {{ user.name }}!</h2>
   <div class="content">
+    <!-- Latest Friends Activity -->
     <div class="friends-activity">
       <h3>Latest Friends Activity</h3>
-      <ul>
-        {% for entry in friend_entries %}
-        <li>
-          <b>{{ entry.user.name }}</b> added <i>{{ entry.title }}</i> to {{
-          entry.media_type.lower() }} list
-        </li>
-        {% else %}
-        <li>No recent activity from friends.</li>
+      <ul class="list-unstyled">
+        {% for m in friend_entries %}
+          {% set clean_title = m.title.replace(' (shared)', '') %}
+          {% if '(shared)' in m.title %}
+            <li>
+              <strong>{{ m.user.name }}</strong>
+              shared <em>{{ clean_title }}</em>
+              to {{ m.media_type }} list
+            </li>
+          {% else %}
+            <li>
+              <strong>{{ m.user.name }}</strong>
+              added <em>{{ m.title }}</em>
+              to {{ m.media_type }} list
+            </li>
+          {% endif %}
         {% endfor %}
+        {% if not friend_entries %}
+          <li>No recent friend activity.</li>
+        {% endif %}
       </ul>
     </div>
 
-
+    <!-- Most Recent Activity -->
     <div class="recent-activity">
       <h3>Most recent activity!</h3>
       <ol>
-        {% for entry in recent_entries %}
-        <li><strong>{{ entry.media_type }}</strong>: {{ entry.title }}</li>
-        {% else %}
-        <li>No recent entries yet.</li>
+        {% for m in recent_entries %}
+          {% set clean_title = m.title.replace(' (shared)', '') %}
+          {% if '(shared)' in m.title %}
+            <li>
+              <strong>{{ m.media_type|capitalize }}:</strong>
+              {{ clean_title }} (shared)
+            </li>
+          {% else %}
+            <li>
+              <strong>{{ m.media_type|capitalize }}:</strong>
+              {{ m.title }} (uploaded)
+            </li>
+          {% endif %}
         {% endfor %}
+        {% if not recent_entries %}
+          <li>No recent entries yet.</li>
+        {% endif %}
       </ol>
     </div>
   </div>
 
+  <!-- Import button (upload GET) -->
   <a href="{{ url_for('main.upload_page') }}" class="import-btn">Import</a>
 </div>
 {% endblock %}
