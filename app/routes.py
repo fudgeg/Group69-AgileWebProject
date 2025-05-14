@@ -24,7 +24,8 @@ from app.models import (
     Movie,
     TVShow,
     Music,
-    FriendRequest
+    FriendRequest,
+    UserActivity
 )
 from app.utils import get_media_type_breakdown, get_user_media_identity
 
@@ -446,8 +447,16 @@ def update_username():
     if not new_username:
         flash("Username cannot be empty.","error")
         return redirect(url_for('main.settings'))
+    
+    old_username = user.name
     user.name = new_username
     db.session.commit()
+
+    # Log the change
+    activity = UserActivity(user_id=user.id, activity_type="username_change", old_value=old_username, new_value=new_username)
+    db.session.add(activity)
+    db.session.commit()
+
     flash("Username updated successfully.")
     return redirect(url_for('main.settings'))
 @main.route('/update_email', methods=['POST'])
@@ -472,11 +481,20 @@ def update_email():
     if existing_user:
         flash("This email is already registered. Please use a different email.","error")
         return redirect(url_for('main.settings'))
+
+    old_email = user.email
     user.email = new_email
     db.session.commit()
+
+    # Log the change
+    activity = UserActivity(user_id=user.id, activity_type="email_change", old_value=old_email, new_value=new_email)
+    db.session.add(activity)
+    db.session.commit()
+
     session.clear()
     flash("Email updated successfully. Please log in with your new email.","caution")
     return redirect(url_for('main.login'))
+
 @main.route('/update_password', methods=['POST'])
 def update_password():
     user_id = session.get('user_id')
@@ -562,7 +580,6 @@ def for_you():
         media_counts=display_media_counts,
         genre_breakdowns=genre_breakdowns
     )
-
 @main.route('/notifications')
 def notifications():
     user_id = session.get('user_id')
@@ -575,15 +592,31 @@ def notifications():
         flash("User not found.", "error")
         return redirect(url_for('main.login'))
 
-    # Retrieve pending friend requests sent to the current user
+    # Retrieve pending friend requests
     friend_requests = FriendRequest.query.filter_by(receiver_id=user.id, status="pending").all()
+
+    # Retrieve activity updates from friends
+    friend_ids = [f.id for f in user.friends]
+    activities = UserActivity.query.filter(
+        UserActivity.user_id.in_(friend_ids),
+        UserActivity.seen == False
+    ).order_by(UserActivity.timestamp.desc()).all()
 
     # Mark all as seen
     for req in friend_requests:
         req.seen = True
+    for activity in activities:
+        activity.seen = True
     db.session.commit()
 
-    return render_template('notifications.html', user=user, friend_requests=friend_requests)
+    return render_template(
+        'notifications.html',
+        user=user,
+        friend_requests=friend_requests,
+        activities=activities  # Use "activities" here
+    )
+
+
 
 
 @main.route('/respond_friend_request/<int:request_id>/<action>', methods=['POST'])
@@ -649,6 +682,17 @@ def reject_friend_request(request_id):
 def inject_unread_notifications():
     user_id = session.get('user_id')
     if user_id:
-        unread_count = FriendRequest.query.filter_by(receiver_id=user_id, status="pending", seen=False).count()
-        return dict(unread_notifications=unread_count)
+        # Exclude the current user's own activities from the unread count
+        activity_unread = UserActivity.query.filter(
+            UserActivity.user_id != user_id,
+            UserActivity.seen == False
+        ).count()
+        
+        # Include friend requests
+        unread_requests = FriendRequest.query.filter_by(receiver_id=user_id, status="pending", seen=False).count()
+        
+        return dict(unread_notifications=activity_unread + unread_requests)
+    
     return dict(unread_notifications=0)
+
+

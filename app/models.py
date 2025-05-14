@@ -37,7 +37,22 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User {self.email}>"
-    
+
+class UserActivity(db.Model):
+    __tablename__ = 'user_activities'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    activity_type = db.Column(db.String(50), nullable=False)  # e.g., "username_change", "email_change"
+    old_value = db.Column(db.String(255), nullable=True)
+    new_value = db.Column(db.String(255), nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    seen = db.Column(db.Boolean, default=False)
+
+    user = db.relationship('User', backref='activities')
+
+    def __repr__(self):
+        return f"<UserActivity {self.activity_type} by User {self.user_id}>"
+
 class FriendRequest(db.Model):
     __tablename__ = 'friend_requests'
     id = db.Column(db.Integer, primary_key=True)
@@ -48,7 +63,6 @@ class FriendRequest(db.Model):
 
     sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_requests')
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_requests')
-
 
 class MediaEntry(db.Model):
     __tablename__ = 'media_entry'

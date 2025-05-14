@@ -1060,11 +1060,16 @@ left: 20px;
   text-align: left;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap; /* This will help with long text wrapping */
+}
+
+.notification-item strong {
+  flex-shrink: 0;
 }
 
 .notification-text {
-  flex-grow: 1;
+  flex-grow: 2;
   font-size: 18px;
   color: #204118;
 }

@@ -5,25 +5,39 @@
   <ul class="notifications-list">
     {% if friend_requests %} {% for request in friend_requests %}
     <li class="notification-item">
-      <span class="notification-text"
-        >{{ request.sender.name }} sent you a friend request!</span
-      >
-      <form
-        method="POST"
-        action="{{ url_for('main.accept_friend_request', request_id=request.id) }}"
-        style="display: inline"
-      >
-        <button class="btn btn-success btn-accept">Accept</button>
-      </form>
-      <form
-        method="POST"
-        action="{{ url_for('main.reject_friend_request', request_id=request.id) }}"
-        style="display: inline"
-      >
-        <button class="btn btn-danger btn-reject">Reject</button>
-      </form>
+      <div class="notification-text">
+        <strong>{{ request.sender.name }}</strong> sent you a friend request!
+      </div>
+      <div class="notification-actions">
+        <form
+          method="POST"
+          action="{{ url_for('main.accept_friend_request', request_id=request.id) }}"
+          style="display: inline"
+        >
+          <button class="btn btn-success btn-accept">Accept</button>
+        </form>
+        <form
+          method="POST"
+          action="{{ url_for('main.reject_friend_request', request_id=request.id) }}"
+          style="display: inline"
+        >
+          <button class="btn btn-danger btn-reject">Reject</button>
+        </form>
+      </div>
     </li>
-    {% endfor %} {% else %}
+
+    {% endfor %} {% endif %} {% if activities %} {% for activity in activities
+    %}
+    <li class="notification-item">
+      <div class="notification-text">
+        <strong>{{ activity.user.name }}</strong> changed their {{
+        activity.activity_type.replace("_", " ") }} from "<strong
+          >{{ activity.old_value }}</strong
+        >" to "<strong>{{ activity.new_value }}</strong>".
+      </div>
+    </li>
+
+    {% endfor %} {% endif %} {% if not friend_requests and not activities %}
     <li>No new notifications.</li>
     {% endif %}
   </ul>
