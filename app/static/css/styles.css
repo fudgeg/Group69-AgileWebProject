@@ -1,7 +1,7 @@
 /* ====================== GENERAL GLOBAL STYLES (Apply to ALL Pages) ====================== */
 body {
   font-family: "Segoe UI", sans-serif;
-  background-color: #dce9d5 ;
+  background-color: #d7f4c7 ;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -13,7 +13,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 height: 100vh; 
-background-color: #c2baba; 
+background-color: #ffffff; 
 }
 
 /* ====================== WELCOME PAGE STYLES ====================== */
@@ -317,8 +317,11 @@ left: 20px;
 .home-container {
   position: relative; 
   background-color: #dce9d5;
-  width: 100%;
-  height: 100vh;
+
+  min-height: 100vh;
+  height: auto;
+  padding-top: 100px; /* so navbar doesn’t overlap content */
+
   padding: 50px;
   text-align: center;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -326,6 +329,8 @@ left: 20px;
   box-sizing: border-box; 
   
 }
+
+
 
 .content {
   display: flex;
@@ -337,47 +342,52 @@ left: 20px;
 }
 
 .friends-activity, .recent-activity {
-  background-color: #9ebf8f;
-  padding: 20px;
-  border-radius: 50px;
-  width: 250px;
+  background-color: #ffffff;
+  padding:10px;
+  border-radius: 20px;
+  width: 500px;
   text-align: center;
   position: relative; 
-  z-index: 2; /* make the 2 boxes appear after the brain image */
+  border: 2px solid #204118;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+
   
 }
 
-.brain-image img {
-  width: 250%;
-  height: auto;
+.friends-activity h2, .recent-activity h2 {
+  margin-top: 0;
+  color: #204118;
+  font-size: 30px;
 }
-
-.brain-image {
-  position: absolute; 
-  top: 50%; 
-  left: 34.5%;
-  transform: translate(-50%, -50%); 
-  width: 400px; 
-  opacity: 0.25; /* Make it transparent */
-  z-index: 1; /* make sure the image stay behind the elements */
+.friends-activity ul, .recent-activity ul {
+  list-style: none;
+  padding: 0;
+  font-size: 18px;
+}
+.friends-activity li, .recent-activity li {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  padding: 5px;
+  font-size: 18px;
 }
 
 
 /* ======================IMPORT BUTTON IN HOME PAGE ======================*/
 .import-btn {
-  margin-top: 20px;
-  padding: 12px 24px;
-  background-color: #555;
+  margin-top: 70px;
+  padding: 12px 90px;
+  background-color: #204118;
+  font-size: 30px;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 36px;
   cursor: pointer;
   display: inline-block;
   text-decoration: none; 
   text-align: center;
   position: relative; 
-  z-index: 2; /*make sure its one layer after the brain image*/
 }
 
 
@@ -813,6 +823,96 @@ left: 20px;
 }
 
 
+/* ====================== FOR YOU PAGE ====================== */
 
+/* ============ FOR YOU PAGE (Updated) ============ */
 
+.for-you-page {
+  padding: 60px 20px;
+  background-color: #dce9d5;
+  min-height: 100vh;
+}
 
+.for-you-page h2 {
+  text-align: center;
+  font-size: 48px;
+  color: #204118;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.media-counts {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-size: 1.3rem;
+  padding: 30px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+}
+
+.chart-section-title {
+  font-size: 36px;
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  color: #204118;
+}
+
+.chart-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+}
+
+.chart-container h5 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #204118;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* ===== FOR YOU MEDIA STATS ===== */
+.media-count-grid {
+  row-gap: 1px;
+}
+.media-card-small {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-family: 'Segoe UI', sans-serif;
+  min-width: 130px;
+  width: 150px;
+  flex: 0 0 auto;
+}
+
+.media-icon {
+  width: 50px;
+  height: auto;
+}
+
+.chart-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: auto !important;
+}

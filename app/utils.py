@@ -14,10 +14,15 @@ def get_user_media_identity(counts_dict):
     if not counts_dict:
         return "You are a Media Explorer"
 
-    top_type = max(counts_dict, key=counts_dict.get)
+    max_count = max(counts_dict.values())
+    top_types = [k for k, v in counts_dict.items() if v == max_count]
+
+    if len(top_types) > 1:
+        return "You are a Media Explorer"
+
     return {
         'book': "You are a Reader",
         'movie': "You are a Cinephile",
         'music': "You are a Music Lover",
         'tv_show': "You are a Binge-Watcher"
-    }.get(top_type, "You are a Media Explorer")
+    }.get(top_types[0], "You are a Media Explorer")
