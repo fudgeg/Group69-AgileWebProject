@@ -1044,6 +1044,53 @@ left: 20px;
   height: auto !important;
 }
 
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-secondary {
+    background-color: #204118;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-outline-dark {
+    background-color: white;
+    color: #333;
+    border: 2px solid #333;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-secondary:hover {
+    background-color: #10280E;
+}
+
+.btn-outline-dark:hover {
+    background-color: #333;
+    color: white;
+}
+
+
 /* ===== Notification PAGE ===== */
 
 .notifications-list {
@@ -1115,3 +1162,4 @@ left: 20px;
     min-width: 18px;
     text-align: center;
 }
+

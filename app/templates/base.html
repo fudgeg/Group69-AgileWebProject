@@ -17,6 +17,7 @@
       type="image/png"
       href="{{ url_for('static', filename='media/SoulMapsIcon.png') }}"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </head>
   <body class="{% if hide_navbar %}center-page{% endif %}">
     {% if not hide_navbar %} {% include "navbar.html" %} {% endif %}
