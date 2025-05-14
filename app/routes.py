@@ -10,7 +10,7 @@ from flask import (
     url_for,
     session,
     flash,
-    current_app
+    current_app,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -23,7 +23,8 @@ from app.models import (
     Book,
     Movie,
     TVShow,
-    Music
+    Music,
+    FriendRequest
 )
 from app.utils import get_media_type_breakdown, get_user_media_identity
 
@@ -216,6 +217,32 @@ def search_users():
     # Render the search results
     return render_template('friends_search.html', user=user, search_results=search_results)
 
+@main.route('/send_friend_request/<int:receiver_id>', methods=['POST'])
+def send_friend_request(receiver_id):
+    user = User.query.get(session.get('user_id'))
+    receiver = User.query.get(receiver_id)
+
+    if not user or not receiver or user == receiver:
+        flash("Invalid friend request.", "error")
+        return redirect(url_for('main.friends'))
+
+    # Check if a request already exists
+    existing_request = FriendRequest.query.filter_by(
+        sender_id=user.id,
+        receiver_id=receiver.id
+    ).first()
+
+    if existing_request:
+        flash("Friend request already sent.", "caution")
+        return redirect(url_for('main.friends'))
+
+    # Create a new friend request
+    friend_request = FriendRequest(sender_id=user.id, receiver_id=receiver.id)
+    db.session.add(friend_request)
+    db.session.commit()
+
+    flash("Friend request sent, awaiting approval.", "success")
+    return redirect(url_for('main.friends'))
 
 
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
@@ -535,6 +562,7 @@ def for_you():
         media_counts=display_media_counts,
         genre_breakdowns=genre_breakdowns
     )
+
 @main.route('/notifications')
 def notifications():
     user_id = session.get('user_id')
@@ -547,7 +575,69 @@ def notifications():
         flash("User not found.", "error")
         return redirect(url_for('main.login'))
 
-    # Retrieve pending friend requests (replace this with actual logic)
-    friend_requests = []  # Placeholder for now
+    # Retrieve pending friend requests sent to the current user
+    friend_requests = FriendRequest.query.filter_by(
+        receiver_id=user.id,
+        status="pending"
+    ).all()
 
     return render_template('notifications.html', user=user, friend_requests=friend_requests)
+
+@main.route('/respond_friend_request/<int:request_id>/<action>', methods=['POST'])
+def respond_friend_request(request_id, action):
+    user = User.query.get(session.get('user_id'))
+    friend_request = FriendRequest.query.get(request_id)
+
+    if not user or not friend_request or friend_request.receiver_id != user.id:
+        flash("Invalid request.", "error")
+        return redirect(url_for('main.notifications'))
+
+    if action == "accept":
+        # Establish the friendship
+        sender = friend_request.sender
+        receiver = friend_request.receiver
+        sender.friends.append(receiver)
+        receiver.friends.append(sender)
+        friend_request.status = "accepted"
+        flash(f"You are now friends with {sender.name}!", "success")
+    elif action == "reject":
+        friend_request.status = "rejected"
+        flash("Friend request rejected.", "caution")
+    else:
+        flash("Invalid action.", "error")
+
+    db.session.commit()
+    return redirect(url_for('main.notifications'))
+
+@main.route('/accept_friend_request/<int:request_id>', methods=['POST'])
+def accept_friend_request(request_id):
+    friend_request = FriendRequest.query.get(request_id)
+    if friend_request:
+        sender = friend_request.sender
+        receiver = friend_request.receiver
+
+        # Make them friends
+        sender.friends.append(receiver)
+        receiver.friends.append(sender)
+
+        # Remove the request
+        db.session.delete(friend_request)
+        db.session.commit()
+
+        flash(f"You are now friends with {sender.name}!", "success")
+    else:
+        flash("Friend request not found.", "error")
+    
+    return redirect(url_for('main.notifications'))
+
+@main.route('/reject_friend_request/<int:request_id>', methods=['POST'])
+def reject_friend_request(request_id):
+    friend_request = FriendRequest.query.get(request_id)
+    if friend_request:
+        db.session.delete(friend_request)
+        db.session.commit()
+        flash("Friend request rejected.", "caution")
+    else:
+        flash("Friend request not found.", "error")
+    
+    return redirect(url_for('main.notifications'))

@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -36,6 +37,22 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User {self.email}>"
+    
+class FriendRequest(db.Model):
+    __tablename__ = 'friend_requests'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default="pending")
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationships to access sender and receiver
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_requests')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_requests')
+
+    def __repr__(self):
+        return f"<FriendRequest from {self.sender.name} to {self.receiver.name} - Status: {self.status}>"
+
 
 class MediaEntry(db.Model):
     __tablename__ = 'media_entry'
@@ -102,3 +119,4 @@ class Book(MediaEntry):
     __mapper_args__ = {'polymorphic_identity': 'book'}
     def __repr__(self):
         return f"<Book {self.title}, Author: {self.author}>"
+

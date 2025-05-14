@@ -1042,3 +1042,56 @@ left: 20px;
   width: 100% !important;
   height: auto !important;
 }
+
+/* ===== Notification PAGE ===== */
+
+.notifications-list {
+  list-style: none;
+  padding: 0;
+}
+
+.notification-item {
+  margin-bottom: 20px;
+  background-color: #f4f4f4;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notification-text {
+  flex-grow: 1;
+  font-size: 18px;
+  color: #204118;
+}
+
+.btn-accept, .btn-reject {
+  padding: 5px 15px;
+  border-radius: 10px;
+  margin-left: 10px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn-accept {
+  background-color: #4CAF50;  /* Green */
+  border: none;
+}
+
+.btn-reject {
+  background-color: #f44336;  /* Red */
+  border: none;
+}
+
+.btn-accept:hover {
+  background-color: #45a049;
+}
+
+.btn-reject:hover {
+  background-color: #d32f2f;
+}

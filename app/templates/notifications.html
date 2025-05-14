@@ -1,10 +1,28 @@
 {% extends "base.html" %} {% block title %}Notifications – Soul Maps{% endblock
 %} {% block content %}
-<div class="notifications-container">
+<div class="home-container">
   <h2>Notifications</h2>
   <ul class="notifications-list">
     {% if friend_requests %} {% for request in friend_requests %}
-    <li>{{ request.sender_name }} sent you a friend request!</li>
+    <li class="notification-item">
+      <span class="notification-text"
+        >{{ request.sender.name }} sent you a friend request!</span
+      >
+      <form
+        method="POST"
+        action="{{ url_for('main.accept_friend_request', request_id=request.id) }}"
+        style="display: inline"
+      >
+        <button class="btn btn-success btn-accept">Accept</button>
+      </form>
+      <form
+        method="POST"
+        action="{{ url_for('main.reject_friend_request', request_id=request.id) }}"
+        style="display: inline"
+      >
+        <button class="btn btn-danger btn-reject">Reject</button>
+      </form>
+    </li>
     {% endfor %} {% else %}
     <li>No new notifications.</li>
     {% endif %}
