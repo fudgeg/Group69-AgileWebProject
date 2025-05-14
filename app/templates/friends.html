@@ -3,7 +3,6 @@
 {% block content %}
 <div class="home-container">
   <h2>Friends</h2>
-
   <!-- ADD BY USERNAME FORM -->
   <div class="mb-4">
     <form method="post" action="{{ url_for('main.friends') }}" class="d-flex gap-2">
@@ -17,7 +16,6 @@
       <button class="btn btn-primary">Send Request</button>
     </form>
   </div>
-
   <!-- SHARE MEDIA SECTION -->
   <div class="share-section mb-4 p-3 border rounded">
     <h4>Share Media with a Friend</h4>
@@ -43,8 +41,6 @@
       <button class="btn btn-success">Share</button>
     </form>
   </div>
-
-
   <div class="friends-page">
     <!-- Friends List -->
     <div class="friends-section">
@@ -65,7 +61,6 @@
         {% endfor %}
       </div>
     </div>
-
     <!-- Recommended Friends -->
     <div class="recommended-section">
       <h3>Recommended Connections</h3>
