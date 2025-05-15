@@ -17,111 +17,90 @@ background-color: #ffffff;
 }
 
 /* ====================== WELCOME PAGE STYLES ====================== */
-.container {
-background-color: #efefe3;
-width: 90%;
-max-width: 600px;
-padding: 40px ;
-border-radius: 10px;
-text-align: center;
-box-shadow: 0 0 10px rgba(0,0,0,0.2);
-}
 
-.welcome-box {
-background-color: #f8f8e8;
-width: 500px;   
-padding: 30px 25px;                  
-border-radius: 12px;
-box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-text-align: center;
+
+body.welcome.center-page {
+  display: block !important;
+  height: auto !important;
 }
 
 
-.login-container {
-position: static;
-background-color: #f8f8e8;
-display: flex;
-align-items: center;
-justify-content: center;
-margin: 50px auto;
-border-radius: 12px;
-padding: 30px 25px;       
-width: 40px;
-max-width: 1100px;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* HERO SECTION */
+/* HERO SECTION */
+.hero-logo {
+  width: 100px;
+  height: auto;
 }
 
-.logo-section {
-flex: 1;
-display: flex;
-justify-content: center;
-align-items: center;
+/* Adjust spacing now that logo is present */
+.hero-inner .display-3 {
+  margin-top: 0.5rem;
 }
 
-/*Base logo*/
-.logo {
-max-width: 100%;
-font-weight: bold;
+/* rest of the CSS unchanged... */
+
+.welcome-hero {
+  background: linear-gradient(to right, #204118, #3a7741);
+  color: white;
+  padding: 25px 20px 60px;
+  text-align: center;
 }
-
-
-.title {
-font-size: 2.5rem;
-color: #204118;
+.hero-inner {
+  max-width: 800px;
+  margin: auto;
 }
-
-.subtitle {
-margin: 15px 0 25px;
-font-size: 1rem;
-font-weight: 500;
-}
-
-.buttons .btn {
-background-color: #204118;
-color: white;
-padding: 12px;
-border-radius: 8px;
-text-decoration: none;
-font-weight: bold;
-margin: 5px;
-}
-
-.vertical-buttons {
-display: flex;
-flex-direction: column;
-align-items: center;
-width: 100%;
-}
-
-.full-width-btn {
-width: 100%;
-max-width: 400px;
-padding: 14px;
-font-size: 1rem;
-border-radius: 12px;
-}
-
-
-.buttons .btn:hover {
-background-color: #356630;
-}
-
-.icons {
-display: flex;
-justify-content: center;
-gap: 35px;
-flex-wrap: wrap;
-margin-top: 20px;
-}
-
 .icon-text {
-text-align: center;
-font-size: 16px;
-line-height: 1.5;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgba(255,255,255,0.8);
+}
+
+/* FEATURES SECTION */
+.feature-showcase {
+  background-color: #fefef5;
+}
+.section-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #204118;
+}
+
+/* Feature Cards */
+.feature-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 30px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.feature-card img {
+  max-width: 230px;
+  height: auto;
+}
+.feature-card h5 {
+  margin-top: 16px;
+  font-weight: 600;
+  color: #204118;
+}
+.feature-card p.small {
+  margin-top: 8px;
+  color: #555;
+  flex-grow: 1;
 }
 
 
 /* ====================== LOGIN & SIGN UP PAGE STYLES  ====================== */
+.center-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #ffffff;
+  padding: 40px 20px;
+}
 .login-container {
   background-color: #efefe3;
   width: 90%;
@@ -134,6 +113,7 @@ line-height: 1.5;
   justify-content: center;
   gap: 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  flex-wrap: wrap
 }
 
 
@@ -155,7 +135,7 @@ line-height: 1.5;
   justify-content: center;
   width: 100%;
   max-width: 600px;
-  position: relative;
+  position: 100%;
 }
 
 

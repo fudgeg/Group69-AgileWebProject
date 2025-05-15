@@ -1,25 +1,96 @@
-{% extends "base.html" %} {% set hide_navbar = true %} {% block title %}Welcome
+{% extends "base.html" %} {% set is_welcome = true %} {% set hide_navbar = true %} {% block title %}Welcome
 – Soul Maps{% endblock %} {% block content %}
-<div class="center-page">
-  <div class="welcome-box">
-    <h1 class="title">Soul Maps</h1>
-    <p class="subtitle">
-      Create your own media maps and share it with your friends!
+<!-- HERO SECTION -->
+<section class="welcome-hero">
+  <div class="hero-inner text-center">
+    <!-- Logo -->
+    <div class="hero-title d-flex align-items-center justify-content-center mb-4">
+  <img src="{{ url_for('static', filename='media/SoulMapsIcon.png') }}"
+       alt="Soul Maps Logo"
+       class="hero-logo me-3">
+  <h1 class="display-3 fw-bold mb-0">Soul Maps</h1>
+</div>
+
+    <p class="lead mt-3">
+      Track every book, movie, show, and song you love—and watch Soul Maps turn them into
+      beautiful interactive charts, personalized media‐identity tags, and shareable stories.
     </p>
-
-    <div class="buttons vertical-buttons">
-      <a href="{{ url_for('main.login') }}" class="btn full-width-btn">Login</a>
-      <a href="{{ url_for('main.signup') }}" class="btn full-width-btn"
-        >Sign Up</a
-      >
+    <div class="mt-4">
+      <a href="{{ url_for('main.login') }}" class="btn btn-light btn-lg me-3">Login</a>
+      <a href="{{ url_for('main.signup') }}" class="btn btn-outline-light btn-lg">Sign Up</a>
     </div>
+    <div class="mt-5 d-flex justify-content-center gap-4 flex-wrap">
+      <span class="icon-text">📚 Books</span>
+      <span class="icon-text">🎬 Movies</span>
+      <span class="icon-text">📺 TV Shows</span>
+      <span class="icon-text">🎵 Music</span>
+    </div>
+  </div>
+</section>
 
-    <div class="icons">
-      <div class="icon-text">📚<br />Books</div>
-      <div class="icon-text">📺<br />Tv shows</div>
-      <div class="icon-text">🎬<br />Movies</div>
-      <div class="icon-text">🎵<br />Music</div>
+<!-- FEATURES SECTION -->
+<section class="feature-showcase py-5">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">What Soul Maps Can Do</h2>
+    <div class="row g-5 justify-content-center">
+      <!-- 1. Book Completion -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="feature-card h-100">
+          <img src="{{ url_for('static', filename='media/book-completion-preview.png') }}"
+               alt="Book Completion" class="img-fluid mb-3 rounded">
+          <h5>📘 Book Completion</h5>
+          <p class="small">
+            See your reading completion rate and average time per book—know exactly how quickly
+            you devour your next novel.
+          </p>
+        </div>
+      </div>
+      <!-- 2. Timeline Analytics -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="feature-card h-100">
+          <img src="{{ url_for('static', filename='media/timeline-preview.png') }}"
+               alt="Timeline Analytics" class="img-fluid mb-3 rounded">
+          <h5>📈 Timeline Analytics</h5>
+          <p class="small">
+            Visualize your media habits month by month—identify your peak binge seasons at a glance.
+          </p>
+        </div>
+      </div>
+      <!-- 3. Genre Insights -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="feature-card h-100">
+          <img src="{{ url_for('static', filename='media/genre-insights-preview.png') }}"
+               alt="Genre Insights" class="img-fluid mb-3 rounded">
+          <h5>📊 Genre Insights</h5>
+          <p class="small">
+            Discover your top genres across books, films, TV, and music—and unlock a tailored media identity.
+          </p>
+        </div>
+      </div>
+      <!-- 4. Media Personality -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="feature-card h-100">
+          <img src="{{ url_for('static', filename='media/media-personality-preview.png') }}"
+               alt="Media Personality" class="img-fluid mb-3 rounded">
+          <h5>🧠 Media Personality</h5>
+          <p class="small">
+            Get labeled as a “Reader,” “Cinephile,” “Binge-Watcher,” or “Music Lover” based on your habits.
+          </p>
+        </div>
+      </div>
+      <!-- 5. Share with Friends -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="feature-card h-100">
+          <img src="{{ url_for('static', filename='media/share-preview.png') }}"
+               alt="Share with Friends" class="img-fluid mb-3 rounded">
+          <h5>🤝 Share with Friends</h5>
+          <p class="small">
+            Send your Soul Map directly in-app, email it to a friend, or download it as a beautiful poster.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+</section>
 {% endblock %}
