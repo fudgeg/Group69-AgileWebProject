@@ -8,7 +8,7 @@ with app.app_context():
     user = User.query.filter_by(email='admin@example.com').first()
 
     if not user:
-        print("❌ Admin user not found.")
+        print("Admin user not found.")
     else:
         db.session.add_all([
             Book(

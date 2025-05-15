@@ -82,6 +82,7 @@ def logout():
     flash('You have been logged out', "caution")
     return redirect(url_for('main.welcome'))
 
+
 @main.route('/home')
 def home():
     user_id = session.get('user_id')
@@ -152,6 +153,7 @@ def home():
         friend_entries=friend_entries
     )
 
+
 @main.route('/friends', methods=['GET', 'POST'])
 def friends():
     user = User.query.get(session.get('user_id'))
@@ -185,6 +187,7 @@ def friends():
         user_media=user_media
     )
 
+
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
 def add_friend(friend_id):
     user   = User.query.get(session.get('user_id'))
@@ -200,6 +203,7 @@ def add_friend(friend_id):
     db.session.commit()
     flash(f"You are now friends with {friend.name}!")
     return redirect(url_for('main.friends'))
+
 
 @main.route('/share_media', methods=['POST'])
 def share_media():
@@ -249,6 +253,7 @@ def share_media():
         flash(f"Shared “{media.title}” with {friend.name}", "success")
 
     return redirect(url_for('main.friends'))
+
 
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
@@ -321,6 +326,7 @@ def upload_page():
     entries = MediaEntry.query.filter_by(user_id=user_id).all()
     return render_template('upload.html', entries=entries)
 
+
 @main.route('/settings')
 def settings():
     user_id = session.get('user_id')
@@ -333,6 +339,7 @@ def settings():
         return redirect(url_for('main.login'))
     profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
     return render_template('settings.html', user=user, profile_picture_url=profile_picture_url)
+
 
 @main.route('/update_profile_picture', methods=['POST'])
 def update_profile_picture():
@@ -360,6 +367,8 @@ def update_profile_picture():
     db.session.commit()
     flash("Profile picture updated successfully.")
     return redirect(url_for('main.settings'))
+
+
 @main.route('/update_username', methods=['POST'])
 def update_username():
     user_id = session.get('user_id')
@@ -410,6 +419,8 @@ def update_email():
     session.clear()
     flash("Email updated successfully. Please log in with your new email.","caution")
     return redirect(url_for('main.login'))
+
+
 @main.route('/update_password', methods=['POST'])
 def update_password():
     user_id = session.get('user_id')
@@ -434,6 +445,8 @@ def update_password():
     session.clear()
     flash("Password updated successfully. Please log in with your new credentials.", "caution")
     return redirect(url_for('main.login'))
+
+
 @main.route('/delete_account', methods=['POST'])
 def delete_account():
     user_id = session.get('user_id')
@@ -454,6 +467,8 @@ def delete_account():
     session.clear()
     flash("Your account has been permanently deleted.", "caution")
     return redirect(url_for('main.welcome'))
+
+
 @main.route('/foryou')
 def for_you():
     user_id = session.get('user_id')
@@ -493,19 +508,7 @@ def for_you():
     monthly_by_type = get_monthly_media_by_type(user_id)
     completion_rate, avg_completion_time = calculate_book_metrics(books)
     
-    tv = TVShow.query.filter_by(user_id=user_id).all()
-    book = Book.query.filter_by(user_id=user_id).all()
-    movie   = Movie.query.filter_by(user_id=user_id).all()
-    musi   = Music.query.filter_by(user_id=user_id).all()
-    for t in tv:
-        print(f"TV: {t.title}, watched: {t.watched_date}")
-    for b in book:
-        print(f"Book: {b.title}, watched: {b.date_finished}")
-    for m in movie:
-        print(f"movie: {m.title}, watched: {m.watched_date}")
-    for mu in musi:
-        print(f"music: {mu.title}, watched: {mu.listened_date}")
-        
+    
     return render_template(
         "foryou.html",
         identity=identity_label,
