@@ -1,4 +1,3 @@
-from datetime import timedelta
 from app.models import Book, MediaEntry, Movie, Music, TVShow
 from app import db
 from sqlalchemy import func
@@ -33,56 +32,24 @@ def get_monthly_media_by_type(user_id):
     def get_month_key(date):
         return date.strftime('%Y-%m')
 
-    def parse_dates(entries, field):
-        return [getattr(e, field) for e in entries if getattr(e, field)]
-
     counts = defaultdict(lambda: defaultdict(int))
 
-    # Fetch all media entries
     movies = Movie.query.filter_by(user_id=user_id).all()
-    tv = TVShow.query.filter_by(user_id=user_id).all()
-    music = Music.query.filter_by(user_id=user_id).all()
-    books = Book.query.filter_by(user_id=user_id).all()
-
-    # Get all date fields that matter
-    all_dates = []
-    for model, field in [
-        (Book, 'date_finished'),
-        (Movie, 'watched_date'),
-        (TVShow, 'watched_date'),
-        (Music, 'listened_date')
-    ]:
-        all_dates += [
-            getattr(entry, field)
-            for entry in model.query.filter_by(user_id=user_id).all()
-            if getattr(entry, field)
-        ]
-
-    # If no dates, return empty
-    if not all_dates:
-        return {}
-
-    # Determine min and max months
-    min_date = min(all_dates).replace(day=1)
-    max_date = max(all_dates).replace(day=1)
-
-    # Pad the full month range (step forward by 1 month)
-    current = min_date
-    while current <= max_date:
-        month_key = current.strftime('%Y-%m')
-        counts[month_key]  # ensures the key is present even if empty
-        current = (current.replace(day=28) + timedelta(days=4)).replace(day=1)
-
-    # Tally real entries
     for m in movies:
         if m.watched_date:
             counts[get_month_key(m.watched_date)]['movie'] += 1
+
+    tv = TVShow.query.filter_by(user_id=user_id).all()
     for t in tv:
         if t.watched_date:
             counts[get_month_key(t.watched_date)]['tv_show'] += 1
+
+    music = Music.query.filter_by(user_id=user_id).all()
     for s in music:
         if s.listened_date:
             counts[get_month_key(s.listened_date)]['music'] += 1
+
+    books = Book.query.filter_by(user_id=user_id).all()
     for b in books:
         if b.date_finished:
             counts[get_month_key(b.date_finished)]['book'] += 1
