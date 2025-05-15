@@ -297,7 +297,8 @@ def add_friend(friend_id):
 
 @main.route('/share_media', methods=['POST'])
 def share_media():
-    user = User.query.get(session.get('user_id'))
+    """Share one of your media entries with a friend."""
+    user      = User.query.get(session.get('user_id'))
     if not user:
         flash("Please log in to share media.", "error")
         return redirect(url_for('main.login'))
@@ -321,28 +322,67 @@ def share_media():
     if exists:
         flash(f"{friend.name} already has “{media.title}”", "caution")
     else:
-        # Insert into friend's list
-        friend_entry = MediaEntry(
-            media_type=media.media_type,
-            title=shared_title,
-            user_id=friend.id
-        )
+        # ─── clone into correct subclass ───
+        if isinstance(media, Movie):
+            friend_entry = Movie(
+                title        = shared_title,
+                rating       = media.rating,
+                comments     = media.comments,
+                genre        = media.genre,
+                watched_date = media.watched_date,
+                user_id      = friend.id
+            )
+        elif isinstance(media, TVShow):
+            friend_entry = TVShow(
+                title        = shared_title,
+                rating       = media.rating,
+                comments     = media.comments,
+                genre        = media.genre,
+                watched_date = media.watched_date,
+                user_id      = friend.id
+            )
+        elif isinstance(media, Book):
+            friend_entry = Book(
+                title         = shared_title,
+                rating        = media.rating,
+                comments      = media.comments,
+                genre         = media.genre,
+                author        = media.author,
+                date_started  = media.date_started,
+                date_finished = media.date_finished,
+                status        = media.status,
+                user_id       = friend.id
+            )
+        elif isinstance(media, Music):
+            friend_entry = Music(
+                title    = shared_title,
+                rating   = media.rating,
+                comments = media.comments,
+                genre    = media.genre,
+                artist   = media.artist,
+                user_id  = friend.id
+            )
+        else:
+            flash("Can’t share that media type.", "error")
+            return redirect(url_for('main.friends'))
+
         db.session.add(friend_entry)
         db.session.commit()
+        # ────────────────────────────────────────
 
-        # Record your share in session (with sharer_id and recipient_id)
+        # optional: session badge
         shares = session.get('your_shares', [])
         shares.append({
-            'media_type': media.media_type,
-            'title':      media.title,
-            'sharer_id':  user.id,
-            'recipient_id': friend.id
+            'media_type': friend_entry.media_type,
+            'title':      friend_entry.title,
+            'sharer_id':  user.id
         })
         session['your_shares'] = shares
 
         flash(f"Shared “{media.title}” with {friend.name}", "success")
 
     return redirect(url_for('main.friends'))
+
 
 
 @main.route('/upload', methods=['GET', 'POST'])
