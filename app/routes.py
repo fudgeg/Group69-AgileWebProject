@@ -25,7 +25,7 @@ from app.models import (
     TVShow,
     Music
 )
-from app.utils import get_media_type_breakdown, get_user_media_identity
+from app.utils import calculate_book_metrics, get_media_type_breakdown, get_monthly_media_by_type, get_user_media_identity
 
 main = Blueprint('main', __name__)
 
@@ -296,7 +296,7 @@ def upload_page():
                 rating=rating,
                 comments=comment,
                 genre=(request.form.get('tvshow_genre') or "").title() or None,
-                watched_date=parse_date(request.form.get('watched_date')),
+                watched_date=parse_date(request.form.get('tvshow_watched_date')),
                 user_id=user_id
             )
         elif media_type == 'music':
@@ -382,6 +382,7 @@ def update_username():
     db.session.commit()
     flash("Username updated successfully.")
     return redirect(url_for('main.settings'))
+
 @main.route('/update_email', methods=['POST'])
 def update_email():
     user_id = session.get('user_id')
@@ -487,10 +488,30 @@ def for_you():
         "Tv&Movies": get_genre_counts(combined_screen),
         "Music":    get_genre_counts(music),
     }
+    
     identity_label = get_user_media_identity(raw_media_counts)
+    monthly_by_type = get_monthly_media_by_type(user_id)
+    completion_rate, avg_completion_time = calculate_book_metrics(books)
+    
+    tv = TVShow.query.filter_by(user_id=user_id).all()
+    book = Book.query.filter_by(user_id=user_id).all()
+    movie   = Movie.query.filter_by(user_id=user_id).all()
+    musi   = Music.query.filter_by(user_id=user_id).all()
+    for t in tv:
+        print(f"TV: {t.title}, watched: {t.watched_date}")
+    for b in book:
+        print(f"Book: {b.title}, watched: {b.date_finished}")
+    for m in movie:
+        print(f"movie: {m.title}, watched: {m.watched_date}")
+    for mu in musi:
+        print(f"music: {mu.title}, watched: {mu.listened_date}")
+        
     return render_template(
         "foryou.html",
         identity=identity_label,
         media_counts=display_media_counts,
-        genre_breakdowns=genre_breakdowns
+        genre_breakdowns=genre_breakdowns,
+        monthly_by_type=monthly_by_type,
+        completion_rate=completion_rate,
+        avg_completion_time=avg_completion_time
     )
