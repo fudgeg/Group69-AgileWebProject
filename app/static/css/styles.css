@@ -335,10 +335,14 @@ left: 20px;
   background-color: #f8f8f8;
   border-radius: 15px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  padding: 15px 20px; /* More padding for breathing room */
+  padding: 15px 20px;
   font-size: 18px;
-  margin-bottom: 15px; /* Space between items */
+  margin-bottom: 15px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal; /* Ensure text wraps correctly */
 }
+
 
 .recent-activity li em {
   font-weight: bold;
@@ -999,7 +1003,7 @@ left: 20px;
 }
 
 .upload-box ul::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .upload-box ul::-webkit-scrollbar-thumb {
