@@ -2,7 +2,10 @@
 – Soul Maps{% endblock %} {% block content %}
 <div class="center-page">
   <div class="welcome-box">
-    <h1 class="title">Soul Maps</h1>
+    <h1 class="title">
+      <span class="info-icon" onclick="openCookieModal()">ℹ️</span> Soul Maps
+    </h1>
+
     <p class="subtitle">
       Create your own media maps and share it with your friends!
     </p>
@@ -15,11 +18,72 @@
     </div>
 
     <div class="icons">
-      <div class="icon-text">📚<br />Books</div>
-      <div class="icon-text">📺<br />Tv shows</div>
-      <div class="icon-text">🎬<br />Movies</div>
-      <div class="icon-text">🎵<br />Music</div>
+      <div class="icon-text">
+        <span>📚</span>
+        Books
+      </div>
+      <div class="icon-text">
+        <span>📺</span>
+        TV Shows
+      </div>
+      <div class="icon-text">
+        <span>🎬</span>
+        Movies
+      </div>
+      <div class="icon-text">
+        <span>🎵</span>
+        Music
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Cookie Modal -->
+<div id="cookieModal" class="cookie-modal">
+  <div class="cookie-content">
+    <h2>Welcome to Soul Maps</h2>
+    <p>Discover, Reflect, and Connect through Media!</p>
+    <ul>
+      <li>
+        <strong>Media-Centric Social Network:</strong> A social platform that
+        revolves around your media journey. Track and share the books you read,
+        the shows you binge, the movies you watch, and the music you love.
+      </li>
+      <li>
+        <strong>Personalized Insights:</strong> Get deep, personalized insights
+        into your media habits, uncovering patterns and hidden interests as you
+        log your daily media experiences.
+      </li>
+      <li>
+        <strong>Connect Through Stories:</strong> Share your journey with
+        friends, connect with like-minded users, and discover new content
+        through a community built around shared tastes and discoveries.
+      </li>
+    </ul>
+    <button onclick="closeCookieModal()" class="cookie-btn">Close</button>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const cookieModal = document.getElementById("cookieModal");
+
+    // Show the modal if not accepted before
+    if (!localStorage.getItem("cookiesAccepted")) {
+      cookieModal.classList.add("active");
+    }
+
+    window.acceptCookies = function () {
+      localStorage.setItem("cookiesAccepted", "true");
+      cookieModal.classList.remove("active");
+    };
+
+    window.openCookieModal = function () {
+      cookieModal.classList.add("active");
+    };
+
+    window.closeCookieModal = function () {
+      cookieModal.classList.remove("active");
+    };
+  });
+</script>
 {% endblock %}
