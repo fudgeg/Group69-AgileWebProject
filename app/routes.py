@@ -614,9 +614,6 @@ def for_you():
 
 
 
-    
-# notifications route (after)
-
 @main.route('/notifications')
 def notifications():
     user_id = session.get('user_id')
@@ -646,16 +643,41 @@ def notifications():
         except json.JSONDecodeError:
             snapshot.parsed_data = {"error": "Invalid snapshot data"}
 
+    # Retrieve all friend shares without a limit
+    friend_entries = (
+        MediaEntry.query
+        .filter_by(user_id=user.id)
+        .filter(MediaEntry.title.contains('(shared)'))
+        .order_by(MediaEntry.id.desc())
+        .all()
+    )
+
+    # Add the friend’s name who shared it
+    real_friends = []
+    for entry in friend_entries:
+        clean = entry.title.rsplit(' (shared)', 1)[0]
+        sharer = (
+            MediaEntry.query
+            .filter(
+                MediaEntry.user_id.in_(friend_ids),
+                MediaEntry.media_type == entry.media_type,
+                MediaEntry.title == clean
+            )
+            .order_by(MediaEntry.id.desc())
+            .first()
+        )
+        if sharer:
+            entry.sharer_name = sharer.user.name
+            real_friends.append(entry)
+
     return render_template(
         'notifications.html',
         user=user,
         friend_requests=friend_requests,
         activities=activities,
-        snapshots=snapshots
+        snapshots=snapshots,
+        friend_entries=real_friends  # Now this includes all shares
     )
-
-
-
 
 
 @main.route('/respond_friend_request/<int:request_id>/<action>', methods=['POST'])

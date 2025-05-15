@@ -59,10 +59,15 @@ class FriendRequest(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.String(20), default="pending")
-    seen = db.Column(db.Boolean, default=False)  # New field
+    seen = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)  # Add this line
 
     sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_requests')
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_requests')
+
+    def __repr__(self):
+        return f"<FriendRequest from {self.sender_id} to {self.receiver_id} at {self.timestamp}>"
+
 
 class MediaSnapshot(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -84,13 +89,11 @@ class MediaEntry(db.Model):
     media_type = db.Column(db.String(50), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     rating = db.Column(db.Integer, nullable=True)
-    # Optional Comments Field
     comments = db.Column(db.Text, nullable=True)
     consumed_date = db.Column(db.Date, nullable=True)
     is_favorite = db.Column(db.Boolean, default=False)
-    # Foreign key to link media entry to the User
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # Relationship to access User from MediaEntry (entry.user)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)  # Add this line
     user = db.relationship('User', backref='media_entries')
 
     __mapper_args__ = {
@@ -100,6 +103,7 @@ class MediaEntry(db.Model):
 
     def __repr__(self):
         return f"<{self.media_type}: {self.title}>"
+
 
 class Movie(MediaEntry):
     __tablename__ = 'movies'

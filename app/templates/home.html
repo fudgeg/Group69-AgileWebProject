@@ -9,9 +9,9 @@ block content %}
       <ul class="list-unstyled">
         {% if friend_entries %} {% for m in friend_entries %}
         <li>
-          Shared {{ m.media_type|capitalize }}:
+          {{ m.sharer_name }} shared {{ m.media_type|capitalize }}:
           <strong><em>{{ m.title.replace(' (shared)', '') }}</em></strong> with
-          {{ m.sharer_name }}
+          You!
         </li>
         {% endfor %} {% else %}
         <li>No recent friend activity.</li>

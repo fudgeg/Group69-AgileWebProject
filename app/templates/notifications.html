@@ -39,20 +39,22 @@
     </li>
     {% endfor %} {% endif %}
 
-    <!-- User Activities -->
-    {% if activities %} {% for activity in activities %}
-    <li class="notification-item" id="notification-{{ activity.id }}">
+    <!-- Latest Friend Shares -->
+    {% if friend_entries %} {% for entry in friend_entries %}
+    <li class="notification-item" id="notification-{{ entry.id }}">
       <div class="notification-header">
-        <strong>{{ activity.user.name }}</strong> changed their {{
-        activity.activity_type.replace("_", " ") }} from "<strong
-          >{{ activity.old_value }}</strong
-        >" to "<strong>{{ activity.new_value }}</strong>".
+        <strong>{{ entry.sharer_name }}</strong> shared {{
+        entry.media_type|capitalize }}:
+        <strong><em>{{ entry.title.replace(' (shared)', '') }}</em></strong>
+        with you!
         <span class="notification-timestamp">
-          {{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}
+          {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}
         </span>
       </div>
     </li>
-    {% endfor %} {% endif %}
+    {% endfor %} {% else %}
+    <li>No recent friend shares.</li>
+    {% endif %}
 
     <!-- Snapshots -->
     {% if snapshots %} {% for snapshot in snapshots %}
