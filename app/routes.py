@@ -25,7 +25,7 @@ from app.models import (
     TVShow,
     Music
 )
-from app.utils import get_media_type_breakdown, get_user_media_identity
+from app.utils import calculate_book_metrics, get_media_type_breakdown, get_monthly_media_by_type, get_user_media_identity
 
 main = Blueprint('main', __name__)
 
@@ -81,6 +81,7 @@ def logout():
     session.pop('user_id', None)
     flash('You have been logged out', "caution")
     return redirect(url_for('main.welcome'))
+
 
 @main.route('/home')
 def home():
@@ -152,6 +153,7 @@ def home():
         friend_entries=friend_entries
     )
 
+
 @main.route('/friends', methods=['GET', 'POST'])
 def friends():
     user = User.query.get(session.get('user_id'))
@@ -185,6 +187,7 @@ def friends():
         user_media=user_media
     )
 
+
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
 def add_friend(friend_id):
     user   = User.query.get(session.get('user_id'))
@@ -200,6 +203,7 @@ def add_friend(friend_id):
     db.session.commit()
     flash(f"You are now friends with {friend.name}!")
     return redirect(url_for('main.friends'))
+
 
 @main.route('/share_media', methods=['POST'])
 def share_media():
@@ -250,6 +254,7 @@ def share_media():
 
     return redirect(url_for('main.friends'))
 
+
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
     user_id = session.get('user_id')
@@ -296,7 +301,7 @@ def upload_page():
                 rating=rating,
                 comments=comment,
                 genre=(request.form.get('tvshow_genre') or "").title() or None,
-                watched_date=parse_date(request.form.get('watched_date')),
+                watched_date=parse_date(request.form.get('tvshow_watched_date')),
                 user_id=user_id
             )
         elif media_type == 'music':
@@ -321,6 +326,7 @@ def upload_page():
     entries = MediaEntry.query.filter_by(user_id=user_id).all()
     return render_template('upload.html', entries=entries)
 
+
 @main.route('/settings')
 def settings():
     user_id = session.get('user_id')
@@ -333,6 +339,7 @@ def settings():
         return redirect(url_for('main.login'))
     profile_picture_url = url_for('static', filename=f'media/{user.profile_picture}')
     return render_template('settings.html', user=user, profile_picture_url=profile_picture_url)
+
 
 @main.route('/update_profile_picture', methods=['POST'])
 def update_profile_picture():
@@ -360,6 +367,8 @@ def update_profile_picture():
     db.session.commit()
     flash("Profile picture updated successfully.")
     return redirect(url_for('main.settings'))
+
+
 @main.route('/update_username', methods=['POST'])
 def update_username():
     user_id = session.get('user_id')
@@ -382,6 +391,7 @@ def update_username():
     db.session.commit()
     flash("Username updated successfully.")
     return redirect(url_for('main.settings'))
+
 @main.route('/update_email', methods=['POST'])
 def update_email():
     user_id = session.get('user_id')
@@ -409,6 +419,8 @@ def update_email():
     session.clear()
     flash("Email updated successfully. Please log in with your new email.","caution")
     return redirect(url_for('main.login'))
+
+
 @main.route('/update_password', methods=['POST'])
 def update_password():
     user_id = session.get('user_id')
@@ -433,6 +445,8 @@ def update_password():
     session.clear()
     flash("Password updated successfully. Please log in with your new credentials.", "caution")
     return redirect(url_for('main.login'))
+
+
 @main.route('/delete_account', methods=['POST'])
 def delete_account():
     user_id = session.get('user_id')
@@ -453,6 +467,8 @@ def delete_account():
     session.clear()
     flash("Your account has been permanently deleted.", "caution")
     return redirect(url_for('main.welcome'))
+
+
 @main.route('/foryou')
 def for_you():
     user_id = session.get('user_id')
@@ -487,10 +503,18 @@ def for_you():
         "Tv&Movies": get_genre_counts(combined_screen),
         "Music":    get_genre_counts(music),
     }
+    
     identity_label = get_user_media_identity(raw_media_counts)
+    monthly_by_type = get_monthly_media_by_type(user_id)
+    completion_rate, avg_completion_time = calculate_book_metrics(books)
+    
+    
     return render_template(
         "foryou.html",
         identity=identity_label,
         media_counts=display_media_counts,
-        genre_breakdowns=genre_breakdowns
+        genre_breakdowns=genre_breakdowns,
+        monthly_by_type=monthly_by_type,
+        completion_rate=completion_rate,
+        avg_completion_time=avg_completion_time
     )

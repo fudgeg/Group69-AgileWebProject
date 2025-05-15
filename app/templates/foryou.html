@@ -39,14 +39,14 @@
   <!-- One Chart per Media Type -->
   <div class="row justify-content-center text-center">
     {% for media_type, genres in genre_breakdowns.items() %}
-      {% if genres %}
-        <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex justify-content-center">
-          <div class="chart-container">
-            <h5>{{ media_type }}</h5>
-            <canvas id="{{ media_type | replace(' ', '_') }}_genre_chart"></canvas>
-          </div>
-        </div>
-      {% endif %}
+    {% if genres %}
+    <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex justify-content-center">
+      <div class="chart-container">
+        <h5>{{ media_type }}</h5>
+        <canvas id="{{ media_type | replace(' ', '_') }}_genre_chart"></canvas>
+      </div>
+    </div>
+    {% endif %}
     {% endfor %}
   </div>
 
@@ -98,6 +98,125 @@
       });
     });
   </script>
+
+  <!-- Timeline: Media Consumed Over Time -->
+  <div class="row justify-content-center align-items-start my-5 gx-4">
+
+    <!-- 📊 Timeline Chart Container -->
+    <div class="col-lg-8">
+      <div class="timeline-section p-4">
+        <h3 class="text-center mb-4">Media Consumed Over Time</h3>
+        <div class="timeline-chart-wrapper">
+          <canvas id="timelineChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📚 Book Stats Container -->
+    <div class="col-lg-4">
+      <div class="book-metrics-section p-4">
+        <h4 class="text-center mb-4">Book Reading Insights</h4>
+
+        <div class="d-flex flex-column align-items-center gap-4">
+
+          <div class="book-stat-card text-center">
+            <h5>📘 Completion Rate</h5>
+            <img src="{{ url_for('static', filename='media/books-stack-of-three.png') }}" alt="Completion Icon" class="book-stat-icon">
+            <div class="book-stat-value">{{ completion_rate }}%</div>
+          </div>
+
+          <div class="book-stat-card text-center">
+            <h5>⏳ Average Time</h5>
+            <img src="{{ url_for('static', filename='media/books.png') }}" alt="Time Icon" class="book-stat-icon">
+            <div class="book-stat-value">{{ avg_completion_time }} days</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div id="monthly-data" data-json='{{ monthly_by_type | tojson | safe }}' style="display: none;"></div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+  <script>
+    // Parse the raw monthly data from your hidden JSON div
+    const rawData = JSON.parse(document.getElementById("monthly-data").dataset.json);
+
+    // Extract and sort months (chronologically)
+    const sortedMonths = [...new Set(Object.keys(rawData))].sort((a, b) => new Date(a) - new Date(b));
+
+    // Format for display on X-axis (e.g., 'Apr 2024')
+    const formattedLabels = sortedMonths.map(monthStr => {
+      const [year, month] = monthStr.split('-');
+      return new Date(year, month - 1).toLocaleString('default', {
+        month: 'short',
+        year: 'numeric'
+      });
+    });
+
+    const mediaTypes = ['book', 'movie', 'tv_show', 'music'];
+    const labels = {
+      book: 'Books',
+      movie: 'Movies',
+      tv_show: 'TV Shows',
+      music: 'Music'
+    };
+
+    const timelineColors = ['#f94144', '#577590', '#90be6d', '#f9c74f'];
+
+    const datasets = mediaTypes.map((type, i) => ({
+      label: labels[type],
+      data: sortedMonths.map(monthKey => rawData[monthKey]?.[type] || 0),
+      borderColor: timelineColors[i],
+      backgroundColor: timelineColors[i],
+      fill: false,
+      tension: 0.3
+    }));
+
+    new Chart(document.getElementById("timelineChart"), {
+      type: 'line',
+      data: {
+        labels: formattedLabels,
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Months',
+              font: { size: 16, weight: 'bold' }
+            },
+            ticks: {
+              font: { size: 14 }
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Entries',
+              font: { size: 16, weight: 'bold' }
+            },
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1,
+              font: { size: 14 }
+            }
+          }
+        }
+      }
+    });
+  </script>
+
 
 </div>
 {% endblock %}
