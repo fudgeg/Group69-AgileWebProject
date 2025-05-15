@@ -19,159 +19,78 @@ body {
 
 
 /* ====================== WELCOME PAGE STYLES ====================== */
-.welcome-box {
-    background-color: #f8f8e8;
-    width: 500px;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    position: relative;
+
+
+body.welcome.center-page {
+  display: block !important;
+  height: auto !important;
 }
 
-/* Title and Info Icon */
-.title {
-    font-size: 3rem;
-    color: #204118;
-    font-weight: 800;
-    margin-bottom: 15px;
-    letter-spacing: -1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+
+/* HERO SECTION */
+/* HERO SECTION */
+.hero-logo {
+  width: 100px;
+  height: auto;
 }
 
-.info-icon {
-    font-size: 1.5rem;
-    color: #204118;
-    cursor: pointer;
-    transition: color 0.3s;
+/* Adjust spacing now that logo is present */
+.hero-inner .display-3 {
+  margin-top: 0.5rem;
 }
 
-.info-icon:hover {
-    color: #356630;
-}
+/* rest of the CSS unchanged... */
 
-/* Subtitle Styling */
-.subtitle {
-    margin: 15px 0 30px;
-    font-size: 1.2rem;
-    color: #333;
-    font-weight: 500;
+.welcome-hero {
+  background: linear-gradient(to right, #204118, #3a7741);
+  color: white;
+  padding: 25px 20px 60px;
+  text-align: center;
 }
-
-/* Button Styles */
-.buttons .btn {
-    background-color: #204118;
-    color: white;
-    padding: 14px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    margin: 3px 0;
-    width: 100%;
-    max-width: 350px;
-    transition: background-color 0.3s, transform 0.3s;
+.hero-inner {
+  max-width: 800px;
+  margin: auto;
 }
-
-.buttons .btn:hover {
-    background-color: #356630;
-    transform: translateY(-3px);
-}
-
-/* Icon Styles */
-.icons {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    margin-top: 30px;
-}
-
 .icon-text {
-    text-align: center;
-    font-size: 18px;
-    color: #204118;
-    line-height: 1.5;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgba(255,255,255,0.8);
 }
 
-.icon-text span {
-    display: block;
-    font-size: 35px;
-    margin-bottom: 5px;
-    color: #356630;
+/* FEATURES SECTION */
+.feature-showcase {
+  background-color: #fefef5;
+}
+.section-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #204118;
 }
 
-/* ====================== COOKIE MODAL STYLES ====================== */
-.cookie-modal {
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+/* Feature Cards */
+.feature-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 30px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
-.cookie-modal.active {
-    opacity: 1;
-    visibility: visible;
+.feature-card img {
+  max-width: 230px;
+  height: auto;
 }
-
-.cookie-content {
-    background-color: #ffffff;
-    padding: 30px 40px;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+.feature-card h5 {
+  margin-top: 16px;
+  font-weight: 600;
+  color: #204118;
 }
-
-/* Centering Modal Text */
-.cookie-content h2 {
-    color: #204118;
-    font-size: 28px;
-    margin-bottom: 15px;
-}
-
-.cookie-content p {
-    color: #333;
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-.cookie-content ul {
-    list-style-type: disc;
-    padding-left: 20px;
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-/* Centering Close Button */
-.cookie-btn {
-    background-color: #204118;
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-    margin: 0 auto;
-    display: block;
-    width: 200px;
-}
-
-.cookie-btn:hover {
-    background-color: #356630;
+.feature-card p.small {
+  margin-top: 8px;
+  color: #555;
+  flex-grow: 1;
 }
 
 
