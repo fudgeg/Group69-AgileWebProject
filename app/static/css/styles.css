@@ -845,7 +845,7 @@ left: 20px;
     font-size: 16px;
 }
 
-.friend-search-container button, .friends-submit  {
+.friend-search-container button, .friends-submit {
   background-color: #204118;
   color: #ffffff;
   border: none;
@@ -859,6 +859,79 @@ left: 20px;
 
 .friend-search-container button:hover {
   background-color: #376e35;
+}
+
+/* Share Section Styles */
+.share-section {
+    background-color: #dce9d5;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Share Section Heading */
+.share-section h4 {
+    color: #204118;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Share Form Styles */
+.share-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Dropdown Styles */
+.share-form select {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid #204118;
+    font-weight: bold;
+    color: #204118;
+    background-color: #ffffff;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Dropdown Hover and Focus */
+.share-form select:focus,
+.share-form select:hover {
+    border-color: #183414;
+    background-color: #f4f4f4;
+}
+
+/* Share Button Styles */
+.share-button {
+    background-color: #204118;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 30px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Share Button Hover */
+.share-button:hover {
+    background-color: #183414;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .share-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .share-button {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 /* ====================== Friend Search Page ====================== */

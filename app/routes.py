@@ -196,7 +196,7 @@ def friends():
     ).all()
 
     # Fetch the user's own media entries for sharing
-    user_media = MediaEntry.query.filter_by(user_id=user.id).all()
+    user_media = MediaEntry.query.filter_by(user_id=user.id).order_by(MediaEntry.media_type, MediaEntry.title).all()
 
     return render_template('friends.html', user=user, friends=friends, recommended=recommended,user_media=user_media)
 

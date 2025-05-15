@@ -66,14 +66,14 @@ block content %}
   </div>
 
   <!-- SHARE MEDIA SECTION -->
-  <div class="share-section mb-4 p-3 border rounded">
+  <div class="share-section">
     <h4>Share Media with a Friend</h4>
     <form
       method="post"
       action="{{ url_for('main.share_media') }}"
-      class="d-flex gap-2 align-items-center"
+      class="share-form"
     >
-      <select name="media_id" class="form-select w-50" required>
+      <select name="media_id" required>
         <option value="" disabled selected>Choose media...</option>
         {% for m in user_media %}
         <option value="{{ m.id }}">
@@ -81,23 +81,25 @@ block content %}
         </option>
         {% endfor %}
       </select>
-      <select name="friend_id" class="form-select w-50" required>
+
+      <select name="friend_id" required>
         <option value="" disabled selected>Choose friend...</option>
         {% for f in friends %}
         <option value="{{ f.id }}">{{ f.name }}</option>
         {% endfor %}
       </select>
-      <button class="btn btn-success">Share</button>
+
+      <button type="submit" class="share-button">Share</button>
     </form>
   </div>
-</div>
 
-<script>
-  function submitFriendSearch() {
-    const query = document.getElementById("friend-search-input").value;
-    if (query.trim() !== "") {
-      window.location.href = "/search?query=" + encodeURIComponent(query);
+  <script>
+    function submitFriendSearch() {
+      const query = document.getElementById("friend-search-input").value;
+      if (query.trim() !== "") {
+        window.location.href = "/search?query=" + encodeURIComponent(query);
+      }
     }
-  }
-</script>
-{% endblock %}
+  </script>
+  {% endblock %}
+</div>
