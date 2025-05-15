@@ -769,7 +769,7 @@ left: 20px;
     font-size: 16px;
 }
 
-.friend-search-container button, .friends-submit {
+.friend-search-container button, .friends-submit  {
   background-color: #204118;
   color: #ffffff;
   border: none;
@@ -952,8 +952,6 @@ left: 20px;
 
 /* ====================== FOR YOU PAGE ====================== */
 
-/* ============ FOR YOU PAGE (Updated) ============ */
-
 .for-you-page {
   padding: 60px 20px;
   background-color: #dce9d5;
@@ -1044,51 +1042,81 @@ left: 20px;
   height: auto !important;
 }
 
-.btn-primary {
-    background-color: #4CAF50;
-    color: white;
+/* ========== For You Page Share Section ========== */
+.for-you-share-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    padding: 20px 40px;
+    background-color: #f8f8e8;
+    border-radius: 20px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Dropdown Styling */
+.for-you-dropdown-container {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.for-you-dropdown {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 2px solid #38761d;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: bold;
+    color: #204118;
+    background-color: #ffffff;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.for-you-dropdown:focus {
+    outline: none;
+    border-color: #2e6e14;
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+}
+
+.for-you-dropdown option {
+    font-weight: bold;
+    color: #204118;
+}
+
+/* Share Buttons */
+.for-you-share-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.for-you-share-btn {
+    background-color: #38761d;
+    color: #ffffff;
     border: none;
-    padding: 10px 20px;
-    margin: 10px;
-    border-radius: 5px;
+    padding: 12px 30px;
+    border-radius: 12px;
     cursor: pointer;
     font-weight: bold;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
-.btn-secondary {
-    background-color: #204118;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
+.for-you-share-btn:hover {
+    background-color: #2e6e14;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
 }
 
-.btn-outline-dark {
-    background-color: white;
-    color: #333;
-    border: 2px solid #333;
-    padding: 10px 20px;
-    margin: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.btn-primary:hover {
-    background-color: #45a049;
-}
-
-.btn-secondary:hover {
-    background-color: #10280E;
-}
-
-.btn-outline-dark:hover {
-    background-color: #333;
-    color: white;
-}
 
 
 /* ===== Notification PAGE ===== */
@@ -1108,7 +1136,7 @@ left: 20px;
   display: flex;
   align-items: center;
   gap: 20px;
-  flex-wrap: wrap; /* This will help with long text wrapping */
+  flex-wrap: wrap; 
 }
 
 .notification-item strong {

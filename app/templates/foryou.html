@@ -73,26 +73,33 @@ block content %}
   </div>
 
   <!-- Share Dropdown -->
-  <div class="text-center mb-5">
-    <select
-      id="friend-select"
-      class="form-select mb-3"
-      aria-label="Select a friend to share with"
-    >
-      <option selected disabled>Select a friend to share your snapshot</option>
-      {% for friend in friends %}
-      <option value="{{ friend.id }}">{{ friend.name }}</option>
-      {% endfor %}
-    </select>
-    <button class="btn btn-primary" onclick="shareToFriend()">
-      Share Snapshot
-    </button>
-    <button class="btn btn-secondary" onclick="shareToEmail()">
-      Share via Email
-    </button>
-    <button class="btn btn-outline-dark" onclick="exportAsImage()">
-      Export as Image
-    </button>
+  <div class="for-you-share-container">
+    <div class="for-you-dropdown-container">
+      <select
+        id="friend-select"
+        class="for-you-dropdown"
+        aria-label="Select a friend to share with"
+      >
+        <option selected disabled>
+          Select a friend to share your snapshot
+        </option>
+        {% for friend in friends %}
+        <option value="{{ friend.id }}">{{ friend.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="for-you-share-buttons">
+      <button class="for-you-share-btn" onclick="shareToFriend()">
+        Share Snapshot
+      </button>
+      <button class="for-you-share-btn" onclick="shareToEmail()">
+        Share via Email
+      </button>
+      <button class="for-you-share-btn" onclick="exportAsImage()">
+        Export as Image
+      </button>
+    </div>
   </div>
 
   <!-- JS to Render Pie Charts and Handle Sharing -->
