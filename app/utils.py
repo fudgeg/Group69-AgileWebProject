@@ -31,7 +31,7 @@ def get_user_media_identity(counts_dict):
 def get_monthly_media_by_type(user_id):
     def get_month_key(date):
         return date.strftime('%Y-%m')
-
+    
     counts = defaultdict(lambda: defaultdict(int))
 
     movies = Movie.query.filter_by(user_id=user_id).all()

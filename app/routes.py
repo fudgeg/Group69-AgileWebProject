@@ -277,6 +277,7 @@ def send_friend_request(receiver_id):
     return redirect(url_for('main.friends'))
 
 
+
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
 def add_friend(friend_id):
     user = User.query.get(session.get('user_id'))
@@ -385,8 +386,6 @@ def share_media():
         flash(f"Shared “{media.title}” with {friend.name}", "success")
 
     return redirect(url_for('main.friends'))
-
-
 
 
 @main.route('/upload', methods=['GET', 'POST'])
@@ -575,7 +574,6 @@ def update_email():
     return redirect(url_for('main.login'))
 
 
-
 @main.route('/update_password', methods=['POST'])
 def update_password():
     user_id = session.get('user_id')
@@ -678,19 +676,7 @@ def for_you():
     monthly_by_type = get_monthly_media_by_type(user_id)
     completion_rate, avg_completion_time = calculate_book_metrics(books)
     
-    tv = TVShow.query.filter_by(user_id=user_id).all()
-    book = Book.query.filter_by(user_id=user_id).all()
-    movie   = Movie.query.filter_by(user_id=user_id).all()
-    musi   = Music.query.filter_by(user_id=user_id).all()
-    for t in tv:
-        print(f"TV: {t.title}, watched: {t.watched_date}")
-    for b in book:
-        print(f"Book: {b.title}, watched: {b.date_finished}")
-    for m in movie:
-        print(f"movie: {m.title}, watched: {m.watched_date}")
-    for mu in musi:
-        print(f"music: {mu.title}, watched: {mu.listened_date}")
-        
+    
     return render_template(
         "foryou.html",
         identity=identity_label,

@@ -8,7 +8,7 @@ app = create_app()
 def create_user(name, email, password="test123"):
     user = User.query.filter_by(email=email).first()
     if not user:
-        print("❌ Admin user not found.")
+        print("Admin user not found.")
     else:
         db.session.add_all([
             Book(
