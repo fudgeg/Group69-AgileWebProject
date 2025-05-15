@@ -5,15 +5,20 @@ block content %}
     background-color: #dce9d5 !important; /* matches the Home page */
   }
 </style>
-
-<div class="container py-5">
-  <div class="card p-4 shadow-lg">
+<div class="upload-container">
+  <div class="upload-box">
     <h2 class="mb-4 text-center">Upload Your Media</h2>
     <form method="POST">
       <!-- Media Type Selection -->
       <div class="form-group">
         <label for="mediaType">Media Type:</label>
-        <select id="mediaType" name="media_type" class="form-control" required onchange="toggleFields()">
+        <select
+          id="mediaType"
+          name="media_type"
+          class="form-control"
+          required
+          onchange="toggleFields()"
+        >
           <option value="">-- Choose One --</option>
           <option value="book">Book</option>
           <option value="tv_show">TV Show</option>
@@ -25,12 +30,25 @@ block content %}
       <!-- Shared Fields -->
       <div class="form-group">
         <label for="mediaTitle">Title:</label>
-        <input type="text" id="mediaTitle" name="title" class="form-control" required />
+        <input
+          type="text"
+          id="mediaTitle"
+          name="title"
+          class="form-control"
+          required
+        />
       </div>
 
       <div class="form-group">
         <label for="rating">Rating (1–5):</label>
-        <input type="number" id="rating" name="rating" class="form-control" min="1" max="5" />
+        <input
+          type="number"
+          id="rating"
+          name="rating"
+          class="form-control"
+          min="1"
+          max="5"
+        />
       </div>
 
       <div class="form-group">
@@ -39,8 +57,11 @@ block content %}
       </div>
 
       <!-- Book-specific Fields -->
-      <div id="bookFields" style="display: none;">
-        <div class="form-group"><label>Author:</label><input type="text" name="author" class="form-control" /></div>
+      <div id="bookFields" style="display: none">
+        <div class="form-group">
+          <label>Author:</label
+          ><input type="text" name="author" class="form-control" />
+        </div>
         <div class="form-group">
           <label>Genre:</label>
           <select name="book_genre" class="form-control">
@@ -55,9 +76,15 @@ block content %}
             <option value="Historical">Historical</option>
           </select>
         </div>
-        
-        <div class="form-group"><label>Date Started:</label><input type="date" name="date_started" class="form-control" /></div>
-        <div class="form-group"><label>Date Finished:</label><input type="date" name="date_finished" class="form-control" /></div>
+
+        <div class="form-group">
+          <label>Date Started:</label
+          ><input type="date" name="date_started" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Date Finished:</label
+          ><input type="date" name="date_finished" class="form-control" />
+        </div>
         <div class="form-group">
           <label>Status:</label>
           <select name="status" class="form-control">
@@ -70,7 +97,7 @@ block content %}
       </div>
 
       <!-- Movie-specific Fields -->
-      <div id="movieFields" style="display: none;">
+      <div id="movieFields" style="display: none">
         <div class="form-group">
           <label>Genre:</label>
           <select name="movie_genre" class="form-control">
@@ -84,11 +111,14 @@ block content %}
             <option value="Animation">Animation</option>
           </select>
         </div>
-        <div class="form-group"><label>Watched Date:</label><input type="date" name="watched_date" class="form-control" /></div>
+        <div class="form-group">
+          <label>Watched Date:</label
+          ><input type="date" name="watched_date" class="form-control" />
+        </div>
       </div>
 
       <!-- TV Show-specific Fields -->
-      <div id="tvShowFields" style="display: none;">
+      <div id="tvShowFields" style="display: none">
         <div class="form-group">
           <label>Genre:</label>
           <select name="tvshow_genre" class="form-control">
@@ -102,12 +132,18 @@ block content %}
             <option value="Animation">Animation</option>
           </select>
         </div>
-        <div class="form-group"><label>Watched Date:</label><input type="date" name="watched_date" class="form-control" /></div>
+        <div class="form-group">
+          <label>Watched Date:</label
+          ><input type="date" name="watched_date" class="form-control" />
+        </div>
       </div>
 
       <!-- Music-specific Fields -->
-      <div id="musicFields" style="display: none;">
-        <div class="form-group"><label>Artist:</label><input type="text" name="artist" class="form-control" /></div>
+      <div id="musicFields" style="display: none">
+        <div class="form-group">
+          <label>Artist:</label
+          ><input type="text" name="artist" class="form-control" />
+        </div>
         <div class="form-group">
           <label>Genre:</label>
           <select name="music_genre" class="form-control">
@@ -122,7 +158,10 @@ block content %}
             <option value="Indie">Indie</option>
           </select>
         </div>
-        <div class="form-group"><label>Listened Date:</label><input type="date" name="listened_date" class="form-control" /></div>
+        <div class="form-group">
+          <label>Listened Date:</label
+          ><input type="date" name="listened_date" class="form-control" />
+        </div>
       </div>
 
       <button type="submit" class="btn btn-dark mt-3">Submit</button>
@@ -133,12 +172,14 @@ block content %}
     <ul>
       {% for entry in entries %}
       <!-- shows media entry plus genre -->
-      <li><strong>{{ entry.media_type|capitalize }}:</strong> {{ entry.title }} {% if entry.genre %}— <em>{{ entry.genre }}</em>{% endif %}</li>
+      <li>
+        <strong>{{ entry.media_type|capitalize }}:</strong> {{ entry.title }} {%
+        if entry.genre %}— <em>{{ entry.genre }}</em>{% endif %}
+      </li>
       {% endfor %}
     </ul>
   </div>
 </div>
-
 <!-- Load JavaScript logic from static file -->
 <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 

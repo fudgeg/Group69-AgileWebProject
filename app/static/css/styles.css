@@ -950,8 +950,16 @@ left: 20px;
   display: flex;
   justify-content: center;
   padding-top: 50px; 
-  min-height: 100vh; /* Ensures the wrapper fills the entire viewport */
-  background-color: #dce9d5; /* Matches your main body background */
+  min-height: 100vh;
+  background-color: #dce9d5; 
+}
+
+.upload-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  background-color: #dce9d5; /* Match your main background */
 }
 
 
