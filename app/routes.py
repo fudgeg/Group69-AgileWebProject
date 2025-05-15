@@ -87,7 +87,7 @@ def login():
 @main.route('/logout')
 def logout():
     # only log out the user
-    session.pop('user_id', None)
+    session.clear()
     flash('You have been logged out', "caution")
     return redirect(url_for('main.welcome'))
 
