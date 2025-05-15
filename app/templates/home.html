@@ -26,14 +26,13 @@ block content %}
         {% if recent_entries %} {% for m in recent_entries %} {% if '(shared)'
         in m.title %}
         <li>
-          Shared {{ m.media_type|capitalize }}:
-          <strong><em>{{ m.title.replace(' (shared)', '') }}</em></strong> {% if
-          m.sharer_name %} with <strong><em>{{ m.sharer_name }}</em></strong>
-          {% else %} with an unknown user {% endif %}
+          You shared {{ m.media_type|capitalize }}:
+          <strong><em>{{ m.title.replace(' (shared)', '') }}</em></strong>
+          with <strong><em>{{ m.recipient_name }}</em></strong>
         </li>
         {% else %}
         <li>
-          Uploaded {{ m.media_type|capitalize }}:
+          You uploaded {{ m.media_type|capitalize }}:
           <strong><em>{{ m.title }}</em></strong>
         </li>
         {% endif %} {% endfor %} {% else %}

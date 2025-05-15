@@ -112,22 +112,42 @@ def home():
     )
     recent_entries = [m for m in db_entries if "(shared)" not in m.title][:5]
 
+    # Add shared items to recent entries
     all_shares = session.get('your_shares', [])
     mine = [s for s in all_shares if s.get('sharer_id') == user.id]
 
     if mine:
         class TempEntry:
-            def __init__(self, media_type, title, sharer_name):
+            def __init__(self, media_type, title, sharer_name, recipient_name):
                 self.media_type = media_type
                 self.title = title + " (shared)"
                 self.sharer_name = sharer_name
+                self.recipient_name = recipient_name
 
         for share in reversed(mine):
             sharer = User.query.get(share['sharer_id'])
-            if sharer:
-                recent_entries.insert(0, TempEntry(share['media_type'], share['title'], sharer.name))
+            recipient = User.query.get(share.get('recipient_id'))  # Get the actual recipient
+
+            # Avoid self-sharing in the wrong context
+            if sharer and recipient and recipient.id != sharer.id:
+                recent_entries.insert(0, TempEntry(
+                    share['media_type'],
+                    share['title'],
+                    sharer.name,
+                    recipient.name
+                ))
+
+            # If the recipient is the current user (self-share), still include but adjust wording
+            elif sharer and recipient and recipient.id == user.id:
+                recent_entries.insert(0, TempEntry(
+                    share['media_type'],
+                    share['title'],
+                    "You",
+                    "yourself"
+                ))
 
         recent_entries = recent_entries[:5]
+
 
 
     # LATEST FRIENDS ACTIVITY: entries shared to you by friends
@@ -277,8 +297,7 @@ def add_friend(friend_id):
 
 @main.route('/share_media', methods=['POST'])
 def share_media():
-    """Share one of your media entries with a friend."""
-    user      = User.query.get(session.get('user_id'))
+    user = User.query.get(session.get('user_id'))
     if not user:
         flash("Please log in to share media.", "error")
         return redirect(url_for('main.login'))
@@ -302,7 +321,7 @@ def share_media():
     if exists:
         flash(f"{friend.name} already has “{media.title}”", "caution")
     else:
-        # insert into friend’s list
+        # Insert into friend's list
         friend_entry = MediaEntry(
             media_type=media.media_type,
             title=shared_title,
@@ -311,18 +330,20 @@ def share_media():
         db.session.add(friend_entry)
         db.session.commit()
 
-        # record your share in session (with sharer_id)
+        # Record your share in session (with sharer_id and recipient_id)
         shares = session.get('your_shares', [])
         shares.append({
             'media_type': media.media_type,
             'title':      media.title,
-            'sharer_id':  user.id
+            'sharer_id':  user.id,
+            'recipient_id': friend.id
         })
         session['your_shares'] = shares
 
         flash(f"Shared “{media.title}” with {friend.name}", "success")
 
     return redirect(url_for('main.friends'))
+
 
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_page():
