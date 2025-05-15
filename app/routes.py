@@ -311,6 +311,7 @@ def upload_page():
                 rating=rating,
                 comments=comment,
                 genre=(request.form.get('music_genre') or "").title() or None,
+                listened_date=parse_date(request.form.get('listened_date')),
                 artist=request.form.get('artist'),
                 user_id=user_id
             )
@@ -322,7 +323,6 @@ def upload_page():
         db.session.commit()
         flash("Media entry added successfully!", "success")
         return redirect(url_for('main.upload_page'))
-
     entries = MediaEntry.query.filter_by(user_id=user_id).all()
     return render_template('upload.html', entries=entries)
 
