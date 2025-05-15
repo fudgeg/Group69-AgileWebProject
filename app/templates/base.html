@@ -18,7 +18,7 @@
       href="{{ url_for('static', filename='media/SoulMapsIcon.png') }}"
     />
   </head>
-  <body class="{% if hide_navbar %}center-page{% endif %}">
+ <body class="{% if hide_navbar %}center-page{% endif %} {% if is_welcome %}welcome{% endif %}"></body>
     {% if not hide_navbar %} {% include "navbar.html" %} {% endif %}
 
     <!-- Global Flash Messages -->
