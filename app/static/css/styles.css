@@ -955,10 +955,11 @@ left: 20px;
 }
 
 .upload-container {
+  align-items: flex-start; /* Align items to the top */
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh; /* Full viewport height */
+  min-height: 100vh;
+  padding-top: 100px; /* Fixed gap from navbar */
   background-color: #dce9d5; /* Match your main background */
 }
 
@@ -975,6 +976,46 @@ left: 20px;
 
 .form-group label {
   text-align: center;
+}
+
+/* Scrollable Entries */
+.upload-box ul {
+  list-style: none;
+  padding: 0;
+  max-height: 300px; /* Set the maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin-bottom: 20px;
+}
+
+.upload-box ul li {
+  background-color: #f0f0e6;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 15px 20px; /* More padding for breathing room */
+  font-size: 18px;
+  margin-bottom: 15px; /* Space between items */
+  word-wrap: break-word; /* Fix long text overflow */
+  overflow-wrap: break-word; /* Alternative for better browser support */
+}
+
+.upload-box ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.upload-box ul::-webkit-scrollbar-thumb {
+  background-color: #565656;
+  border-radius: 8px;
+}
+
+.upload-box ul::-webkit-scrollbar-track {
+  background-color: #f0f0e6;
+  border-radius: 8px;
+}
+
+.upload-box ul li:hover{
+  background-color: #cfcece;
+  transform: scale(1.02);
+  transition: 0.2s;
 }
 
 
