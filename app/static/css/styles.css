@@ -300,41 +300,61 @@ left: 20px;
 .content {
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+  gap: 30px;
   margin-top: 75px;
 
 }
 
 .friends-activity, .recent-activity {
   background-color: #ffffff;
-  padding:10px;
+  padding: 20px 30px; /* Increased padding */
   border-radius: 20px;
   width: 500px;
-  text-align: center;
-  position: relative; 
+  text-align: left; /* Align text to the left for readability */
   border: 2px solid #204118;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-
-  
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  max-width: 600px; /* Allow for more content width */
 }
-
-.friends-activity h2, .recent-activity h2 {
+.friends-activity h3, .recent-activity h3 {
   margin-top: 0;
   color: #204118;
   font-size: 30px;
+  margin-bottom: 20px;
 }
-.friends-activity ul, .recent-activity ul {
+.friends-activity ul, .recent-activity ol {
   list-style: none;
   padding: 0;
-  font-size: 18px;
+  font-size: 20px; /* Slightly larger font for readability */
+  line-height: 1.6; /* Increase line spacing */
+  margin: 0;
 }
+
 .friends-activity li, .recent-activity li {
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  padding: 5px;
+  background-color: #f8f8f8;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 15px 20px; /* More padding for breathing room */
   font-size: 18px;
+  margin-bottom: 15px; /* Space between items */
+}
+
+.recent-activity li em {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.recent-activity li span {
+  color: #666;
+  font-size: 16px;
+}
+
+/* Smooth hover effect */
+.friends-activity li:hover, .recent-activity li:hover {
+  background-color: #e6f4e0;
+  transform: scale(1.02);
+  transition: 0.2s;
 }
 
 
@@ -1057,7 +1077,6 @@ left: 20px;
     margin-right: auto;
 }
 
-/* Dropdown Styling */
 .for-you-dropdown-container {
     margin-bottom: 20px;
     width: 100%;
@@ -1090,7 +1109,6 @@ left: 20px;
     color: #204118;
 }
 
-/* Share Buttons */
 .for-you-share-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -1126,28 +1144,12 @@ left: 20px;
   padding: 0;
 }
 
-.notification-item {
-  margin-bottom: 20px;
-  background-color: #f4f4f4;
-  padding: 15px 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap; 
-}
 
 .notification-item strong {
   flex-shrink: 0;
 }
 
-.notification-text {
-  flex-grow: 2;
-  font-size: 18px;
-  color: #204118;
-}
+
 
 .btn-accept, .btn-reject {
   padding: 5px 15px;
@@ -1191,3 +1193,98 @@ left: 20px;
     text-align: center;
 }
 
+.notification-item {
+    position: relative;
+    background-color: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.notification-text {
+    flex-grow: 1;
+    font-size: 16px;
+    color: #204118;
+}
+
+.notification-item.seen {
+    background-color: #3c373728; 
+    color: #777;
+}
+
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensure timestamp is always on the far right */
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.notification-header strong {
+    flex-grow: 1;
+    margin-right: 20px; /* Add spacing between name and timestamp */
+}
+
+.notification-timestamp {
+    font-size: 14px;
+    color: #888;
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+}
+
+
+.mark-read-btn {
+    background-color: #38761d;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Segoe UI', sans-serif;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.mark-read-btn:hover {
+    background-color: #2e6e14;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+}
+
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+.mark-all-read-btn {
+    background-color: #38761d;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.mark-all-read-btn:hover {
+    background-color: #2e6e14;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+}

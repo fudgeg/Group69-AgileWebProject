@@ -112,17 +112,23 @@ def home():
     )
     recent_entries = [m for m in db_entries if "(shared)" not in m.title][:5]
 
-    # prepend any shares you have made 
     all_shares = session.get('your_shares', [])
     mine = [s for s in all_shares if s.get('sharer_id') == user.id]
+
     if mine:
         class TempEntry:
-            def __init__(self, media_type, title):
+            def __init__(self, media_type, title, sharer_name):
                 self.media_type = media_type
-                self.title      = title + " (shared)"
+                self.title = title + " (shared)"
+                self.sharer_name = sharer_name
+
         for share in reversed(mine):
-            recent_entries.insert(0, TempEntry(share['media_type'], share['title']))
+            sharer = User.query.get(share['sharer_id'])
+            if sharer:
+                recent_entries.insert(0, TempEntry(share['media_type'], share['title'], sharer.name))
+
         recent_entries = recent_entries[:5]
+
 
     # LATEST FRIENDS ACTIVITY: entries shared to you by friends
     friend_entries = (
@@ -609,6 +615,8 @@ def for_you():
 
 
     
+# notifications route (after)
+
 @main.route('/notifications')
 def notifications():
     user_id = session.get('user_id')
@@ -627,36 +635,23 @@ def notifications():
     # Retrieve activity updates from friends
     friend_ids = [f.id for f in user.friends]
     activities = UserActivity.query.filter(
-        UserActivity.user_id.in_(friend_ids),
-        UserActivity.seen == False
+        UserActivity.user_id.in_(friend_ids)
     ).order_by(UserActivity.timestamp.desc()).all()
 
     # Retrieve media snapshots and parse the JSON data for template use
-    snapshots = MediaSnapshot.query.filter_by(receiver_id=user.id, seen=False).all()
+    snapshots = MediaSnapshot.query.filter_by(receiver_id=user.id).all()
     for snapshot in snapshots:
         try:
-            # ✅ Attach parsed data to a temporary attribute for rendering
             snapshot.parsed_data = json.loads(snapshot.snapshot_data)
         except json.JSONDecodeError:
-            # Handle corrupted data gracefully
             snapshot.parsed_data = {"error": "Invalid snapshot data"}
-
-    # Mark all as seen (without modifying snapshot_data)
-    for req in friend_requests:
-        req.seen = True
-    for activity in activities:
-        activity.seen = True
-    for snapshot in snapshots:
-        snapshot.seen = True
-
-    db.session.commit()
 
     return render_template(
         'notifications.html',
         user=user,
         friend_requests=friend_requests,
         activities=activities,
-        snapshots=snapshots  # Pass parsed snapshots
+        snapshots=snapshots
     )
 
 
@@ -775,4 +770,23 @@ def send_snapshot():
     db.session.commit()
 
     return jsonify({"success": True, "message": "Snapshot sent successfully!"})
+
+@main.route('/mark_all_notifications_read', methods=['POST'])
+def mark_all_notifications_read():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"success": False, "message": "Please log in to mark all notifications as read."})
+
+    # Mark all friend requests as seen
+    FriendRequest.query.filter_by(receiver_id=user_id, status="pending").update({"seen": True})
+    
+    # Mark all activities as seen
+    UserActivity.query.filter_by(user_id=user_id, seen=False).update({"seen": True})
+    
+    # Mark all snapshots as seen
+    MediaSnapshot.query.filter_by(receiver_id=user_id, seen=False).update({"seen": True})
+    
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "All notifications marked as read."})
 

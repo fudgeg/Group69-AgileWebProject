@@ -1,13 +1,24 @@
 {% extends "base.html" %} {% block title %}Notifications – Soul Maps{% endblock
 %} {% block content %}
 <div class="home-container">
-  <h2>Notifications</h2>
+  <div class="notifications-header">
+    <h2>Notifications</h2>
+    {% if friend_requests or activities or snapshots %}
+    <button onclick="markAllAsRead()" class="mark-all-read-btn">
+      Mark All as Read
+    </button>
+    {% endif %}
+  </div>
+
   <ul class="notifications-list">
     <!-- Friend Requests -->
     {% if friend_requests %} {% for request in friend_requests %}
-    <li class="notification-item">
-      <div class="notification-text">
+    <li class="notification-item" id="notification-{{ request.id }}">
+      <div class="notification-header">
         <strong>{{ request.sender.name }}</strong> sent you a friend request!
+        <span class="notification-timestamp">
+          {{ request.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </span>
       </div>
       <div class="notification-actions">
         <form
@@ -30,33 +41,38 @@
 
     <!-- User Activities -->
     {% if activities %} {% for activity in activities %}
-    <li class="notification-item">
-      <div class="notification-text">
+    <li class="notification-item" id="notification-{{ activity.id }}">
+      <div class="notification-header">
         <strong>{{ activity.user.name }}</strong> changed their {{
         activity.activity_type.replace("_", " ") }} from "<strong
           >{{ activity.old_value }}</strong
         >" to "<strong>{{ activity.new_value }}</strong>".
+        <span class="notification-timestamp">
+          {{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </span>
       </div>
     </li>
-    {% endfor %} {% endif %} {% if snapshots %}
-    <ul class="notifications-list">
-      {% for snapshot in snapshots %}
-      <li class="notification-item">
-        <div class="notification-text">
-          <strong>{{ snapshot.sender.name }}</strong> shared their media stats
-          with you!
-        </div>
-        <div class="notification-details">
-          <img
-            src="{{ url_for('static', filename='snapshots/' ~ snapshot.snapshot_data) }}"
-            alt="Snapshot"
-            style="max-width: 100%; border-radius: 10px"
-          />
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
+    {% endfor %} {% endif %}
+
+    <!-- Snapshots -->
+    {% if snapshots %} {% for snapshot in snapshots %}
+    <li class="notification-item" id="notification-{{ snapshot.id }}">
+      <div class="notification-header">
+        <strong>{{ snapshot.sender.name }}</strong> shared their media stats
+        with you!
+        <span class="notification-timestamp">
+          {{ snapshot.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </span>
+      </div>
+      <div class="notification-details">
+        <img
+          src="{{ url_for('static', filename='snapshots/' ~ snapshot.snapshot_data) }}"
+          alt="Snapshot"
+          style="max-width: 100%; border-radius: 10px"
+        />
+      </div>
+    </li>
+    {% endfor %} {% endif %}
 
     <!-- No Notifications Fallback -->
     {% if not friend_requests and not activities and not snapshots %}
@@ -64,4 +80,39 @@
     {% endif %}
   </ul>
 </div>
+
+<script>
+  function markAllAsRead() {
+    fetch(`/mark_all_notifications_read`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // Mark all notifications as seen
+          const notifications = document.querySelectorAll(".notification-item");
+          notifications.forEach((item) => {
+            item.classList.add("seen");
+            const markReadBtn = item.querySelector(".mark-read-btn");
+            if (markReadBtn) markReadBtn.remove();
+          });
+
+          // Clear the notification badge
+          const notificationBadge = document.querySelector(
+            ".notification-badge"
+          );
+          if (notificationBadge) notificationBadge.remove();
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error marking all notifications as read:", error);
+      });
+  }
+</script>
+
 {% endblock %}
