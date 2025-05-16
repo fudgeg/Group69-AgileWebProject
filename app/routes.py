@@ -458,6 +458,8 @@ def upload_page():
         flash("Media entry added successfully!", "success")
         return redirect(url_for('main.upload_page'))
     entries = MediaEntry.query.filter_by(user_id=user_id).all()
+    print("[DEBUG] Entries for user:", [e.title for e in entries])
+    
     return render_template('upload.html', entries=entries)
 
 
