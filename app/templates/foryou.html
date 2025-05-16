@@ -156,14 +156,17 @@ block content %}
       }
 
       html2canvas(forYouPage).then((canvas) => {
-        // Convert the canvas to a Blob
         canvas.toBlob((blob) => {
-          // Add a proper file name with extension
           const file = new File([blob], "snapshot.png", { type: "image/png" });
-
           const formData = new FormData();
           formData.append("snapshot", file);
           formData.append("receiver_id", receiverId);
+
+          // Include CSRF Token
+          const csrfToken = document.querySelector(
+            "input[name='csrf_token']"
+          ).value;
+          formData.append("csrf_token", csrfToken);
 
           fetch("/send_snapshot", {
             method: "POST",
@@ -268,6 +271,8 @@ block content %}
         action="{{ url_for('main.share_media') }}"
         class="media-sharing-form"
       >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
         <select name="media_id" class="sharing-dropdown" required>
           <option disabled selected>Choose media...</option>
           {% for m in user_media %}
