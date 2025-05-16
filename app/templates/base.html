@@ -19,7 +19,8 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </head>
- <body class="{% if hide_navbar %}center-page{% endif %} {% if is_welcome %}welcome{% endif %}"></body>
+<body class="{% if hide_navbar and not is_welcome %}center-page{% endif %} {% if is_welcome %}welcome{% endif %}">
+
     {% if not hide_navbar %} {% include "navbar.html" %} {% endif %}
 
     <!-- Global Flash Messages -->

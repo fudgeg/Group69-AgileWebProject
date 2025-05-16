@@ -16,6 +16,8 @@ body {
     background-color: #c2baba;
 }
 
+
+
 /* ====================== WELCOME PAGE STYLES ====================== */
 .welcome-box {
     background-color: #f8f8e8;
@@ -1581,4 +1583,27 @@ left: 20px;
     color: #bbb;
     text-decoration: none;
     cursor: pointer;
+}
+.welcome-hero {
+  display: block !important;
+  width: 100%;
+  background: linear-gradient(135deg, #204118, #38761d);
+  color: white;
+  padding: 80px 20px;
+}
+
+.hero-inner {
+  display: block !important;
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+
+.hero-title h1 {
+  color: white;
+}
+
+.lead {
+  font-size: 1.25rem;
 }
