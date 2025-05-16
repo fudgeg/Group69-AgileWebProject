@@ -33,10 +33,11 @@ def test_login_logout(driver):
     # 6) Now log out
     driver.get(f"{BASE}/logout")
 
-    # 7) Wait for the welcome page “center-page” container
+    # 7) Wait for the login page to load
     WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "center-page"))
-    )
+    EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Soul Maps')]"))
+)
+
 
     # 8) Confirm we’re back at the root URL
     assert driver.current_url.rstrip("/") == BASE
