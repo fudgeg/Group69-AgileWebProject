@@ -5,16 +5,7 @@
 |  Github username   |      IceBearSYK     |       fudgeg        |        Saayella         |     ZFUNG14           |
 
 
-The creation of the web application should be done in a private GitHub repository that includes a README containing:
-  - a description of the purpose of the application, explaining its design and use.
-    multimedia application that allows users to upload their watch history (ie. Netflix, Spotify, YouTube etc.)
-
-  - a table with with each row containing the i) UWA ID ii) name and iii) Github user name of the group members.
-  
-  - instructions for how to launch the application.
-  
-  - instructions for how to run the tests for the application.
-
+## About the website
 
 ## Instruction to run
 1. Clone the repo
@@ -32,9 +23,19 @@ The creation of the web application should be done in a private GitHub repositor
   - flask run
 
 ## Running the test suites 
-### Important: Run Selenium tests before seeding the database or running unit tests. This ensures a clean environment for UI-based validations (like fresh signup/login flows).
+
+### Important: 
+Run Selenium tests before seeding the database or running unit tests. This ensures a clean environment for UI-based validations (like fresh signup/login flows) 
 
 - Make sure the flask app is running. Then in another terminal,
 -  pytest tests_e2e/ : This includes four selenium tests
--  pytest tests_unit/ : This includes six unit tests. 
+-  pytest tests_unit/ : This includes six unit tests.
+
+## Instructions to re-run the server 
+1. rm -f app.db soulmaps.db
+2. rm -rf migrations/
+3. flask db init (can be skipped if migration exists)
+4. flask db migrate -m "initial" (can be skipped if migration exists)
+5. flask db upgrade
+6. flask run
 
