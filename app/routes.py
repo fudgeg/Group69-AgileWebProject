@@ -667,10 +667,12 @@ def for_you():
             if entry.genre:
                 counts[entry.genre] = counts.get(entry.genre, 0) + 1
         return counts
-    combined= tv_shows+ movies
+
+    combined_screen = movies + tv_shows
+    
     genre_breakdowns = {
         "Books": get_genre_counts(books),
-        "TV&Movies": get_genre_counts(combined),
+        "Tv&Movies": get_genre_counts(combined_screen),
         "Music": get_genre_counts(music),
     }
 
@@ -682,7 +684,7 @@ def for_you():
     
     
 
-    # ✅ Pass the required variables to the template
+    #  Pass the required variables to the template
     return render_template(
         "foryou.html",
         identity=identity_label,

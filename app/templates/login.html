@@ -18,6 +18,8 @@ Soul Maps{% endblock %} {% block content %}
       method="POST"
       action="{{ url_for('main.login') }}"
     >
+     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+     
       <input
         type="email"
         name="email"

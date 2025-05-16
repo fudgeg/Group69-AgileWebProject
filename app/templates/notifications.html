@@ -26,6 +26,8 @@
           action="{{ url_for('main.accept_friend_request', request_id=request.id) }}"
           style="display: inline"
         >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
           <button class="btn btn-success btn-accept">Accept</button>
         </form>
         <form
@@ -33,6 +35,8 @@
           action="{{ url_for('main.reject_friend_request', request_id=request.id) }}"
           style="display: inline"
         >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
           <button class="btn btn-danger btn-reject">Reject</button>
         </form>
       </div>
