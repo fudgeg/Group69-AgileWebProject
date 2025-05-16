@@ -71,7 +71,8 @@ Run Selenium tests before seeding the database or running unit tests. This ensur
 ## Selenium Tests
 1. Invalid Login (test_invalid_login.py)
 2. Signup Flow (test_signup_flow.py)
-3. Protected Routes (test_protected_routes_1.py) - 1 for /home
-4. Protected Routes (test_protected_routes_2.py) - 2 for /upload
-5. Upload Book Test (test_upload_book.py) -
-6. 
+3. Protected Routes (home_requires_login.py) - 1 for /home
+4. Protected Routes (upload_requires_login.py) - 2 for /upload
+5. Upload Book Test (test_upload_book.py) 
+6. Check Media Display Count (test_media_display_count.py)
+   
