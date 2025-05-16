@@ -65,34 +65,6 @@ block content %}
     </div>
   </div>
 
-  <!-- SHARE MEDIA SECTION -->
-  <div class="share-section">
-    <h4>Share Media with a Friend</h4>
-    <form
-      method="post"
-      action="{{ url_for('main.share_media') }}"
-      class="share-form"
-    >
-      <select name="media_id" required>
-        <option value="" disabled selected>Choose media...</option>
-        {% for m in user_media %}
-        <option value="{{ m.id }}">
-          {{ m.media_type|capitalize }} – {{ m.title.replace(' (shared)', '') }}
-        </option>
-        {% endfor %}
-      </select>
-
-      <select name="friend_id" required>
-        <option value="" disabled selected>Choose friend...</option>
-        {% for f in friends %}
-        <option value="{{ f.id }}">{{ f.name }}</option>
-        {% endfor %}
-      </select>
-
-      <button type="submit" class="share-button">Share</button>
-    </form>
-  </div>
-
   <script>
     function submitFriendSearch() {
       const query = document.getElementById("friend-search-input").value;
