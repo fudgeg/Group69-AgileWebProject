@@ -20,12 +20,6 @@ The creation of the web application should be done in a private GitHub repositor
 - git clone https://github.com/fudgeg/Group69-AgileWebProject
 - cd Group69-AgileWebProject
 - pip install -r requirements.txt
-- flask shell
-- Type in terminal
-  - from app import create_app
-  - from app.models import db
-  - app = create_app()
-  - with app.app_context():
-    - db.create_all()
+- flask db upgrade
 - flask run
 
