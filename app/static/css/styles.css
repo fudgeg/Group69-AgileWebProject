@@ -1,22 +1,26 @@
 /* ====================== GENERAL GLOBAL STYLES ====================== */
 body {
     font-family: "Segoe UI", sans-serif;
-    background-color: #f4f3f0;
+    background-color: #c2baba;  
     margin: 0;
     padding: 0;
+    width: 100vw;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
-/* Center Page */
-.center-page {
+.center-page,
+.background-wrapper {
+    background-color: #c2baba;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
-    background-color: #c2baba;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
 }
-
-
 
 /* ====================== WELCOME PAGE STYLES ====================== */
 .welcome-box {
@@ -96,31 +100,20 @@ body {
 
 
 
-
 /* ====================== LOGIN & SIGN UP PAGE STYLES  ====================== */
-.center-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #ffffff;
-  padding: 40px 20px;
-}
 .login-container {
-  background-color: #efefe3;
-  width: 90%;
-  max-width: 950px;
-  height: auto;
-  padding: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  flex-wrap: wrap
+    background-color: #efefe3;
+    width: 90%;
+    max-width: 950px;
+    padding: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    flex-wrap: wrap;
 }
-
 
 .logo-section .logo {
   flex: 1;
