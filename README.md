@@ -7,7 +7,7 @@
 
 ## About the website
 Purpose:
-Soul Maps is a personal media tracker and social sharing web application. It allows users to log, rate and share the books they read, Tv Shows/Movies they watch and Music they listen to. It then turns this data into personlised insights. Soul Maps also encourages connections by letting you add friends, share your media snapshots (incluing charts and summaries) allowing you to discover each other's tastes.
+- Soul Maps is a personal media tracker and social sharing web application. It allows users to log, rate and share the books they read, Tv Shows/Movies they watch and Music they listen to. It then turns this data into personlised insights. Soul Maps also encourages connections by letting you add friends, share your media snapshots (incluing charts and summaries) allowing you to discover each other's tastes.
 
 Design:
 - Modular Flask App: Uses an application-factory (create_app) and a main blueprint for clean, testable routing.
