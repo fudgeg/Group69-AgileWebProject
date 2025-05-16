@@ -1,6 +1,7 @@
 
 from app.models import User
 
+# Test the User model
 def test_password_hashing():
     user = User(name="TestUser", email="test@example.com")
     user.set_password("secure123")

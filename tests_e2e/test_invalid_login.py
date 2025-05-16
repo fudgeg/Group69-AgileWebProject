@@ -4,6 +4,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 BASE = "http://127.0.0.1:5000"
 
+# Test to verify invalid login attempts
+# This test checks if the user receives an error message when trying to log in with invalid credentials.
+
 def test_invalid_login(driver):
     driver.get(f"{BASE}/login")
     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.NAME, "email")))

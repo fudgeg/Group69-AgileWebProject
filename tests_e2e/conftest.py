@@ -3,6 +3,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
+# This fixture sets up the Chrome WebDriver for Selenium tests.
+# It installs the ChromeDriver using webdriver_manager and launches it in headless mode.
+# After the tests are done, it quits the driver to free up resources.
 @pytest.fixture(scope="session")
 def driver():
     # install & launch ChromeDriver
