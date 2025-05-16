@@ -58,8 +58,10 @@ Reading Insights where you can find your completion rate and average time spent 
 
 ## Running the test suites 
 
+
+
 ### Important: 
-Run Selenium tests before seeding the database or running unit tests. This ensures a clean environment for UI-based validations (like fresh signup/login flows) 
+Run Selenium tests before seeding the database or running unit tests. This ensures a clean environment for UI-based validations (like fresh signup/login flows)
 
 - Make sure the flask app is running. Then in another terminal,
 -  pytest tests_e2e/ : This includes six selenium tests
@@ -84,10 +86,10 @@ Run Selenium tests before seeding the database or running unit tests. This ensur
 7. Music Model Tests (tests/test_music.py)- Ensure music entries persist correctly
 
 ## Selenium Tests
-1. Invalid Login (test_invalid_login.py)
-2. Signup Flow (test_signup_flow.py)
-3. Protected Routes (home_requires_login.py) - 1 for /home
-4. Protected Routes (upload_requires_login.py) - 2 for /upload
-5. Upload Book Test (test_upload_book.py) 
-6. Check Media Display Count (test_media_display_count.py)
+1. Invaid login (test_invalid_login.py)--> Verifies that logging in with incorrect credentials shows an error and denies access
+2. Signup flow (test_signup_flow.py) --> Ensures a new user can successfully sign up and is redirected to the login page.
+3. protected routes (test_upload_requires_login.py) --> Confirms that unauthenticated users are redirected to /login when trying to access the upload page.
+4. protected routes (test_home_requires_login.py) --> Confirms that unauthenticated users are redirected to /login when trying to access the home page.
+5. media display count (test_media_display_count.py) --> checks if the media analysis is working correctly 
+6. upload media flow (test_upload_media.py)--> checks if media is correctly uploaded and shown under entries
    
