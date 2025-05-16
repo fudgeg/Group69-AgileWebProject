@@ -1,204 +1,115 @@
 /* ====================== GENERAL GLOBAL STYLES ====================== */
 body {
     font-family: "Segoe UI", sans-serif;
-    background-color: #f4f3f0;
+    background-color: #c2baba;  
     margin: 0;
     padding: 0;
+    width: 100vw;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
-/* Center Page */
-.center-page {
+.center-page,
+.background-wrapper {
+    background-color: #c2baba;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
-    background-color: #c2baba;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
 }
-
-
 
 /* ====================== WELCOME PAGE STYLES ====================== */
-.welcome-box {
-    background-color: #f8f8e8;
-    width: 500px;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    position: relative;
+body.welcome.center-page {
+  display: block !important;
+  height: auto !important;
 }
 
-/* Title and Info Icon */
-.title {
-    font-size: 3rem;
-    color: #204118;
-    font-weight: 800;
-    margin-bottom: 15px;
-    letter-spacing: -1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+
+/* HERO SECTION */
+/* HERO SECTION */
+.hero-logo {
+  width: 100px;
+  height: auto;
 }
 
-.info-icon {
-    font-size: 1.5rem;
-    color: #204118;
-    cursor: pointer;
-    transition: color 0.3s;
+/* Adjust spacing now that logo is present */
+.hero-inner .display-3 {
+  margin-top: 0.5rem;
 }
 
-.info-icon:hover {
-    color: #356630;
-}
+/* rest of the CSS unchanged... */
 
-/* Subtitle Styling */
-.subtitle {
-    margin: 15px 0 30px;
-    font-size: 1.2rem;
-    color: #333;
-    font-weight: 500;
+.welcome-hero {
+  background: linear-gradient(to right, #204118, #3a7741);
+  color: white;
+  padding: 25px 20px 60px;
+  text-align: center;
 }
-
-/* Button Styles */
-.buttons .btn {
-    background-color: #204118;
-    color: white;
-    padding: 14px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    margin: 3px 0;
-    width: 100%;
-    max-width: 350px;
-    transition: background-color 0.3s, transform 0.3s;
+.hero-inner {
+  max-width: 800px;
+  margin: auto;
 }
-
-.buttons .btn:hover {
-    background-color: #356630;
-    transform: translateY(-3px);
-}
-
-/* Icon Styles */
-.icons {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    margin-top: 30px;
-}
-
 .icon-text {
-    text-align: center;
-    font-size: 18px;
-    color: #204118;
-    line-height: 1.5;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgba(255,255,255,0.8);
 }
 
-.icon-text span {
-    display: block;
-    font-size: 35px;
-    margin-bottom: 5px;
-    color: #356630;
+/* FEATURES SECTION */
+.feature-showcase {
+  background-color: #fefef5;
+}
+.section-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #204118;
 }
 
-/* ====================== COOKIE MODAL STYLES ====================== */
-.cookie-modal {
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+/* Feature Cards */
+.feature-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 30px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
-.cookie-modal.active {
-    opacity: 1;
-    visibility: visible;
+.feature-card img {
+  max-width: 230px;
+  height: auto;
 }
-
-.cookie-content {
-    background-color: #ffffff;
-    padding: 30px 40px;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+.feature-card h5 {
+  margin-top: 16px;
+  font-weight: 600;
+  color: #204118;
 }
-
-/* Centering Modal Text */
-.cookie-content h2 {
-    color: #204118;
-    font-size: 28px;
-    margin-bottom: 15px;
-}
-
-.cookie-content p {
-    color: #333;
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-.cookie-content ul {
-    list-style-type: disc;
-    padding-left: 20px;
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-/* Centering Close Button */
-.cookie-btn {
-    background-color: #204118;
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-    margin: 0 auto;
-    display: block;
-    width: 200px;
-}
-
-.cookie-btn:hover {
-    background-color: #356630;
+.feature-card p.small {
+  margin-top: 8px;
+  color: #555;
+  flex-grow: 1;
 }
 
 
 /* ====================== LOGIN & SIGN UP PAGE STYLES  ====================== */
-.center-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #ffffff;
-  padding: 40px 20px;
-}
 .login-container {
-  background-color: #efefe3;
-  width: 90%;
-  max-width: 950px;
-  height: auto;
-  padding: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  flex-wrap: wrap
+    background-color: #efefe3;
+    width: 90%;
+    max-width: 950px;
+    padding: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    flex-wrap: wrap;
 }
-
 
 .logo-section .logo {
   flex: 1;
@@ -304,29 +215,48 @@ left: 20px;
   padding: 10px 20px;
   color: white;
 }
+
 .navbar-left {
-  display:flex ;
+  display: flex;
   align-items: center;
   gap: 60px; 
 }
 
-.navbar-icon{
-  width: 50px;
-  height: auto;
+.navbar-icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  margin-bottom: 5px;
 }
 
 .navbar .logo {
   font-size: 24px;
 }
 
-.nav-icon-button{
-  background-color: #9ebf8f; 
-  padding: 10px;
+.nav-icon-button {
+  background-color: #9ebf8f;
+  padding: 10px 15px;
   border-radius: 8px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  position: relative;
+  gap: 10px;
+  transition: background-color 0.3s, color 0.3s;
+  min-width: 150px;
+}
+
+.nav-icon-button:hover {
+  background-color: #7aa96c;
+  cursor: pointer;}
+
+.nav-label {
+  font-size: 16px;
+  color: #356630;
+  font-weight: bold;
+}
+
+.nav-link {
+  text-decoration: none; 
+  color: white;
 }
 
 .nav-icons {
@@ -335,10 +265,8 @@ left: 20px;
 }
 
 .nav-icon {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  background-color: #9ebf8f;
+  width: 40px;
+  height: 40px;
 }
 
 /* ====================== HOME PAGE ====================== */
@@ -426,7 +354,7 @@ left: 20px;
 
 
 /* ======================IMPORT BUTTON IN HOME PAGE ======================*/
-.import-btn {
+.upload-btn {
   margin-top: 70px;
   padding: 12px 90px;
   background-color: #204118;
@@ -443,7 +371,7 @@ left: 20px;
 }
 
 
-.import-btn:hover {
+.upload-btn:hover {
   background-color: #777;
 }
 
@@ -738,7 +666,6 @@ left: 20px;
   color: white;
 }
 
-/* Back Button Styles */
 .back-button:hover {
   background-color: #356630;
   color: #ffffff;
@@ -754,13 +681,13 @@ left: 20px;
 }
 
 .friends-section, .recommended-section {
-  background-color: #9ebf8f;
-  padding: 20px;
-  border-radius: 30px;
-  width: 300px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  height: 500px;  /* Fixed height */
+    background-color: #9ebf8f;
+    padding: 40px;
+    border-radius: 30px;
+    width: 500px; /* Increase width */
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    margin-bottom: 40px;
 }
 
 .friends-list {
@@ -774,24 +701,24 @@ left: 20px;
 }
 
 .friend-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background-color: #dce9d5; 
-  padding: 10px 20px;
-  border-radius: 20px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  justify-content: space-between;
-  max-width: 600px;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: #dce9d5; 
+    padding: 20px 30px; /* Increase padding */
+    border-radius: 30px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    justify-content: space-between;
+    max-width: 450px; /* Increase width */
+    width: 100%;
 }
 
 .friend-pfp {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid #204118;
+    width: 60px;  /* Slightly larger profile picture */
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #204118;
 }
 
 .friend-card img {
@@ -799,14 +726,14 @@ left: 20px;
 }
 
 .friend-name {
-  font-size: 18px;
-  font-weight: bold;
-  color: #204118;
-  flex-grow: 1;  
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 24px;  /* Increase text size */
+    font-weight: bold;
+    color: #204118;
+    flex-grow: 1;  
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .friends-list::-webkit-scrollbar {
@@ -870,79 +797,6 @@ left: 20px;
 
 .friend-search-container button:hover {
   background-color: #376e35;
-}
-
-/* Share Section Styles */
-.share-section {
-    background-color: #dce9d5;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-/* Share Section Heading */
-.share-section h4 {
-    color: #204118;
-    margin-bottom: 15px;
-    font-weight: bold;
-}
-
-/* Share Form Styles */
-.share-form {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* Dropdown Styles */
-.share-form select {
-    flex: 1;
-    padding: 10px 15px;
-    border-radius: 20px;
-    border: 1px solid #204118;
-    font-weight: bold;
-    color: #204118;
-    background-color: #ffffff;
-    transition: border-color 0.3s, background-color 0.3s;
-}
-
-/* Dropdown Hover and Focus */
-.share-form select:focus,
-.share-form select:hover {
-    border-color: #183414;
-    background-color: #f4f4f4;
-}
-
-/* Share Button Styles */
-.share-button {
-    background-color: #204118;
-    color: #ffffff;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 30px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-/* Share Button Hover */
-.share-button:hover {
-    background-color: #183414;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .share-form {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .share-button {
-        width: 100%;
-        text-align: center;
-    }
 }
 
 /* ====================== Friend Search Page ====================== */
@@ -1363,6 +1217,109 @@ left: 20px;
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
 }
 
+.sharing-section {
+  background-color: #f8f8e8;
+  padding: 20px;
+  border-radius: 16px;
+  margin: 20px auto;
+  max-width: 800px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.sharing-group {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.sharing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.sharing-buttons button {
+  background-color: #38761d;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.sharing-buttons button:hover {
+  background-color: #2e6e14;
+}
+
+.divider {
+  height: 1px;
+  background-color: #dcdcdc;
+  margin: 20px 0;
+}
+
+.share-button {
+  background-color: #38761d;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.share-button:hover {
+  background-color: #2e6e14;
+}
+
+/* ===== Dropdown Styling ===== */
+.sharing-dropdown {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 2px solid #38761d;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: bold;
+    color: #204118;
+    background-color: #ffffff;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.sharing-dropdown:focus {
+    outline: none;
+    border-color: #2e6e14;
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+}
+
+.sharing-dropdown option {
+    font-weight: bold;
+    color: #204118;
+}
+
+/* ===== Enhanced Button Styling ===== */
+.share-button {
+    background-color: #38761d;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    width: 100%;
+    max-width: 400px;
+}
+
+.share-button:hover {
+    background-color: #2e6e14;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+}
 
 
 /* ===== Notification PAGE ===== */

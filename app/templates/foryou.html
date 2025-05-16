@@ -72,36 +72,6 @@ block content %}
     {% endif %} {% endfor %}
   </div>
 
-  <!-- Share Dropdown -->
-  <div class="for-you-share-container">
-    <div class="for-you-dropdown-container">
-      <select
-        id="friend-select"
-        class="for-you-dropdown"
-        aria-label="Select a friend to share with"
-      >
-        <option selected disabled>
-          Select a friend to share your snapshot
-        </option>
-        {% for friend in friends %}
-        <option value="{{ friend.id }}">{{ friend.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="for-you-share-buttons">
-      <button class="for-you-share-btn" onclick="shareToFriend()">
-        Share Snapshot
-      </button>
-      <button class="for-you-share-btn" onclick="shareToEmail()">
-        Share via Email
-      </button>
-      <button class="for-you-share-btn" onclick="exportAsImage()">
-        Export as Image
-      </button>
-    </div>
-  </div>
-
   <!-- JS to Render Pie Charts and Handle Sharing -->
   <script>
     const colors = [
@@ -217,7 +187,6 @@ block content %}
   </script>
   <!-- Timeline: Media Consumed Over Time -->
   <div class="row justify-content-center align-items-start my-5 gx-4">
-
     <!-- 📊 Timeline Chart Container -->
     <div class="col-lg-8">
       <div class="timeline-section p-4">
@@ -234,106 +203,170 @@ block content %}
         <h4 class="text-center mb-4">Book Reading Insights</h4>
 
         <div class="d-flex flex-column align-items-center gap-4">
-
           <div class="book-stat-card text-center">
             <h5>📘 Completion Rate</h5>
-            <img src="{{ url_for('static', filename='media/books-stack-of-three.png') }}" alt="Completion Icon" class="book-stat-icon">
+            <img
+              src="{{ url_for('static', filename='media/books-stack-of-three.png') }}"
+              alt="Completion Icon"
+              class="book-stat-icon"
+            />
             <div class="book-stat-value">{{ completion_rate }}%</div>
           </div>
 
           <div class="book-stat-card text-center">
             <h5>⏳ Average Time</h5>
-            <img src="{{ url_for('static', filename='media/books.png') }}" alt="Time Icon" class="book-stat-icon">
+            <img
+              src="{{ url_for('static', filename='media/books.png') }}"
+              alt="Time Icon"
+              class="book-stat-icon"
+            />
             <div class="book-stat-value">{{ avg_completion_time }} days</div>
           </div>
-
         </div>
       </div>
     </div>
-
   </div>
 
-
-  <div id="monthly-data" data-json='{{ monthly_by_type | tojson | safe }}' style="display: none;"></div>
+  <div
+    id="monthly-data"
+    data-json="{{ monthly_by_type | tojson | safe }}"
+    style="display: none"
+  ></div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <hr class="divider my-4" />
 
-  <script>
-    // Parse the raw monthly data from your hidden JSON div
-    const rawData = JSON.parse(document.getElementById("monthly-data").dataset.json);
+  <h3 class="text-center my-4">Share Your Media with Friends!</h3>
 
-    // Extract and sort months (chronologically)
-    const sortedMonths = [...new Set(Object.keys(rawData))].sort((a, b) => new Date(a) - new Date(b));
+  <!-- Sharing Section -->
+  <div class="sharing-section">
+    <!-- Snapshot Sharing -->
+    <div class="sharing-group">
+      <h4>Media Analytics Sharing</h4>
+      <select id="friend-select" class="sharing-dropdown">
+        <option selected disabled>
+          Select a friend to share your snapshot
+        </option>
+        {% for friend in friends %}
+        <option value="{{ friend.id }}">{{ friend.name }}</option>
+        {% endfor %}
+      </select>
+      <div class="sharing-buttons">
+        <button onclick="shareToFriend()">Share Snapshot</button>
+        <button onclick="shareToEmail()">Share via Email</button>
+        <button onclick="exportAsImage()">Export as Image</button>
+      </div>
+    </div>
 
-    // Format for display on X-axis (e.g., 'Apr 2024')
-    const formattedLabels = sortedMonths.map(monthStr => {
-      const [year, month] = monthStr.split('-');
-      return new Date(year, month - 1).toLocaleString('default', {
-        month: 'short',
-        year: 'numeric'
+    <hr class="divider" />
+
+    <!-- Media Entry Sharing -->
+    <div class="sharing-group">
+      <h4>Media Entry Sharing</h4>
+      <form
+        method="post"
+        action="{{ url_for('main.share_media') }}"
+        class="media-sharing-form"
+      >
+        <select name="media_id" class="sharing-dropdown" required>
+          <option disabled selected>Choose media...</option>
+          {% for m in user_media %}
+          <option value="{{ m.id }}">
+            {{ m.media_type.capitalize() }} – {{ m.title }}
+          </option>
+          {% endfor %}
+        </select>
+
+        <select name="friend_id" class="sharing-dropdown" required>
+          <option disabled selected>Choose friend...</option>
+          {% for f in friends %}
+          <option value="{{ f.id }}">{{ f.name }}</option>
+          {% endfor %}
+        </select>
+
+        <button type="submit" class="share-button">Share</button>
+      </form>
+    </div>
+
+    <script>
+      // Parse the raw monthly data from your hidden JSON div
+      const rawData = JSON.parse(
+        document.getElementById("monthly-data").dataset.json
+      );
+
+      // Extract and sort months (chronologically)
+      const sortedMonths = [...new Set(Object.keys(rawData))].sort(
+        (a, b) => new Date(a) - new Date(b)
+      );
+
+      // Format for display on X-axis (e.g., 'Apr 2024')
+      const formattedLabels = sortedMonths.map((monthStr) => {
+        const [year, month] = monthStr.split("-");
+        return new Date(year, month - 1).toLocaleString("default", {
+          month: "short",
+          year: "numeric",
+        });
       });
-    });
 
-    const mediaTypes = ['book', 'movie', 'tv_show', 'music'];
-    const labels = {
-      book: 'Books',
-      movie: 'Movies',
-      tv_show: 'TV Shows',
-      music: 'Music'
-    };
+      const mediaTypes = ["book", "movie", "tv_show", "music"];
+      const labels = {
+        book: "Books",
+        movie: "Movies",
+        tv_show: "TV Shows",
+        music: "Music",
+      };
 
-    const timelineColors = ['#f94144', '#577590', '#90be6d', '#f9c74f'];
+      const timelineColors = ["#f94144", "#577590", "#90be6d", "#f9c74f"];
 
-    const datasets = mediaTypes.map((type, i) => ({
-      label: labels[type],
-      data: sortedMonths.map(monthKey => rawData[monthKey]?.[type] || 0),
-      borderColor: timelineColors[i],
-      backgroundColor: timelineColors[i],
-      fill: false,
-      tension: 0.3
-    }));
+      const datasets = mediaTypes.map((type, i) => ({
+        label: labels[type],
+        data: sortedMonths.map((monthKey) => rawData[monthKey]?.[type] || 0),
+        borderColor: timelineColors[i],
+        backgroundColor: timelineColors[i],
+        fill: false,
+        tension: 0.3,
+      }));
 
-    new Chart(document.getElementById("timelineChart"), {
-      type: 'line',
-      data: {
-        labels: formattedLabels,
-        datasets: datasets
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'top' }
+      new Chart(document.getElementById("timelineChart"), {
+        type: "line",
+        data: {
+          labels: formattedLabels,
+          datasets: datasets,
         },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Months',
-              font: { size: 16, weight: 'bold' }
-            },
-            ticks: {
-              font: { size: 14 }
-            }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top" },
           },
-          y: {
-            title: {
-              display: true,
-              text: 'Entries',
-              font: { size: 16, weight: 'bold' }
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Months",
+                font: { size: 16, weight: "bold" },
+              },
+              ticks: {
+                font: { size: 14 },
+              },
             },
-            ticks: {
-              beginAtZero: true,
-              stepSize: 1,
-              font: { size: 14 }
-            }
-          }
-        }
-      }
-    });
-  </script>
+            y: {
+              title: {
+                display: true,
+                text: "Entries",
+                font: { size: 16, weight: "bold" },
+              },
+              ticks: {
+                beginAtZero: true,
+                stepSize: 1,
+                font: { size: 14 },
+              },
+            },
+          },
+        },
+      });
+    </script>
+  </div>
 
-
+  {% endblock %}
 </div>
-
-{% endblock %}

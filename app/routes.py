@@ -640,6 +640,9 @@ def for_you():
     # Fetch the user's friends
     friends = user.friends
 
+    # Fetch the user's media entries for sharing
+    user_media = MediaEntry.query.filter_by(user_id=user.id).order_by(MediaEntry.media_type, MediaEntry.title).all()
+
     # Media data
     books = Book.query.filter_by(user_id=user_id).all()
     movies = Movie.query.filter_by(user_id=user_id).all()
@@ -677,7 +680,6 @@ def for_you():
     }
 
     # Generate the identity label
-    
     identity_label = get_user_media_identity(raw_media_counts)
     monthly_by_type = get_monthly_media_by_type(user_id)
     completion_rate, avg_completion_time = calculate_book_metrics(books)
@@ -685,6 +687,8 @@ def for_you():
     
 
     #  Pass the required variables to the template
+    
+    # ✅ Pass the required variables to the template
     return render_template(
         "foryou.html",
         identity=identity_label,
@@ -694,8 +698,10 @@ def for_you():
         monthly_by_type=monthly_by_type,
         completion_rate=completion_rate,
         avg_completion_time=avg_completion_time,
-        friends=friends
+        friends=friends,
+        user_media=user_media  
     )
+
 
 
 
