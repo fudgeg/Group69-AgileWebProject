@@ -35,6 +35,6 @@ The creation of the web application should be done in a private GitHub repositor
 ### Important: Run Selenium tests before seeding the database or running unit tests. This ensures a clean environment for UI-based validations (like fresh signup/login flows).
 
 - Make sure the flask app is running. Then in another terminal,
-      - pytest tests_e2e/ : This includes four selenium tests
-      - pytest tests_unit/ : This includes six unit tests. 
+-  pytest tests_e2e/ : This includes four selenium tests
+-  pytest tests_unit/ : This includes six unit tests. 
 
