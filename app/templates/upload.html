@@ -9,6 +9,8 @@ block content %}
   <div class="upload-box">
     <h2 class="mb-4 text-center">Upload Your Media</h2>
     <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
       <!-- Media Type Selection -->
       <div class="form-group">
         <label for="mediaType">Media Type:</label>

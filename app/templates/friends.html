@@ -55,6 +55,7 @@ block content %}
             method="POST"
             action="{{ url_for('main.send_friend_request', receiver_id=person.id) }}"
           >
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="friends-submit">Add</button>
           </form>
         </div>
@@ -73,6 +74,8 @@ block content %}
       action="{{ url_for('main.share_media') }}"
       class="share-form"
     >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
       <select name="media_id" required>
         <option value="" disabled selected>Choose media...</option>
         {% for m in user_media %}
