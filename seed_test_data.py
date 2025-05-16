@@ -1,115 +1,66 @@
+
 from app import create_app
 from app.models import db, User, Book, Movie, TVShow, Music
 from datetime import date
 
 app = create_app()
 
-with app.app_context():
-    user = User.query.filter_by(email='admin@example.com').first()
-
+def create_user(name, email, password="test123"):
+    user = User.query.filter_by(email=email).first()
     if not user:
-        print("Admin user not found.")
-    else:
-        db.session.add_all([
-            Book(
-                title="The Hobbit",
-                media_type="book",
-                rating=5,
-                comments="A timeless fantasy adventure.",
-                consumed_date=date(2024, 3, 10),
-                is_favorite=True,
-                genre="Fantasy",
-                author="J.R.R. Tolkien",
-                date_started=date(2024, 3, 1),
-                date_finished=date(2024, 3, 10),
-                status="finished",
-                user_id=user.id
-            ),
-            Book(
-                title="Sapiens",
-                media_type="book",
-                rating=4,
-                comments="Eye-opening take on human history.",
-                consumed_date=date(2024, 4, 15),
-                is_favorite=False,
-                genre="Non-Fiction",
-                author="Yuval Noah Harari",
-                date_started=date(2024, 4, 1),
-                date_finished=date(2024, 4, 15),
-                status="finished",
-                user_id=user.id
-            ),
-
-            Movie(
-                title="Inception",
-                media_type="movie",
-                rating=5,
-                comments="Mind-bending masterpiece.",
-                consumed_date=date(2024, 5, 1),
-                is_favorite=True,
-                genre="Sci-Fi",
-                watched_date=date(2024, 5, 1),
-                user_id=user.id
-            ),
-            Movie(
-                title="The Godfather",
-                media_type="movie",
-                rating=5,
-                comments="A cinematic classic.",
-                consumed_date=date(2024, 5, 2),
-                is_favorite=True,
-                genre="Drama",
-                watched_date=date(2024, 5, 2),
-                user_id=user.id
-            ),
-
-            TVShow(
-                title="Breaking Bad",
-                media_type="tv_show",
-                rating=5,
-                comments="Best character development ever.",
-                consumed_date=date(2024, 4, 20),
-                is_favorite=True,
-                genre="Thriller",
-                watched_date=date(2024, 4, 20),
-                user_id=user.id
-            ),
-            TVShow(
-                title="Friends",
-                media_type="tv_show",
-                rating=4,
-                comments="Fun comfort show.",
-                consumed_date=date(2024, 4, 18),
-                is_favorite=False,
-                genre="Comedy",
-                watched_date=date(2024, 4, 18),
-                user_id=user.id
-            ),
-
-            Music(
-                title="Bohemian Rhapsody",
-                media_type="music",
-                rating=5,
-                comments="A rock opera legend.",
-                consumed_date=date(2024, 4, 5),
-                is_favorite=True,
-                genre="Rock",
-                artist="Queen",
-                listened_date=date(2024, 4, 5),
-                user_id=user.id
-            ),
-            Music(
-                title="Blinding Lights",
-                media_type="music",
-                rating=4,
-                comments="80s synth vibe done right.",
-                consumed_date=date(2024, 4, 7),
-                is_favorite=False,
-                genre="Pop",
-                artist="The Weeknd",
-                listened_date=date(2024, 4, 7),
-                user_id=user.id
-            ),
-        ])
+        user = User(name=name, email=email)
+        user.set_password(password)
+        db.session.add(user)
         db.session.commit()
-        print("Test media entries added for admin@example.com")
+        print(f"✅ Created user: {name} ({email})")
+    return user
+
+def add_friend(user_a, user_b):
+    if user_b not in user_a.friends:
+        user_a.friends.append(user_b)
+        user_b.friends.append(user_a)
+        db.session.commit()
+        print(f"🤝 {user_a.name} and {user_b.name} are now friends")
+
+def seed_static_media():
+    db.drop_all()
+    db.create_all()
+
+    alice = create_user("Alice", "alice@example.com")
+    bob = create_user("Bob", "bob@example.com")
+    charlie = create_user("Charlie", "charlie@example.com")
+
+    # Alice's entries
+    db.session.add_all([
+        Book(title="Dune", genre="Sci-Fi", author="Frank Herbert", date_started=date(2024, 1, 10), date_finished=date(2024, 2, 5), status="completed", media_type="book", user_id=alice.id),
+        Movie(title="Interstellar", genre="Sci-Fi", watched_date=date(2024, 3, 15), media_type="movie", user_id=alice.id),
+        TVShow(title="Stranger Things", genre="Sci-Fi", watched_date=date(2024, 4, 1), media_type="tv_show", user_id=alice.id),
+        Music(title="Starlight", genre="Sci-Fi", artist="Muse", listened_date=date(2024, 5, 1), media_type="music", user_id=alice.id),
+    ])
+
+    # Bob's entries
+    db.session.add_all([
+        Book(title="Catch-22", genre="Satire", author="Joseph Heller", date_started=date(2024, 2, 1), date_finished=date(2024, 3, 1), status="completed", media_type="book", user_id=bob.id),
+        Movie(title="The Truman Show", genre="Comedy", watched_date=date(2024, 4, 10), media_type="movie", user_id=bob.id),
+        TVShow(title="Brooklyn Nine-Nine", genre="Comedy", watched_date=date(2024, 4, 20), media_type="tv_show", user_id=bob.id),
+        Music(title="Happy", genre="Pop", artist="Pharrell Williams", listened_date=date(2024, 5, 5), media_type="music", user_id=bob.id),
+    ])
+
+    # Charlie's entries
+    db.session.add_all([
+        Book(title="Educated", genre="Memoir", author="Tara Westover", date_started=date(2024, 1, 15), date_finished=date(2024, 2, 20), status="completed", media_type="book", user_id=charlie.id),
+        Movie(title="The Pursuit of Happyness", genre="Drama", watched_date=date(2024, 3, 25), media_type="movie", user_id=charlie.id),
+        TVShow(title="This Is Us", genre="Drama", watched_date=date(2024, 4, 12), media_type="tv_show", user_id=charlie.id),
+        Music(title="Fix You", genre="Alternative", artist="Coldplay", listened_date=date(2024, 5, 8), media_type="music", user_id=charlie.id),
+    ])
+
+    # Friendships
+    add_friend(alice, bob)
+    add_friend(alice, charlie)
+
+    db.session.commit()
+    print("✅ Static test data seeded successfully.")
+
+if __name__ == "__main__":
+    with app.app_context():
+        seed_static_media()
