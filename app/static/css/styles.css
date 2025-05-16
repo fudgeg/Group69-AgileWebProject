@@ -174,6 +174,14 @@ body {
 
 
 /* ====================== LOGIN & SIGN UP PAGE STYLES  ====================== */
+.center-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #ffffff;
+  padding: 40px 20px;
+}
 .login-container {
   background-color: #efefe3;
   width: 90%;
@@ -186,6 +194,7 @@ body {
   justify-content: center;
   gap: 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  flex-wrap: wrap
 }
 
 
@@ -207,7 +216,7 @@ body {
   justify-content: center;
   width: 100%;
   max-width: 600px;
-  position: relative;
+  position: 100%;
 }
 
 
@@ -1150,6 +1159,8 @@ left: 20px;
 
 /* ====================== FOR YOU PAGE ====================== */
 
+/* ============ FOR YOU PAGE (Updated) ============ */
+
 .for-you-page {
   padding: 60px 20px;
   background-color: #dce9d5;
@@ -1240,6 +1251,43 @@ left: 20px;
   height: auto !important;
 }
 
+.timeline-section, .book-metrics-section {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.timeline-chart-wrapper {
+  width: 100%;
+  height: 450px;
+}
+
+.timeline-chart-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.book-stat-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 250px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.book-stat-icon {
+  width: 60px;
+  height: auto;
+  margin: 15px 0;
+}
+
+.book-stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #204118;
+}
 /* ========== For You Page Share Section ========== */
 .for-you-share-container {
     display: flex;
