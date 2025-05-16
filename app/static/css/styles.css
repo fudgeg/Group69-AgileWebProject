@@ -1291,6 +1291,109 @@ left: 20px;
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
 }
 
+.sharing-section {
+  background-color: #f8f8e8;
+  padding: 20px;
+  border-radius: 16px;
+  margin: 20px auto;
+  max-width: 800px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.sharing-group {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.sharing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.sharing-buttons button {
+  background-color: #38761d;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.sharing-buttons button:hover {
+  background-color: #2e6e14;
+}
+
+.divider {
+  height: 1px;
+  background-color: #dcdcdc;
+  margin: 20px 0;
+}
+
+.share-button {
+  background-color: #38761d;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.share-button:hover {
+  background-color: #2e6e14;
+}
+
+/* ===== Dropdown Styling ===== */
+.sharing-dropdown {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 2px solid #38761d;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: bold;
+    color: #204118;
+    background-color: #ffffff;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.sharing-dropdown:focus {
+    outline: none;
+    border-color: #2e6e14;
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+}
+
+.sharing-dropdown option {
+    font-weight: bold;
+    color: #204118;
+}
+
+/* ===== Enhanced Button Styling ===== */
+.share-button {
+    background-color: #38761d;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    width: 100%;
+    max-width: 400px;
+}
+
+.share-button:hover {
+    background-color: #2e6e14;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+}
 
 
 /* ===== Notification PAGE ===== */
