@@ -666,7 +666,6 @@ left: 20px;
   color: white;
 }
 
-/* Back Button Styles */
 .back-button:hover {
   background-color: #356630;
   color: #ffffff;
@@ -682,13 +681,13 @@ left: 20px;
 }
 
 .friends-section, .recommended-section {
-  background-color: #9ebf8f;
-  padding: 20px;
-  border-radius: 30px;
-  width: 300px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  height: 500px;  /* Fixed height */
+    background-color: #9ebf8f;
+    padding: 40px;
+    border-radius: 30px;
+    width: 500px; /* Increase width */
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    margin-bottom: 40px;
 }
 
 .friends-list {
@@ -702,24 +701,24 @@ left: 20px;
 }
 
 .friend-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background-color: #dce9d5; 
-  padding: 10px 20px;
-  border-radius: 20px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  justify-content: space-between;
-  max-width: 600px;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: #dce9d5; 
+    padding: 20px 30px; /* Increase padding */
+    border-radius: 30px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    justify-content: space-between;
+    max-width: 450px; /* Increase width */
+    width: 100%;
 }
 
 .friend-pfp {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid #204118;
+    width: 60px;  /* Slightly larger profile picture */
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #204118;
 }
 
 .friend-card img {
@@ -727,14 +726,14 @@ left: 20px;
 }
 
 .friend-name {
-  font-size: 18px;
-  font-weight: bold;
-  color: #204118;
-  flex-grow: 1;  
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 24px;  /* Increase text size */
+    font-weight: bold;
+    color: #204118;
+    flex-grow: 1;  
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .friends-list::-webkit-scrollbar {
@@ -798,79 +797,6 @@ left: 20px;
 
 .friend-search-container button:hover {
   background-color: #376e35;
-}
-
-/* Share Section Styles */
-.share-section {
-    background-color: #dce9d5;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-/* Share Section Heading */
-.share-section h4 {
-    color: #204118;
-    margin-bottom: 15px;
-    font-weight: bold;
-}
-
-/* Share Form Styles */
-.share-form {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* Dropdown Styles */
-.share-form select {
-    flex: 1;
-    padding: 10px 15px;
-    border-radius: 20px;
-    border: 1px solid #204118;
-    font-weight: bold;
-    color: #204118;
-    background-color: #ffffff;
-    transition: border-color 0.3s, background-color 0.3s;
-}
-
-/* Dropdown Hover and Focus */
-.share-form select:focus,
-.share-form select:hover {
-    border-color: #183414;
-    background-color: #f4f4f4;
-}
-
-/* Share Button Styles */
-.share-button {
-    background-color: #204118;
-    color: #ffffff;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 30px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-/* Share Button Hover */
-.share-button:hover {
-    background-color: #183414;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .share-form {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .share-button {
-        width: 100%;
-        text-align: center;
-    }
 }
 
 /* ====================== Friend Search Page ====================== */
