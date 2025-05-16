@@ -58,3 +58,20 @@ Run Selenium tests before seeding the database or running unit tests. This ensur
 5. flask db upgrade
 6. flask run
 
+
+## Unit Tests
+1. Authentication Tests (tests/test_auth.py) - Duplicate signup is rejected
+2. User Model Tests (tests/test_users.py) - Creating, querying, and deleting users
+3. User Model Tests (tests/test_users.py) - Email uniqueness and data integrity
+4. Book Model Tests (tests/test_books.py) -Add, retrieve, and delete book entries
+5. Movie Model Tests (tests/test_movies.py) - CRUD operations and genre field validation
+6. TVShow Model Tests (tests/test_tvshows.py) - Verify listing and removal functions
+7. Music Model Tests (tests/test_music.py)- Ensure music entries persist correctly
+
+## Selenium Tests
+1. Invalid Login (test_invalid_login.py)
+2. Signup Flow (test_signup_flow.py)
+3. Protected Routes (test_protected_routes_1.py) - 1 for /home
+4. Protected Routes (test_protected_routes_2.py) - 2 for /upload
+5. Upload Book Test (test_upload_book.py) -
+6. 
