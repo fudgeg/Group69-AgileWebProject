@@ -24,8 +24,18 @@
 
 ## Running the test suites 
 
+
+## selenium test
+- Invaid login (test_invalid_login.py)--> Verifies that logging in with incorrect credentials shows an error and denies access
+- Signup flow (test_signup_flow.py) --> Ensures a new user can successfully sign up and is redirected to the login page.
+- protected routes (test_upload_requires_login.py) --> Confirms that unauthenticated users are redirected to /login when trying to access the upload page.
+- protected routes (test_home_requires_login.py) --> Confirms that unauthenticated users are redirected to /login when trying to access the home page.
+- media display count (test_media_display_count.py) --> checks if the media analysis is working correctly 
+- upload media flow (test_upload_media.py)--> checks if media is correctly uploaded and shown under entries
+
+
 ### Important: 
-Run Selenium tests before seeding the database or running unit tests. This ensures a clean environment for UI-based validations (like fresh signup/login flows) 
+Run Selenium tests before seeding the database or running unit tests. This ensures a clean environment for UI-based validations (like fresh signup/login flows)
 
 - Make sure the flask app is running. Then in another terminal,
 -  pytest tests_e2e/ : This includes four selenium tests

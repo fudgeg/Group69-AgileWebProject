@@ -1,4 +1,4 @@
-
+  //projects js functions stored here
   function toggleFields() {
     const type = document.getElementById("mediaType").value;
 
