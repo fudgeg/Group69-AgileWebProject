@@ -62,7 +62,7 @@ Reading Insights where you can find your completion rate and average time spent 
 Run Selenium tests before seeding the database or running unit tests. This ensures a clean environment for UI-based validations (like fresh signup/login flows) 
 
 - Make sure the flask app is running. Then in another terminal,
--  pytest tests_e2e/ : This includes four selenium tests
+-  pytest tests_e2e/ : This includes six selenium tests
 -  pytest tests_unit/ : This includes six unit tests.
 
 ## Instructions to re-run the server 
