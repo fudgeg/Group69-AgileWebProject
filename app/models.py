@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -11,7 +12,7 @@ friend_association = db.Table('friendships',
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100),unique=True,nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     profile_picture = db.Column(db.String(100), default='user.png')
@@ -37,19 +38,62 @@ class User(db.Model):
     def __repr__(self):
         return f"<User {self.email}>"
 
+class UserActivity(db.Model):
+    __tablename__ = 'user_activities'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    activity_type = db.Column(db.String(50), nullable=False)  # e.g., "username_change", "email_change"
+    old_value = db.Column(db.String(255), nullable=True)
+    new_value = db.Column(db.String(255), nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    seen = db.Column(db.Boolean, default=False)
+
+    user = db.relationship('User', backref='activities')
+
+    def __repr__(self):
+        return f"<UserActivity {self.activity_type} by User {self.user_id}>"
+
+class FriendRequest(db.Model):
+    __tablename__ = 'friend_requests'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    status = db.Column(db.String(20), default="pending")
+    seen = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)  # Add this line
+
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_requests')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_requests')
+
+    def __repr__(self):
+        return f"<FriendRequest from {self.sender_id} to {self.receiver_id} at {self.timestamp}>"
+
+
+class MediaSnapshot(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    snapshot_data = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    seen = db.Column(db.Boolean, default=False) 
+    
+    sender = db.relationship('User', foreign_keys=[sender_id])
+    receiver = db.relationship('User', foreign_keys=[receiver_id])
+
+
+
+
 class MediaEntry(db.Model):
     __tablename__ = 'media_entry'
     id = db.Column(db.Integer, primary_key=True)
     media_type = db.Column(db.String(50), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     rating = db.Column(db.Integer, nullable=True)
-    # Optional Comments Field
     comments = db.Column(db.Text, nullable=True)
     consumed_date = db.Column(db.Date, nullable=True)
     is_favorite = db.Column(db.Boolean, default=False)
-    # Foreign key to link media entry to the User
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # Relationship to access User from MediaEntry (entry.user)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)  # Add this line
     user = db.relationship('User', backref='media_entries')
 
     __mapper_args__ = {
@@ -59,6 +103,7 @@ class MediaEntry(db.Model):
 
     def __repr__(self):
         return f"<{self.media_type}: {self.title}>"
+
 
 class Movie(MediaEntry):
     __tablename__ = 'movies'
@@ -102,3 +147,4 @@ class Book(MediaEntry):
     __mapper_args__ = {'polymorphic_identity': 'book'}
     def __repr__(self):
         return f"<Book {self.title}, Author: {self.author}>"
+

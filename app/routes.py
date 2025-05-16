@@ -1,4 +1,4 @@
-import os
+import os, json, uuid
 from datetime import datetime
 from collections import Counter
 
@@ -10,7 +10,8 @@ from flask import (
     url_for,
     session,
     flash,
-    current_app
+    current_app,
+    jsonify
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -23,7 +24,10 @@ from app.models import (
     Book,
     Movie,
     TVShow,
-    Music
+    Music,
+    FriendRequest,
+    UserActivity,
+    MediaSnapshot
 )
 from app.utils import calculate_book_metrics, get_media_type_breakdown, get_monthly_media_by_type, get_user_media_identity
 
@@ -32,6 +36,7 @@ main = Blueprint('main', __name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @main.route('/')
 def welcome():
@@ -45,6 +50,10 @@ def signup():
         password = request.form.get('password')
         if not name or not email or not password:
             flash("All fields are required", "error")
+            return redirect(url_for('main.signup'))
+        existing_username = User.query.filter_by(name=name).first()
+        if existing_username:
+            flash("Username already taken. Please choose a different one.", "error")
             return redirect(url_for('main.signup'))
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
@@ -78,7 +87,7 @@ def login():
 @main.route('/logout')
 def logout():
     # only log out the user
-    session.pop('user_id', None)
+    session.clear()
     flash('You have been logged out', "caution")
     return redirect(url_for('main.welcome'))
 
@@ -104,17 +113,43 @@ def home():
     )
     recent_entries = [m for m in db_entries if "(shared)" not in m.title][:5]
 
-    # prepend any shares you have made 
+    # Add shared items to recent entries
     all_shares = session.get('your_shares', [])
     mine = [s for s in all_shares if s.get('sharer_id') == user.id]
+
     if mine:
         class TempEntry:
-            def __init__(self, media_type, title):
+            def __init__(self, media_type, title, sharer_name, recipient_name):
                 self.media_type = media_type
-                self.title      = title + " (shared)"
+                self.title = title + " (shared)"
+                self.sharer_name = sharer_name
+                self.recipient_name = recipient_name
+
         for share in reversed(mine):
-            recent_entries.insert(0, TempEntry(share['media_type'], share['title']))
+            sharer = User.query.get(share['sharer_id'])
+            recipient = User.query.get(share.get('recipient_id'))  # Get the actual recipient
+
+            # Avoid self-sharing in the wrong context
+            if sharer and recipient and recipient.id != sharer.id:
+                recent_entries.insert(0, TempEntry(
+                    share['media_type'],
+                    share['title'],
+                    sharer.name,
+                    recipient.name
+                ))
+
+            # If the recipient is the current user (self-share), still include but adjust wording
+            elif sharer and recipient and recipient.id == user.id:
+                recent_entries.insert(0, TempEntry(
+                    share['media_type'],
+                    share['title'],
+                    "You",
+                    "yourself"
+                ))
+
         recent_entries = recent_entries[:5]
+
+
 
     # LATEST FRIENDS ACTIVITY: entries shared to you by friends
     friend_entries = (
@@ -154,13 +189,15 @@ def home():
     )
 
 
+
 @main.route('/friends', methods=['GET', 'POST'])
 def friends():
     user = User.query.get(session.get('user_id'))
     if not user:
-        flash("Please log in to view friends.", "error")
+        flash("Please log in to view friends.","error")
         return redirect(url_for('main.login'))
 
+    # Handle Add Friend by name
     if request.method == 'POST' and 'username_search' in request.form:
         name_query = request.form['username_search'].strip()
         if name_query:
@@ -169,38 +206,94 @@ def friends():
                 user.friends.append(other)
                 other.friends.append(user)
                 db.session.commit()
-                flash(f"Friend request sent to {other.name}!", "success")
         return redirect(url_for('main.friends'))
 
-    friends     = user.friends
+    # Fetch the current user's friends
+    friends = user.friends
+
+    # Fetch recommended connections (all users except current user and their friends)
     recommended = User.query.filter(
         User.id != user.id,
-        ~User.id.in_([f.id for f in friends])
+        ~User.id.in_([f.id for f in user.friends])
     ).all()
-    user_media  = MediaEntry.query.filter_by(user_id=user.id).all()
 
-    return render_template(
-        'friends.html',
-        user=user,
-        friends=friends,
-        recommended=recommended,
-        user_media=user_media
-    )
+    # Fetch the user's own media entries for sharing
+    user_media = MediaEntry.query.filter_by(user_id=user.id).order_by(MediaEntry.media_type, MediaEntry.title).all()
+
+    return render_template('friends.html', user=user, friends=friends, recommended=recommended,user_media=user_media)
+
+
+@main.route('/search', methods=['GET'])
+def search_users():
+    # Ensure the user is logged in
+    user = User.query.get(session.get('user_id'))
+    if not user:
+        flash("Please log in to search for friends.", "error")
+        return redirect(url_for('main.login'))
+
+    # Get the search query from the URL
+    query = request.args.get('query', '').strip()
+    
+    # Make sure the query is not empty
+    if not query:
+        flash("Please enter a valid username to search.", "error")
+        return redirect(url_for('main.friends'))
+
+    # Fetch users whose names contain the search term, excluding the current user and existing friends
+    search_results = User.query.filter(
+        User.name.ilike(f"%{query}%"),
+        User.id != user.id,
+        ~User.id.in_([f.id for f in user.friends])
+    ).all()
+
+    # Render the search results
+    return render_template('friends_search.html', user=user, search_results=search_results)
+
+@main.route('/send_friend_request/<int:receiver_id>', methods=['POST'])
+def send_friend_request(receiver_id):
+    user = User.query.get(session.get('user_id'))
+    receiver = User.query.get(receiver_id)
+
+    if not user or not receiver or user == receiver:
+        flash("Invalid friend request.", "error")
+        return redirect(url_for('main.friends'))
+
+    # Check if a request already exists
+    existing_request = FriendRequest.query.filter_by(
+        sender_id=user.id,
+        receiver_id=receiver.id
+    ).first()
+
+    if existing_request:
+        flash("Friend request already sent.", "caution")
+        return redirect(url_for('main.friends'))
+
+    # Create a new friend request
+    friend_request = FriendRequest(sender_id=user.id, receiver_id=receiver.id)
+    db.session.add(friend_request)
+    db.session.commit()
+
+    flash("Friend request sent, awaiting approval.", "success")
+    return redirect(url_for('main.friends'))
 
 
 @main.route('/add_friend/<int:friend_id>', methods=['POST'])
 def add_friend(friend_id):
-    user   = User.query.get(session.get('user_id'))
+    user = User.query.get(session.get('user_id'))
     friend = User.query.get(friend_id)
+
     if not user or not friend or friend == user:
-        flash("Invalid request.", "error")
+        flash("Invalid request.","error")
         return redirect(url_for('main.friends'))
+
     if friend in user.friends:
-        flash("You're already friends.", "caution")
+        flash("You're already friends.","caution")
         return redirect(url_for('main.friends'))
+
     user.friends.append(friend)
     friend.friends.append(user)
     db.session.commit()
+
     flash(f"You are now friends with {friend.name}!")
     return redirect(url_for('main.friends'))
 
@@ -232,20 +325,59 @@ def share_media():
     if exists:
         flash(f"{friend.name} already has “{media.title}”", "caution")
     else:
-        # insert into friend’s list
-        friend_entry = MediaEntry(
-            media_type=media.media_type,
-            title=shared_title,
-            user_id=friend.id
-        )
+        # ─── clone into correct subclass ───
+        if isinstance(media, Movie):
+            friend_entry = Movie(
+                title        = shared_title,
+                rating       = media.rating,
+                comments     = media.comments,
+                genre        = media.genre,
+                watched_date = media.watched_date,
+                user_id      = friend.id
+            )
+        elif isinstance(media, TVShow):
+            friend_entry = TVShow(
+                title        = shared_title,
+                rating       = media.rating,
+                comments     = media.comments,
+                genre        = media.genre,
+                watched_date = media.watched_date,
+                user_id      = friend.id
+            )
+        elif isinstance(media, Book):
+            friend_entry = Book(
+                title         = shared_title,
+                rating        = media.rating,
+                comments      = media.comments,
+                genre         = media.genre,
+                author        = media.author,
+                date_started  = media.date_started,
+                date_finished = media.date_finished,
+                status        = media.status,
+                user_id       = friend.id
+            )
+        elif isinstance(media, Music):
+            friend_entry = Music(
+                title    = shared_title,
+                rating   = media.rating,
+                comments = media.comments,
+                genre    = media.genre,
+                artist   = media.artist,
+                user_id  = friend.id
+            )
+        else:
+            flash("Can’t share that media type.", "error")
+            return redirect(url_for('main.friends'))
+
         db.session.add(friend_entry)
         db.session.commit()
+        # ────────────────────────────────────────
 
-        # record your share in session (with sharer_id)
+        # optional: session badge
         shares = session.get('your_shares', [])
         shares.append({
-            'media_type': media.media_type,
-            'title':      media.title,
+            'media_type': friend_entry.media_type,
+            'title':      friend_entry.title,
             'sharer_id':  user.id
         })
         session['your_shares'] = shares
@@ -253,6 +385,8 @@ def share_media():
         flash(f"Shared “{media.title}” with {friend.name}", "success")
 
     return redirect(url_for('main.friends'))
+
+
 
 
 @main.route('/upload', methods=['GET', 'POST'])
@@ -381,14 +515,26 @@ def update_username():
         return redirect(url_for('main.login'))
     new_username = request.form.get('username').strip()
     password     = request.form.get('password').strip()
+    existing_username = User.query.filter_by(name=new_username).first()
+    if existing_username:
+        flash("Username already taken. Please choose a different one.", "error")
+        return redirect(url_for('main.settings'))
     if not user.check_password(password):
         flash("Incorrect password. Please try again.","error")
         return redirect(url_for('main.settings'))
     if not new_username:
         flash("Username cannot be empty.","error")
         return redirect(url_for('main.settings'))
+    
+    old_username = user.name
     user.name = new_username
     db.session.commit()
+
+    # Log the change
+    activity = UserActivity(user_id=user.id, activity_type="username_change", old_value=old_username, new_value=new_username)
+    db.session.add(activity)
+    db.session.commit()
+
     flash("Username updated successfully.")
     return redirect(url_for('main.settings'))
 
@@ -414,11 +560,20 @@ def update_email():
     if existing_user:
         flash("This email is already registered. Please use a different email.","error")
         return redirect(url_for('main.settings'))
+
+    old_email = user.email
     user.email = new_email
     db.session.commit()
+
+    # Log the change
+    activity = UserActivity(user_id=user.id, activity_type="email_change", old_value=old_email, new_value=new_email)
+    db.session.add(activity)
+    db.session.commit()
+
     session.clear()
     flash("Email updated successfully. Please log in with your new email.","caution")
     return redirect(url_for('main.login'))
+
 
 
 @main.route('/update_password', methods=['POST'])
@@ -475,46 +630,269 @@ def for_you():
     if not user_id:
         flash("You must be logged in to access this page.", "error")
         return redirect(url_for('main.login'))
+
+    # Fetch the current user
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('main.login'))
+
+    # Fetch the user's friends
+    friends = user.friends
+
+    # Media data
+    books = Book.query.filter_by(user_id=user_id).all()
+    movies = Movie.query.filter_by(user_id=user_id).all()
+    tv_shows = TVShow.query.filter_by(user_id=user_id).all()
+    music = Music.query.filter_by(user_id=user_id).all()
+
+    raw_media_counts = {
+        "book": len(books),
+        "movie": len(movies),
+        "tv_show": len(tv_shows),
+        "music": len(music),
+    }
+
+    display_media_counts = {
+        "Books": raw_media_counts["book"],
+        "Movies": raw_media_counts["movie"],
+        "TV Shows": raw_media_counts["tv_show"],
+        "Music": raw_media_counts["music"],
+    }
+
+    # Add genre breakdowns
     def get_genre_counts(queryset):
         counts = {}
         for entry in queryset:
             if entry.genre:
                 counts[entry.genre] = counts.get(entry.genre, 0) + 1
         return counts
-    books    = Book.query.filter_by(user_id=user_id).all()
-    movies   = Movie.query.filter_by(user_id=user_id).all()
-    tv_shows = TVShow.query.filter_by(user_id=user_id).all()
-    music    = Music.query.filter_by(user_id=user_id).all()
-    raw_media_counts = {
-        "book":    len(books),
-        "movie":   len(movies),
-        "tv_show": len(tv_shows),
-        "music":   len(music),
-    }
-    display_media_counts = {
-        "Books":    raw_media_counts["book"],
-        "Movies":   raw_media_counts["movie"],
-        "TV Shows": raw_media_counts["tv_show"],
-        "Music":    raw_media_counts["music"],
-    }
-    combined_screen = movies + tv_shows
+
     genre_breakdowns = {
-        "Books":    get_genre_counts(books),
-        "Tv&Movies": get_genre_counts(combined_screen),
-        "Music":    get_genre_counts(music),
+        "Books": get_genre_counts(books),
+        "Movies": get_genre_counts(movies),
+        "TV Shows": get_genre_counts(tv_shows),
+        "Music": get_genre_counts(music),
     }
+
+    # Generate the identity label
     
     identity_label = get_user_media_identity(raw_media_counts)
     monthly_by_type = get_monthly_media_by_type(user_id)
     completion_rate, avg_completion_time = calculate_book_metrics(books)
     
     
+
+    # ✅ Pass the required variables to the template
     return render_template(
         "foryou.html",
         identity=identity_label,
+        username=user.name,
         media_counts=display_media_counts,
         genre_breakdowns=genre_breakdowns,
         monthly_by_type=monthly_by_type,
         completion_rate=completion_rate,
-        avg_completion_time=avg_completion_time
+        avg_completion_time=avg_completion_time,
+        friends=friends
     )
+
+
+
+@main.route('/notifications')
+def notifications():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Please log in to view notifications.", "error")
+        return redirect(url_for('main.login'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('main.login'))
+
+    # Retrieve pending friend requests
+    friend_requests = FriendRequest.query.filter_by(receiver_id=user.id, status="pending").all()
+
+    # Retrieve activity updates from friends
+    friend_ids = [f.id for f in user.friends]
+    activities = UserActivity.query.filter(
+        UserActivity.user_id.in_(friend_ids)
+    ).order_by(UserActivity.timestamp.desc()).all()
+
+    # Retrieve media snapshots and parse the JSON data for template use
+    snapshots = MediaSnapshot.query.filter_by(receiver_id=user.id).all()
+    for snapshot in snapshots:
+        try:
+            snapshot.parsed_data = json.loads(snapshot.snapshot_data)
+        except json.JSONDecodeError:
+            snapshot.parsed_data = {"error": "Invalid snapshot data"}
+
+    # Retrieve all friend shares without a limit
+    friend_entries = (
+        MediaEntry.query
+        .filter_by(user_id=user.id)
+        .filter(MediaEntry.title.contains('(shared)'))
+        .order_by(MediaEntry.id.desc())
+        .all()
+    )
+
+    # Add the friend’s name who shared it
+    real_friends = []
+    for entry in friend_entries:
+        clean = entry.title.rsplit(' (shared)', 1)[0]
+        sharer = (
+            MediaEntry.query
+            .filter(
+                MediaEntry.user_id.in_(friend_ids),
+                MediaEntry.media_type == entry.media_type,
+                MediaEntry.title == clean
+            )
+            .order_by(MediaEntry.id.desc())
+            .first()
+        )
+        if sharer:
+            entry.sharer_name = sharer.user.name
+            real_friends.append(entry)
+
+    return render_template(
+        'notifications.html',
+        user=user,
+        friend_requests=friend_requests,
+        activities=activities,
+        snapshots=snapshots,
+        friend_entries=real_friends  # Now this includes all shares
+    )
+
+
+@main.route('/respond_friend_request/<int:request_id>/<action>', methods=['POST'])
+def respond_friend_request(request_id, action):
+    user = User.query.get(session.get('user_id'))
+    friend_request = FriendRequest.query.get(request_id)
+
+    if not user or not friend_request or friend_request.receiver_id != user.id:
+        flash("Invalid request.", "error")
+        return redirect(url_for('main.notifications'))
+
+    if action == "accept":
+        # Establish the friendship
+        sender = friend_request.sender
+        receiver = friend_request.receiver
+        sender.friends.append(receiver)
+        receiver.friends.append(sender)
+        friend_request.status = "accepted"
+        flash(f"You are now friends with {sender.name}!", "success")
+    elif action == "reject":
+        friend_request.status = "rejected"
+        flash("Friend request rejected.", "caution")
+    else:
+        flash("Invalid action.", "error")
+
+    db.session.commit()
+    return redirect(url_for('main.notifications'))
+
+@main.route('/accept_friend_request/<int:request_id>', methods=['POST'])
+def accept_friend_request(request_id):
+    friend_request = FriendRequest.query.get(request_id)
+    if friend_request:
+        sender = friend_request.sender
+        receiver = friend_request.receiver
+
+        # Make them friends
+        sender.friends.append(receiver)
+        receiver.friends.append(sender)
+
+        # Remove the request
+        db.session.delete(friend_request)
+        db.session.commit()
+
+        flash(f"You are now friends with {sender.name}!", "success")
+    else:
+        flash("Friend request not found.", "error")
+    
+    return redirect(url_for('main.notifications'))
+
+@main.route('/reject_friend_request/<int:request_id>', methods=['POST'])
+def reject_friend_request(request_id):
+    friend_request = FriendRequest.query.get(request_id)
+    if friend_request:
+        db.session.delete(friend_request)
+        db.session.commit()
+        flash("Friend request rejected.", "caution")
+    else:
+        flash("Friend request not found.", "error")
+    
+    return redirect(url_for('main.notifications'))
+
+@main.app_context_processor
+def inject_unread_notifications():
+    user_id = session.get('user_id')
+    if user_id:
+        # Count unseen snapshots, friend requests, and activities
+        snapshot_unread = MediaSnapshot.query.filter_by(receiver_id=user_id, seen=False).count()
+        activity_unread = UserActivity.query.filter(
+            UserActivity.user_id != user_id,
+            UserActivity.seen == False
+        ).count()
+        unread_requests = FriendRequest.query.filter_by(receiver_id=user_id, status="pending", seen=False).count()
+        
+        return dict(unread_notifications=snapshot_unread + activity_unread + unread_requests)
+    
+    return dict(unread_notifications=0)
+
+
+@main.route('/send_snapshot', methods=['POST'])
+def send_snapshot():
+    user = User.query.get(session.get('user_id'))
+    if not user:
+        return jsonify({"success": False, "message": "Please log in to share your media snapshot."})
+
+    receiver_id = request.form.get('receiver_id', type=int)
+    receiver = User.query.get(receiver_id)
+    if not receiver or receiver == user or receiver not in user.friends:
+        return jsonify({"success": False, "message": "Invalid receiver."})
+
+    # Check if the file part is present
+    if 'snapshot' not in request.files:
+        return jsonify({"success": False, "message": "No snapshot file found."})
+
+    file = request.files['snapshot']
+    if not allowed_file(file.filename):
+        return jsonify({"success": False, "message": "Invalid file type. Please upload a PNG, JPG, JPEG, or GIF file."})
+
+    # Generate a unique filename to prevent collisions
+    filename = f"{uuid.uuid4().hex}.png"
+    upload_folder = os.path.join(current_app.static_folder, 'snapshots')
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, filename)
+    file.save(file_path)
+
+    # Save the snapshot entry in the database
+    snapshot = MediaSnapshot(
+        sender_id=user.id,
+        receiver_id=receiver.id,
+        snapshot_data=filename  # Store just the filename
+    )
+    db.session.add(snapshot)
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "Snapshot sent successfully!"})
+
+@main.route('/mark_all_notifications_read', methods=['POST'])
+def mark_all_notifications_read():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"success": False, "message": "Please log in to mark all notifications as read."})
+
+    # Mark all friend requests as seen
+    FriendRequest.query.filter_by(receiver_id=user_id, status="pending").update({"seen": True})
+    
+    # Mark all activities as seen
+    UserActivity.query.filter_by(user_id=user_id, seen=False).update({"seen": True})
+    
+    # Mark all snapshots as seen
+    MediaSnapshot.query.filter_by(receiver_id=user_id, seen=False).update({"seen": True})
+    
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "All notifications marked as read."})
+

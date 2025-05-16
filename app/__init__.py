@@ -1,5 +1,5 @@
 from flask import Flask
-from .models import db, User  # ✅ Import db from models here
+from .models import db, User  
 
 def create_app():
     app = Flask(__name__)
@@ -8,7 +8,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///soulmaps.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    db.init_app(app)  # ✅ Works now
+    db.init_app(app)  
 
     from .routes import main
     app.register_blueprint(main)

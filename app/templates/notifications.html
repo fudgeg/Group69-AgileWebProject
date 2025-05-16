@@ -1,0 +1,150 @@
+{% extends "base.html" %} {% block title %}Notifications – Soul Maps{% endblock
+%} {% block content %}
+<div class="home-container">
+  <div class="notifications-header">
+    <h2>Notifications</h2>
+    {% if friend_requests or activities or snapshots %}
+    <button onclick="markAllAsRead()" class="mark-all-read-btn">
+      Mark All as Read
+    </button>
+    {% endif %}
+  </div>
+
+  <ul class="notifications-list">
+    <!-- Friend Requests -->
+    {% if friend_requests %} {% for request in friend_requests %}
+    <li class="notification-item" id="notification-{{ request.id }}">
+      <div class="notification-header">
+        <strong>{{ request.sender.name }}</strong> sent you a friend request!
+        <span class="notification-timestamp">
+          {{ request.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </span>
+      </div>
+      <div class="notification-actions">
+        <form
+          method="POST"
+          action="{{ url_for('main.accept_friend_request', request_id=request.id) }}"
+          style="display: inline"
+        >
+          <button class="btn btn-success btn-accept">Accept</button>
+        </form>
+        <form
+          method="POST"
+          action="{{ url_for('main.reject_friend_request', request_id=request.id) }}"
+          style="display: inline"
+        >
+          <button class="btn btn-danger btn-reject">Reject</button>
+        </form>
+      </div>
+    </li>
+    {% endfor %} {% endif %}
+
+    <!-- Latest Friend Shares -->
+    {% if friend_entries %} {% for entry in friend_entries %}
+    <li class="notification-item" id="notification-{{ entry.id }}">
+      <div class="notification-header">
+        <strong>{{ entry.sharer_name }}</strong> shared {{
+        entry.media_type|capitalize }}:
+        <strong><em>{{ entry.title.replace(' (shared)', '') }}</em></strong>
+        with you!
+        <span class="notification-timestamp">
+          {{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </span>
+      </div>
+    </li>
+    {% endfor %} {% else %}
+    <li>No recent friend shares.</li>
+    {% endif %}
+
+    <!-- Snapshots -->
+    {% if snapshots %} {% for snapshot in snapshots %}
+    <li
+      class="notification-item with-image"
+      id="notification-{{ snapshot.id }}"
+    >
+      <div class="notification-text-wrapper">
+        <div class="notification-header">
+          <strong>{{ snapshot.sender.name }}</strong> shared their media stats
+          with you!
+        </div>
+        <span class="notification-timestamp">
+          {{ snapshot.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </span>
+      </div>
+      <img
+        src="{{ url_for('static', filename='snapshots/' ~ snapshot.snapshot_data) }}"
+        alt="Snapshot"
+        class="notification-image"
+        onclick="openImageModal(this.src)"
+      />
+    </li>
+    {% endfor %} {% endif %}
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="modalImage" />
+    </div>
+
+    <!-- No Notifications Fallback -->
+    {% if not friend_requests and not activities and not snapshots %}
+    <li>No new notifications.</li>
+    {% endif %}
+  </ul>
+</div>
+
+<script>
+  function openImageModal(src) {
+    const modal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    modalImage.src = src;
+    modal.style.display = "block";
+  }
+
+  function closeImageModal() {
+    const modal = document.getElementById("imageModal");
+    modal.style.display = "none";
+  }
+
+  // Close the modal when clicking outside the image
+  window.onclick = function (event) {
+    const modal = document.getElementById("imageModal");
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  function markAllAsRead() {
+    fetch(`/mark_all_notifications_read`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // Mark all notifications as seen
+          const notifications = document.querySelectorAll(".notification-item");
+          notifications.forEach((item) => {
+            item.classList.add("seen");
+            const markReadBtn = item.querySelector(".mark-read-btn");
+            if (markReadBtn) markReadBtn.remove();
+          });
+
+          // Clear the notification badge
+          const notificationBadge = document.querySelector(
+            ".notification-badge"
+          );
+          if (notificationBadge) notificationBadge.remove();
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error marking all notifications as read:", error);
+      });
+  }
+</script>
+
+{% endblock %}

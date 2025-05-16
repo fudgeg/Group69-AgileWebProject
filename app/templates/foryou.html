@@ -1,9 +1,7 @@
-{% extends "base.html" %}
-{% block title %}For You – Soul Maps{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}For You – Soul Maps{% endblock %} {%
+block content %}
 
 <div class="for-you-page">
-
   <!-- Media Identity Title -->
   <div class="text-center">
     <h2 class="mb-4">{{ identity }}</h2>
@@ -12,22 +10,38 @@
   <!-- Compact Media Counts in One Row -->
   <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
     <div class="media-card-small">
-      <img src="{{ url_for('static', filename='media/books.png') }}" alt="Books" class="media-icon mb-2">
+      <img
+        src="{{ url_for('static', filename='media/books.png') }}"
+        alt="Books"
+        class="media-icon mb-2"
+      />
       <div><strong>Books</strong></div>
       <div>{{ media_counts['Books'] }}</div>
     </div>
     <div class="media-card-small">
-      <img src="{{ url_for('static', filename='media/movies.png') }}" alt="Movies" class="media-icon mb-2">
+      <img
+        src="{{ url_for('static', filename='media/movies.png') }}"
+        alt="Movies"
+        class="media-icon mb-2"
+      />
       <div><strong>Movies</strong></div>
       <div>{{ media_counts['Movies'] }}</div>
     </div>
     <div class="media-card-small">
-      <img src="{{ url_for('static', filename='media/tv.png') }}" alt="TV Shows" class="media-icon mb-2">
+      <img
+        src="{{ url_for('static', filename='media/tv.png') }}"
+        alt="TV Shows"
+        class="media-icon mb-2"
+      />
       <div><strong>TV Shows</strong></div>
       <div>{{ media_counts['TV Shows'] }}</div>
     </div>
     <div class="media-card-small">
-      <img src="{{ url_for('static', filename='media/music.png') }}" alt="Music" class="media-icon mb-2">
+      <img
+        src="{{ url_for('static', filename='media/music.png') }}"
+        alt="Music"
+        class="media-icon mb-2"
+      />
       <div><strong>Music</strong></div>
       <div>{{ media_counts['Music'] }}</div>
     </div>
@@ -36,69 +50,171 @@
   <!-- Section Title -->
   <h3 class="text-center mb-4">Top Genres</h3>
 
+  <script>
+    const genreData = {{ genre_breakdowns | tojson | safe }};
+    const identity = "{{ identity | e }}"; // Add this line
+    const username = "{{ username | e }}";  // Add the username here
+  </script>
+
+  <!-- Chart.js libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
   <!-- One Chart per Media Type -->
   <div class="row justify-content-center text-center">
-    {% for media_type, genres in genre_breakdowns.items() %}
-    {% if genres %}
+    {% for media_type, genres in genre_breakdowns.items() %} {% if genres %}
     <div class="col-12 col-md-6 col-lg-4 mb-5 d-flex justify-content-center">
       <div class="chart-container">
         <h5>{{ media_type }}</h5>
         <canvas id="{{ media_type | replace(' ', '_') }}_genre_chart"></canvas>
       </div>
     </div>
-    {% endif %}
-    {% endfor %}
+    {% endif %} {% endfor %}
   </div>
 
-  <!-- Embed data as JSON -->
-  <div id="genre-breakdowns" data-json='{{ genre_breakdowns | tojson | safe }}' style="display: none;"></div>
+  <!-- Share Dropdown -->
+  <div class="for-you-share-container">
+    <div class="for-you-dropdown-container">
+      <select
+        id="friend-select"
+        class="for-you-dropdown"
+        aria-label="Select a friend to share with"
+      >
+        <option selected disabled>
+          Select a friend to share your snapshot
+        </option>
+        {% for friend in friends %}
+        <option value="{{ friend.id }}">{{ friend.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-  <!-- Chart.js libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <div class="for-you-share-buttons">
+      <button class="for-you-share-btn" onclick="shareToFriend()">
+        Share Snapshot
+      </button>
+      <button class="for-you-share-btn" onclick="shareToEmail()">
+        Share via Email
+      </button>
+      <button class="for-you-share-btn" onclick="exportAsImage()">
+        Export as Image
+      </button>
+    </div>
+  </div>
 
-  <!-- JS to Render Pie Charts -->
+  <!-- JS to Render Pie Charts and Handle Sharing -->
   <script>
-    const genreData = JSON.parse(document.getElementById("genre-breakdowns").dataset.json);
-    const colors = ["#006633", "#4c9900", "#00994c", "#20540E", "#74EC48", "#8BC34A", "#AED581", "#DCEDC8"];
+    const colors = [
+      "#006633",
+      "#4c9900",
+      "#00994c",
+      "#20540E",
+      "#74EC48",
+      "#8BC34A",
+      "#AED581",
+      "#DCEDC8",
+    ];
 
     Object.entries(genreData).forEach(([mediaType, genres]) => {
-      const canvasId = `${mediaType.replace(/ /g, '_')}_genre_chart`;
+      const canvasId = `${mediaType.replace(/ /g, "_")}_genre_chart`;
       const ctx = document.getElementById(canvasId);
       if (!ctx) return;
 
       new Chart(ctx, {
-        type: 'pie',
+        type: "pie",
         data: {
           labels: Object.keys(genres),
-          datasets: [{
-            data: Object.values(genres),
-            backgroundColor: colors.slice(0, Object.keys(genres).length),
-            borderColor: "#fff",
-            borderWidth: 2
-          }]
+          datasets: [
+            {
+              data: Object.values(genres),
+              backgroundColor: colors.slice(0, Object.keys(genres).length),
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+          ],
         },
         options: {
           plugins: {
             legend: { display: false },
             datalabels: {
-              color: '#fff',
+              color: "#fff",
               font: {
-                family: 'Segoe UI',
-                weight: 'bold',
-                size: 14
+                family: "Segoe UI",
+                weight: "bold",
+                size: 14,
               },
-              formatter: (_, ctx) => ctx.chart.data.labels[ctx.dataIndex]
-            }
+              formatter: (_, ctx) => ctx.chart.data.labels[ctx.dataIndex],
+            },
           },
           responsive: true,
-          maintainAspectRatio: true
+          maintainAspectRatio: true,
         },
-        plugins: [ChartDataLabels]
+        plugins: [ChartDataLabels],
       });
     });
-  </script>
 
+    function shareToEmail() {
+      const cleanIdentity = identity.replace(/^You are a\s*/i, "");
+
+      const subject = "Check out my Media Stats on Soul Maps!";
+      const body = `Hey, I just found out my media consumption profile on Soul Maps and I'm a ${cleanIdentity}! Add me on Soul Maps now to check out my top genres and more! My username is @${username}.`;
+
+      const mailtoLink = `mailto:?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoLink;
+    }
+
+    function exportAsImage() {
+      const forYouPage = document.querySelector(".for-you-page");
+      html2canvas(forYouPage).then((canvas) => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "SoulMaps_Snapshot.png";
+        link.click();
+      });
+    }
+
+    function shareToFriend() {
+      const forYouPage = document.querySelector(".for-you-page");
+      const friendSelect = document.getElementById("friend-select");
+      const receiverId = friendSelect.value;
+
+      if (!receiverId) {
+        alert("Please select a friend to share your snapshot with.");
+        return;
+      }
+
+      html2canvas(forYouPage).then((canvas) => {
+        // Convert the canvas to a Blob
+        canvas.toBlob((blob) => {
+          // Add a proper file name with extension
+          const file = new File([blob], "snapshot.png", { type: "image/png" });
+
+          const formData = new FormData();
+          formData.append("snapshot", file);
+          formData.append("receiver_id", receiverId);
+
+          fetch("/send_snapshot", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                alert("Snapshot sent successfully!");
+              } else {
+                alert("Failed to send snapshot: " + data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Failed to send snapshot. Please try again.");
+            });
+        }, "image/png");
+      });
+    }
+  </script>
   <!-- Timeline: Media Consumed Over Time -->
   <div class="row justify-content-center align-items-start my-5 gx-4">
 
@@ -219,4 +335,5 @@
 
 
 </div>
+
 {% endblock %}
