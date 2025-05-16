@@ -425,7 +425,7 @@ def upload_page():
                 rating=rating,
                 comments=comment,
                 genre=(request.form.get('movie_genre') or "").title() or None,
-                consumed_date=parse_date(request.form.get('watched_date')),
+                watched_date=parse_date(request.form.get('watched_date')),
                 user_id=user_id
             )
         elif media_type == 'tv_show':
@@ -667,11 +667,10 @@ def for_you():
             if entry.genre:
                 counts[entry.genre] = counts.get(entry.genre, 0) + 1
         return counts
-
+    combined= tv_shows+ movies
     genre_breakdowns = {
         "Books": get_genre_counts(books),
-        "Movies": get_genre_counts(movies),
-        "TV Shows": get_genre_counts(tv_shows),
+        "TV&Movies": get_genre_counts(combined),
         "Music": get_genre_counts(music),
     }
 
