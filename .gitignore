@@ -5,6 +5,5 @@ instance/
 .vscode/
 *.sqlite3
 *.db
-.env
 node_modules/
 .DS_Store

@@ -55,6 +55,7 @@ block content %}
             method="POST"
             action="{{ url_for('main.send_friend_request', receiver_id=person.id) }}"
           >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <button type="submit" class="friends-submit">Add</button>
           </form>
         </div>

@@ -20,6 +20,8 @@ Soul Maps{% endblock %} {% block content %}
         action="{{ url_for('main.signup') }}"
         onsubmit="return checkPasswords();"
       >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
         <input
           type="text"
           name="full_name"
@@ -44,6 +46,7 @@ Soul Maps{% endblock %} {% block content %}
         />
         <input
           type="password"
+          name="confirm_password"
           placeholder="Re-enter your password"
           id="confirm_password"
           class="input-field full-width"

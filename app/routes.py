@@ -425,7 +425,7 @@ def upload_page():
                 rating=rating,
                 comments=comment,
                 genre=(request.form.get('movie_genre') or "").title() or None,
-                consumed_date=parse_date(request.form.get('watched_date')),
+                watched_date=parse_date(request.form.get('watched_date')),
                 user_id=user_id
             )
         elif media_type == 'tv_show':
@@ -671,10 +671,11 @@ def for_you():
                 counts[entry.genre] = counts.get(entry.genre, 0) + 1
         return counts
 
+    combined_screen = movies + tv_shows
+    
     genre_breakdowns = {
         "Books": get_genre_counts(books),
-        "Movies": get_genre_counts(movies),
-        "TV Shows": get_genre_counts(tv_shows),
+        "Tv&Movies": get_genre_counts(combined_screen),
         "Music": get_genre_counts(music),
     }
 
@@ -682,6 +683,10 @@ def for_you():
     identity_label = get_user_media_identity(raw_media_counts)
     monthly_by_type = get_monthly_media_by_type(user_id)
     completion_rate, avg_completion_time = calculate_book_metrics(books)
+    
+    
+
+    #  Pass the required variables to the template
     
     # ✅ Pass the required variables to the template
     return render_template(
