@@ -8,7 +8,21 @@
 ## About the website
 Purpose:
 Soul Maps is a personal media tracker and social sharing web application. It allows users to log, rate and share the books they read, Tv Shows/Movies they watch and Music they listen to. It then turns this data into personlised insights. Soul Maps also encourages connections by letting you add friends, share your media snapshots (incluing charts and summaries) allowing you to discover each other's tastes.
+
 Design:
+- Modular Flask App: Uses an application-factory (create_app) and a main blueprint for clean, testable routing.
+  
+- Config via .env: Loads secrets (e.g. SECRET_KEY, database URL) from a .env into a Config class, keeping credentials out of code.
+
+- SQLAlchemy Models: Polymorphic MediaEntry subclasses (Book, Movie, TVShow, Music), plus User, friendships, friend-requests, snapshots, and activity logs.
+  
+- Forms & CSRF: All user inputs handled by Flask-WTF form classes (with built-in CSRF), plus client-side JS for dynamic upload fields.
+  
+- Templates & Assets: Jinja2 templates extend a shared layout; Chart.js and html2canvas power the “For You” snapshots; SCSS/CSS ensures responsive styling.
+
+- Authentication: Flask-Login secures /home and /upload, redirecting unauthenticated users to login.
+
+- Testing: Pytest for unit logic, Selenium end-to-end tests verify login protection and upload workflows.
 
 Use:
 - First, register with your full name, username, email address and password. Your account will be verified to see if your credentials are valid, then you can log in for the first time.
