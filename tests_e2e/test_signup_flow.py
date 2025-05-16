@@ -8,6 +8,8 @@ BASE = "http://127.0.0.1:5000"
 
 def test_signup_flow(driver):
     unique_email = f"testuser_{uuid.uuid4().hex[:8]}@example.com"
+    unique_name = f"testuser_{uuid.uuid4().hex[:6]}"
+
 
     # Go to the signup page
     driver.get(f"{BASE}/signup")
@@ -16,7 +18,7 @@ def test_signup_flow(driver):
     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.NAME, "email")))
 
     # Fill the form using correct NAME fields
-    driver.find_element(By.NAME, "full_name").send_keys("Test User")
+    driver.find_element(By.NAME, "full_name").send_keys(unique_name)
     driver.find_element(By.NAME, "email").send_keys(unique_email)
     driver.find_element(By.NAME, "password").send_keys("securepass123")
     driver.find_element(By.NAME, "confirm_password").send_keys("securepass123")
