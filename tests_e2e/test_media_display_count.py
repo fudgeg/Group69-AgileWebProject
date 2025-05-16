@@ -60,6 +60,5 @@ def test_media_display_count(driver):
             books_count_text = card.text
             break
 
-    print("[DEBUG] Books card content:", books_count_text)
     assert books_count_text is not None
     assert "1" in books_count_text  # Ensures at least 1 book is reflected
