@@ -9,25 +9,27 @@
   </div>
 
   <div class="nav-icons">
-    <a href="{{ url_for('main.home') }}">
+    <a href="{{ url_for('main.home') }}" class="nav-link">
       <div class="nav-icon-button">
         <img
           src="{{ url_for('static', filename='media/homeIcon.png') }}"
           alt="Home"
           class="nav-icon"
         />
+        <span class="nav-label">Home</span>
       </div>
     </a>
-    <a href="{{ url_for('main.for_you') }}">
+    <a href="{{ url_for('main.for_you') }}" class="nav-link">
       <div class="nav-icon-button">
         <img
           src="{{ url_for('static', filename='media/forYouIcon.png') }}"
           alt="For You"
           class="nav-icon"
         />
+        <span class="nav-label">For You</span>
       </div>
     </a>
-    <a href="{{ url_for('main.notifications') }}">
+    <a href="{{ url_for('main.notifications') }}" class="nav-link">
       <div class="nav-icon-button">
         <img
           src="{{ url_for('static', filename='media/bell.png') }}"
@@ -37,26 +39,27 @@
         {% if unread_notifications > 0 %}
         <span class="notification-badge">{{ unread_notifications }}</span>
         {% endif %}
+        <span class="nav-label">Notifications</span>
       </div>
     </a>
-
-    <a href="{{ url_for('main.friends') }}">
+    <a href="{{ url_for('main.friends') }}" class="nav-link">
       <div class="nav-icon-button">
         <img
           src="{{ url_for('static', filename='media/friendsIcon.png') }}"
           alt="Friends"
           class="nav-icon"
         />
+        <span class="nav-label">Friends</span>
       </div>
     </a>
-
-    <a href="{{ url_for('main.settings') }}">
+    <a href="{{ url_for('main.settings') }}" class="nav-link">
       <div class="nav-icon-button">
         <img
           src="{{ url_for('static', filename='media/settingsIcon.png') }}"
           alt="Settings"
           class="nav-icon"
         />
+        <span class="nav-label">Settings</span>
       </div>
     </a>
   </div>
