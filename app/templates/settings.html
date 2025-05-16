@@ -30,6 +30,8 @@ block content %}
           enctype="multipart/form-data"
           class="settings-form"
         >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
           <button
             type="button"
             class="btn update-btn"
@@ -73,6 +75,8 @@ block content %}
         action="{{ url_for('main.update_username') }}"
         class="settings-form"
       >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <label for="new-username">New Username</label>
         <input
           type="text"
@@ -107,6 +111,8 @@ block content %}
         action="{{ url_for('main.update_email') }}"
         class="settings-form"
       >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <label for="email">New Email</label>
         <input
           type="email"
@@ -135,6 +141,8 @@ block content %}
         class="settings-form"
         onsubmit="return checkPasswordMatch();"
       >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <label for="current_password">Current Password</label>
         <input
           type="password"
@@ -172,6 +180,8 @@ block content %}
         class="settings-form"
         onsubmit="return confirmAccountDeletion();"
       >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <label for="delete_password"
           >Enter Password to Confirm Account Deletion</label
         >

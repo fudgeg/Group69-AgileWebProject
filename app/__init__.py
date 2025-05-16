@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_wtf import CSRFProtect
 from .models import db, User  
 
 def create_app():
@@ -9,7 +10,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)  
-
+    CSRFProtect(app)  # Enables CSRF globally
     from .routes import main
     app.register_blueprint(main)
 
