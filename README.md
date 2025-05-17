@@ -91,7 +91,7 @@ to run Unit Tests use: pytest tests/
 
 to run Selenium Tests use: pytest tests_e2e/
 
-# Note: These tests run reliably on Windows. Mac users may encounter issues.
+### Note: These tests run reliably on Windows. Mac users may encounter issues.
 
 1. Invaid login (test_invalid_login.py)--> Verifies that logging in with incorrect credentials shows an error and denies access
 2. Signup flow (test_signup_flow.py) --> Ensures a new user can successfully sign up and is redirected to the login page.
