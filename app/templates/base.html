@@ -32,40 +32,38 @@
     {% endblock %}
 
     <script>
-      function showPopup(message, type = "success") {
-          const popup = document.createElement("div");
-          popup.classList.add("popup-message", type);
-          popup.textContent = message;
-          document.body.appendChild(popup);
+      // Flash message function
+        function showPopup(message, type = "success") {
+            const popup = document.createElement("div");
+            popup.classList.add("popup-message", type);
+            popup.textContent = message;
+            document.body.appendChild(popup);
 
-          // Automatically remove the popup after 3 seconds
-          setTimeout(() => {
-              popup.classList.add("hide");
-              setTimeout(() => popup.remove(), 500);
-          }, 3000);
-      }
+            setTimeout(() => {
+                popup.classList.add("hide");
+                setTimeout(() => popup.remove(), 500);
+            }, 3000);
+        }
 
-      // Check for flash messages (to avoid double flash)
-      document.addEventListener("DOMContentLoaded", () => {
-          const flashMessages = {{ get_flashed_messages(with_categories=True) | tojson | safe }};
+        document.addEventListener("DOMContentLoaded", () => {
+            const flashMessages = {{ get_flashed_messages(with_categories=True) | tojson | safe }};
 
-          if (flashMessages.length) {
-              // Only show each message once
-              const uniqueMessages = [];
-              flashMessages.forEach(([category, message]) => {
-                  if (!uniqueMessages.includes(message)) {
-                      uniqueMessages.push(message);
+            if (flashMessages.length) {
+                const uniqueMessages = [];
+                flashMessages.forEach(([category, message]) => {
+                    if (!uniqueMessages.includes(message)) {
+                        uniqueMessages.push(message);
 
-                      let type;
-                      if (category === 'error') type = 'error';
-                      else if (category === 'caution') type = 'caution';
-                      else type = 'success';
+                        let type;
+                        if (category === 'error') type = 'error';
+                        else if (category === 'caution') type = 'caution';
+                        else type = 'success';
 
-                      showPopup(message, type);
-                  }
-              });
-          }
-      });
+                        showPopup(message, type);
+                    }
+                });
+            }
+        });
     </script>
   </body>
 </html>

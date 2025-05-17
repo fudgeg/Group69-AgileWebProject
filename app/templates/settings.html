@@ -1,7 +1,6 @@
 {% extends "base.html" %} {% block title %}Settings – Soul Maps{% endblock %} {%
 block content %}
 <div class="settings-page">
-  <!-- Sidebar -->
   <div class="settings-sidebar">
     <h2>Settings</h2>
     <ul>
@@ -30,7 +29,7 @@ block content %}
           enctype="multipart/form-data"
           class="settings-form"
         >
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
           <button
             type="button"
@@ -75,7 +74,7 @@ block content %}
         action="{{ url_for('main.update_username') }}"
         class="settings-form"
       >
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         <label for="new-username">New Username</label>
         <input
@@ -111,7 +110,7 @@ block content %}
         action="{{ url_for('main.update_email') }}"
         class="settings-form"
       >
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         <label for="email">New Email</label>
         <input
@@ -141,7 +140,7 @@ block content %}
         class="settings-form"
         onsubmit="return checkPasswordMatch();"
       >
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         <label for="current_password">Current Password</label>
         <input
@@ -180,7 +179,7 @@ block content %}
         class="settings-form"
         onsubmit="return confirmAccountDeletion();"
       >
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
         <label for="delete_password"
           >Enter Password to Confirm Account Deletion</label
@@ -238,7 +237,7 @@ block content %}
     showSection("account");
   });
 
-  // Show the default section (Account Settings) on load
+  // Show the default section (Account Settings) on load. Uses DOM manipulation to dynamically change the structure of website without communicationg with server
   document.addEventListener("DOMContentLoaded", () => {
     showSection("account");
   });

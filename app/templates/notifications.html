@@ -26,7 +26,7 @@
           action="{{ url_for('main.accept_friend_request', request_id=request.id) }}"
           style="display: inline"
         >
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
           <button class="btn btn-success btn-accept">Accept</button>
         </form>
@@ -35,7 +35,7 @@
           action="{{ url_for('main.reject_friend_request', request_id=request.id) }}"
           style="display: inline"
         >
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
           <button class="btn btn-danger btn-reject">Reject</button>
         </form>
@@ -110,7 +110,6 @@
     modal.style.display = "none";
   }
 
-  // Close the modal when clicking outside the image
   window.onclick = function (event) {
     const modal = document.getElementById("imageModal");
     if (event.target == modal) {
@@ -128,7 +127,6 @@
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          // Mark all notifications as seen
           const notifications = document.querySelectorAll(".notification-item");
           notifications.forEach((item) => {
             item.classList.add("seen");
@@ -136,7 +134,6 @@
             if (markReadBtn) markReadBtn.remove();
           });
 
-          // Clear the notification badge
           const notificationBadge = document.querySelector(
             ".notification-badge"
           );

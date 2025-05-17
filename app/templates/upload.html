@@ -1,15 +1,10 @@
 {% extends "base.html" %} {% block title %}Upload – Soul Maps{% endblock %} {%
 block content %}
-<style>
-  body {
-    background-color: #dce9d5 !important; /* matches the Home page */
-  }
-</style>
 <div class="upload-container">
   <div class="upload-box">
     <h2 class="mb-4 text-center">Upload Your Media</h2>
     <form method="POST">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
       <!-- Media Type Selection -->
       <div class="form-group">
