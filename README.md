@@ -42,7 +42,6 @@ Reading Insights where you can find your completion rate and average time spent 
 - In Settings, you can manage your account, update your profile picture, username, or email. You can also change your password with built-in validation. Permanently delete your account if desired
 
 ## Instruction to run
-(was run on a windows using wsl)
 1. Clone the repo
    - git clone https://github.com/fudgeg/Group69-AgileWebProject
    - cd Group69-AgileWebProject
@@ -89,6 +88,7 @@ to run Unit Tests use: pytest  tests/
 
 ## Selenium Tests
 to run Selenium Tests use: pytest  tests_e2e/
+Note: These tests run reliably on Windows. Mac users may encounter issues.
 1. Invaid login (test_invalid_login.py)--> Verifies that logging in with incorrect credentials shows an error and denies access
 2. Signup flow (test_signup_flow.py) --> Ensures a new user can successfully sign up and is redirected to the login page.
 3. protected routes (test_upload_requires_login.py) --> Confirms that unauthenticated users are redirected to /login when trying to access the upload page.
