@@ -24,6 +24,11 @@ Design:
 
 - Testing: Pytest for unit logic, Selenium end-to-end tests verify login protection and upload workflows.
 
+Note:
+
+Parts of this project were developed with the assistance from generative AI tools (e.g., ChatGPT, copilot) and online resources such as tutorials web sites (e.g., GeeksforGeeks), and forums (e.g., Stack Overflow). All code was reviewed and adapted to ensure understanding and functionality within the project context.
+
+
 Use:
 
 - First, register with your full name, username, email address and password. Your account will be verified to see if your credentials are valid, then you can log in for the first time.
