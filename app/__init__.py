@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
-from .models import db, User    # ✅ Import db & User from models
-from .config import Config       # ─── pull in our Config class
+from .models import db, User    
+from .config import Config      
 
+# create_app function initializes the Flask application
 def create_app():
     app = Flask(__name__)
 

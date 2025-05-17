@@ -1,9 +1,13 @@
+# This file contains the utility functions for the application.
+# It includes functions for user media identity, monthly media breakdown, and book metrics calculation.
+
 from datetime import timedelta
 from app.models import Book, MediaEntry, Movie, Music, TVShow
 from app import db
 from sqlalchemy import func
 from collections import defaultdict
 
+# This function retrieves the media type breakdown for a given user.
 def get_media_type_breakdown(user_id):
     counts = (
         db.session.query(MediaEntry.media_type, func.count(MediaEntry.id))
@@ -12,6 +16,8 @@ def get_media_type_breakdown(user_id):
         .all()
     )
     return {media_type: count for media_type, count in counts}
+
+# This function determines the user's media identity based on their media type breakdown.
 def get_user_media_identity(counts_dict):
     if not counts_dict:
         return "You are a Media Explorer"
@@ -29,6 +35,7 @@ def get_user_media_identity(counts_dict):
         'tv_show': "You are a Binge-Watcher"
     }.get(top_types[0], "You are a Media Explorer")
     
+# This function retrieves the monthly media breakdown by type for a given user.
 def get_monthly_media_by_type(user_id):
     def get_month_key(date):
         return date.strftime('%Y-%m')
@@ -89,6 +96,7 @@ def get_monthly_media_by_type(user_id):
 
     return dict(counts)
 
+# This function calculates the completion rate and average reading duration for books.
 def calculate_book_metrics(books):
     total = len(books)
     completed = [b for b in books if b.status and b.status.lower() == "finished"]

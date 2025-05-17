@@ -1,6 +1,7 @@
 import pytest
 from app.models import db, User
 
+# This test function checks if duplicate signups are handled correctly.
 def test_duplicate_signup_fails(client):
     # 1) First signup — should succeed
     r1 = client.post(
