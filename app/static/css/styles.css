@@ -28,27 +28,19 @@ body.welcome.center-page {
   height: auto !important;
 }
 
-
-/* HERO SECTION */
-/* HERO SECTION */
 .hero-logo {
   width: 100px;
   height: auto;
 }
 
-/* Adjust spacing now that logo is present */
-.hero-inner .display-3 {
-  margin-top: 0.5rem;
-}
-
-/* rest of the CSS unchanged... */
-
 .welcome-hero {
-  background: linear-gradient(to right, #204118, #3a7741);
+  display: block !important;
+  width: 100%;
+  background: linear-gradient(135deg, #204118, #38761d);
   color: white;
-  padding: 25px 20px 60px;
-  text-align: center;
+  padding: 80px 20px;
 }
+
 .hero-inner {
   max-width: 800px;
   margin: auto;
@@ -59,7 +51,6 @@ body.welcome.center-page {
   color: rgba(255,255,255,0.8);
 }
 
-/* FEATURES SECTION */
 .feature-showcase {
   background-color: #fefef5;
 }
@@ -69,7 +60,14 @@ body.welcome.center-page {
   color: #204118;
 }
 
-/* Feature Cards */
+.hero-title h1 {
+  color: white;
+}
+
+.lead {
+  font-size: 1.25rem;
+}
+
 .feature-card {
   background-color: #ffffff;
   border-radius: 12px;
@@ -80,10 +78,12 @@ body.welcome.center-page {
   flex-direction: column;
   align-items: center;
 }
+
 .feature-card img {
   max-width: 230px;
   height: auto;
 }
+
 .feature-card h5 {
   margin-top: 16px;
   font-weight: 600;
@@ -117,7 +117,6 @@ body.welcome.center-page {
 }
 
 
-
 .form-section {
   flex: 1;
   background-color: #204118;
@@ -131,7 +130,6 @@ body.welcome.center-page {
   max-width: 600px;
   position: 100%;
 }
-
 
 .form-title {
   margin-top: 0;
@@ -219,19 +217,21 @@ left: 20px;
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 60px; 
+  gap: 10px; 
+  padding-left: 20px;
 }
 
 .navbar-icon {
   width: 40px;
-  height: 40px;
+  height: 50px;
   cursor: pointer;
   margin-bottom: 5px;
 }
 
 .navbar .logo {
-  font-size: 24px;
-}
+  font-size: 28px; 
+  font-weight: bold; 
+  margin: 0;}
 
 .nav-icon-button {
   background-color: #9ebf8f;
@@ -276,7 +276,7 @@ left: 20px;
 
   min-height: 100vh;
   height: auto;
-  padding-top: 100px; /* so navbar doesn’t overlap content */
+  padding-top: 100px; 
 
   padding: 50px;
   text-align: center;
@@ -285,8 +285,6 @@ left: 20px;
   box-sizing: border-box; 
   
 }
-
-
 
 .content {
   display: flex;
@@ -300,13 +298,13 @@ left: 20px;
 
 .friends-activity, .recent-activity {
   background-color: #ffffff;
-  padding: 20px 30px; /* Increased padding */
+  padding: 20px 30px; 
   border-radius: 20px;
   width: 500px;
-  text-align: left; /* Align text to the left for readability */
+  text-align: left; 
   border: 2px solid #204118;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  max-width: 600px; /* Allow for more content width */
+  max-width: 600px; 
 }
 .friends-activity h3, .recent-activity h3 {
   margin-top: 0;
@@ -317,8 +315,8 @@ left: 20px;
 .friends-activity ul, .recent-activity ol {
   list-style: none;
   padding: 0;
-  font-size: 20px; /* Slightly larger font for readability */
-  line-height: 1.6; /* Increase line spacing */
+  font-size: 20px; 
+  line-height: 1.6;
   margin: 0;
 }
 
@@ -331,7 +329,7 @@ left: 20px;
   margin-bottom: 15px;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  white-space: normal; /* Ensure text wraps correctly */
+  white-space: normal;
 }
 
 
@@ -345,7 +343,6 @@ left: 20px;
   font-size: 16px;
 }
 
-/* Smooth hover effect */
 .friends-activity li:hover, .recent-activity li:hover {
   background-color: #e6f4e0;
   transform: scale(1.02);
@@ -378,7 +375,7 @@ left: 20px;
 /* ======================Settings Page Layout====================== */
 .settings-page {
   display: flex;
-  height: calc(100vh - 70px); /* adjust based on your navbar height */
+  height: calc(100vh - 70px); 
 }
 
 .settings-sidebar {
@@ -447,7 +444,6 @@ left: 20px;
   padding-left: 20px;
 }
 
-/* Show only the active section */
 .settings-section:not(.hidden) {
   display: block;
 }
@@ -495,7 +491,6 @@ left: 20px;
   line-height: 1.4; 
 }
 
-/* Popup Message Styles */
 .popup-message {
   position: fixed;
   top: 20px;
@@ -513,17 +508,14 @@ left: 20px;
   transition: opacity 0.5s, top 0.5s;
 }
 
-/* Error Messages */
 .popup-message.error {
   background-color: #d9534f;
 }
 
-/* Caution Messages */
 .popup-message.caution {
   background-color: #ffb343;
 }
 
-/* Hide Effect */
 .popup-message.hide {
   top: 0;
   opacity: 0;
@@ -571,7 +563,6 @@ left: 20px;
   border-radius: 8px;
 }
 
-/* Consistent Input Field Styles */
 .settings-form input[type="text"],
 .settings-form input[type="password"],
 .settings-form input[type="email"] {
@@ -595,7 +586,6 @@ left: 20px;
   background-color: #ffffff;
 }
 
-/* Button Styles */
 .btn.update-btn,
 .btn.delete-btn {
   background-color: #204118;
@@ -617,14 +607,12 @@ left: 20px;
   background-color: #356630;
 }
 
-/* Center Align Buttons */
 .settings-form {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Label Spacing */
 .settings-form label {
   width: 100%;
   max-width: 400px;
@@ -634,7 +622,6 @@ left: 20px;
   color: #204118;
 }
 
-/* Button Styles Consistency */
 .btn.update-btn{
   background-color: #204118;
   color: #ffffff;
@@ -684,7 +671,7 @@ left: 20px;
     background-color: #9ebf8f;
     padding: 40px;
     border-radius: 30px;
-    width: 500px; /* Increase width */
+    width: 500px; 
     text-align: center;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
     margin-bottom: 40px;
@@ -705,16 +692,16 @@ left: 20px;
     align-items: center;
     gap: 20px;
     background-color: #dce9d5; 
-    padding: 20px 30px; /* Increase padding */
+    padding: 20px 30px; 
     border-radius: 30px;
     box-shadow: 0 0 15px rgba(0,0,0,0.15);
     justify-content: space-between;
-    max-width: 450px; /* Increase width */
+    max-width: 450px; 
     width: 100%;
 }
 
 .friend-pfp {
-    width: 60px;  /* Slightly larger profile picture */
+    width: 60px;  
     height: 60px;
     object-fit: cover;
     border-radius: 50%;
@@ -726,7 +713,7 @@ left: 20px;
 }
 
 .friend-name {
-    font-size: 24px;  /* Increase text size */
+    font-size: 24px;  
     font-weight: bold;
     color: #204118;
     flex-grow: 1;  
@@ -844,7 +831,6 @@ left: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* Profile Picture Styling */
 .result-container .friend-pfp {
     width: 60px;
     height: 60px;
@@ -853,7 +839,6 @@ left: 20px;
     object-fit: cover;
 }
 
-/* Name Styling */
 .result-container .friend-name {
     flex-grow: 1;
     color: #204118;
@@ -864,7 +849,6 @@ left: 20px;
     text-overflow: ellipsis;
 }
 
-/* Button Styling */
 .result-container .friends-submit {
     background-color: #204118;
     color: #ffffff;
@@ -949,14 +933,13 @@ left: 20px;
 }
 
 .upload-container {
-  align-items: flex-start; /* Align items to the top */
+  align-items: flex-start; 
   display: flex;
   justify-content: center;
   min-height: 100vh;
-  padding-top: 100px; /* Fixed gap from navbar */
-  background-color: #dce9d5; /* Match your main background */
+  padding-top: 100px; 
+  background-color: #dce9d5; 
 }
-
 
 .upload-box {
   background-color: #f0f0e6;
@@ -972,12 +955,11 @@ left: 20px;
   text-align: center;
 }
 
-/* Scrollable Entries */
 .upload-box ul {
   list-style: none;
   padding: 0;
-  max-height: 300px; /* Set the maximum height */
-  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 300px; 
+  overflow-y: auto; 
   margin-bottom: 20px;
 }
 
@@ -985,11 +967,11 @@ left: 20px;
   background-color: #f0f0e6;
   border-radius: 15px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  padding: 15px 20px; /* More padding for breathing room */
+  padding: 15px 20px; 
   font-size: 18px;
-  margin-bottom: 15px; /* Space between items */
-  word-wrap: break-word; /* Fix long text overflow */
-  overflow-wrap: break-word; /* Alternative for better browser support */
+  margin-bottom: 15px; 
+  word-wrap: break-word;
+  overflow-wrap: break-word; 
 }
 
 .upload-box ul::-webkit-scrollbar {
@@ -1014,9 +996,6 @@ left: 20px;
 
 
 /* ====================== FOR YOU PAGE ====================== */
-
-/* ============ FOR YOU PAGE (Updated) ============ */
-
 .for-you-page {
   padding: 60px 20px;
   background-color: #dce9d5;
@@ -1144,6 +1123,7 @@ left: 20px;
   font-weight: bold;
   color: #204118;
 }
+
 /* ========== For You Page Share Section ========== */
 .for-you-share-container {
     display: flex;
@@ -1272,7 +1252,6 @@ left: 20px;
   background-color: #2e6e14;
 }
 
-/* ===== Dropdown Styling ===== */
 .sharing-dropdown {
     width: 100%;
     padding: 14px;
@@ -1299,7 +1278,6 @@ left: 20px;
     color: #204118;
 }
 
-/* ===== Enhanced Button Styling ===== */
 .share-button {
     background-color: #38761d;
     color: #fff;
@@ -1323,14 +1301,12 @@ left: 20px;
 
 
 /* ===== Notification PAGE ===== */
-
 .notifications-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-/* General Notification Item */
 .notification-item {
     background-color: #f9f9f9;
     padding: 15px 20px;
@@ -1342,13 +1318,11 @@ left: 20px;
     gap: 15px;
 }
 
-/* Seen Notifications */
 .notification-item.seen {
     background-color: #ececec; 
     color: #777;
 }
 
-/* Header Styling */
 .notification-header {
     flex-grow: 1;
     display: flex;
@@ -1358,13 +1332,11 @@ left: 20px;
     justify-content: space-between; 
 }
 
-/* Name Styling */
 .notification-header strong {
     flex-shrink: 0;
     font-weight: bold;
 }
 
-/* Text Styling */
 .notification-text {
     flex-grow: 1;
     font-size: 16px;
@@ -1373,7 +1345,6 @@ left: 20px;
     text-overflow: ellipsis;
 }
 
-/* Timestamp Styling */
 .notification-timestamp {
     font-size: 14px;
     color: #888;
@@ -1382,7 +1353,6 @@ left: 20px;
     margin-left: auto;
 }
 
-/* Button Styling */
 .btn-accept, .btn-reject {
     padding: 5px 15px;
     border-radius: 10px;
@@ -1411,7 +1381,6 @@ left: 20px;
     background-color: #d32f2f;
 }
 
-/* Notifications Header */
 .notifications-header {
     display: flex;
     justify-content: space-between;
@@ -1420,7 +1389,6 @@ left: 20px;
     padding: 0 20px;
 }
 
-/* Mark All as Read Button */
 .mark-all-read-btn {
     background-color: #38761d;
     color: #fff;
@@ -1440,7 +1408,6 @@ left: 20px;
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* Notification Badge */
 .notification-badge {
     position: absolute;
     top: -5px;
@@ -1463,7 +1430,6 @@ left: 20px;
     flex-wrap: nowrap;
 }
 
-/* Image Wrapper */
 .notification-item.with-image .notification-image {
     max-width: 80px;
     max-height: 80px;
@@ -1479,7 +1445,6 @@ left: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Text Wrapper */
 .notification-item.with-image .notification-text-wrapper {
     flex-grow: 1;
     display: flex;
@@ -1492,17 +1457,14 @@ left: 20px;
     word-break: break-word;
 }
 
-
-/* Timestamp */
 .notification-item.with-image .notification-timestamp {
     font-size: 14px;
     color: #888;
     white-space: nowrap;
-    margin-left: auto; /* Pushes timestamp to the right */
-    flex-shrink: 0; /* Prevents timestamp from wrapping */
+    margin-left: auto; 
+    flex-shrink: 0; 
 }
 
-/* Modal Styles */
 .image-modal {
     display: none;
     position: fixed;
@@ -1541,13 +1503,7 @@ left: 20px;
     text-decoration: none;
     cursor: pointer;
 }
-.welcome-hero {
-  display: block !important;
-  width: 100%;
-  background: linear-gradient(135deg, #204118, #38761d);
-  color: white;
-  padding: 80px 20px;
-}
+
 
 .hero-inner {
   display: block !important;
@@ -1557,10 +1513,3 @@ left: 20px;
 }
 
 
-.hero-title h1 {
-  color: white;
-}
-
-.lead {
-  font-size: 1.25rem;
-}
