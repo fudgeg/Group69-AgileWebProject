@@ -1,7 +1,7 @@
 
 from app.models import User
 
-# This test function checks if the User model is created correctly.
+# This test file checks if the User model is created correctly.
 
 # This test functions checks if password hashing works as expected.
 def test_password_hashing():
