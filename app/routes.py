@@ -687,10 +687,8 @@ def for_you():
     completion_rate, avg_completion_time = calculate_book_metrics(books)
     
     
-
-    #  Pass the required variables to the template
     
-    # ✅ Pass the required variables to the template
+    # Pass the required variables to the template
     return render_template(
         "foryou.html",
         identity=identity_label,
