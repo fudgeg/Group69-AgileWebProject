@@ -5,7 +5,7 @@
 | Name            | Imran Elmi | Glenn Fudge | Saayella Saayella | Zi Fung Tan |
 | Github username | IceBearSYK | fudgeg      | Saayella          | ZFUNG14     |
 
-## About the website
+## About the website : Soul Maps
 
 Purpose:
 
@@ -47,17 +47,18 @@ Use:
 1. Clone the repo
    - git clone https://github.com/fudgeg/Group69-AgileWebProject
    - cd Group69-AgileWebProject
-2. Set up the environment
+2. Install dependencies
    - pip install -r requirements.txt
-3. Set up app and database
-
-- export FLASK_APP=run.py
-- export FLASK_ENV=development
-- flask db init (can be skipped if migration exists)
-- flask db migrate -m "initial" (can be skipped if migration exists)
-- flask db upgrade
-
-4. Run the app
+3. Set environment variables
+   - Option 1: Use a .env file
+   - Option 2: Run following:
+   - export FLASK_APP=run.py (or on windows set FLASK_APP=run.py)
+   - export FLASK_ENV=development ((or on windows set FLASK_ENV=development)
+4. Set up database
+   - flask db init (can be skipped if migration exists)
+   - flask db migrate -m "initial" (can be skipped if migration exists)
+   - flask db upgrade
+5. Run the app
 
 - flask run
 
@@ -104,3 +105,10 @@ to run Selenium Tests use: pytest tests_e2e/
 4. protected routes (test_home_requires_login.py) --> Confirms that unauthenticated users are redirected to /login when trying to access the home page.
 5. media display count (test_media_display_count.py) --> checks if the media analysis is working correctly
 6. upload media flow (test_upload_media.py)--> checks if media is correctly uploaded and shown under entries
+
+**To run the website after performing selenium tests, you will need to re-run the server**
+
+### Open Tasks
+
+- 🔔 **Notification popup appears on Settings icon** instead of the bell icon. (UI alignment issue)
+- 🖼️ **Snapshot image dimensions are inconsistent** across different screen sizes. Needs fixed aspect ratio or responsive scaling.
