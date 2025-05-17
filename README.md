@@ -26,7 +26,7 @@ Design:
 
 Note:
 
-Parts of this project were developed with the assistance from generative AI tools (e.g., ChatGPT, copilot) and online resources such as tutorials web sites (e.g., GeeksforGeeks), and forums (e.g., Stack Overflow). All code was reviewed and adapted to ensure understanding and functionality within the project context.
+Parts of this project were developed with the assistance from generative AI tools (e.g., ChatGPT, copilot) and online resources such as tutorial web sites (e.g., GeeksforGeeks), and forums (e.g., Stack Overflow). All code was reviewed and adapted to ensure understanding and functionality within the project.
 
 
 Use:
