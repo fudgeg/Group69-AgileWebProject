@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 BASE = "http://127.0.0.1:5000"
 
 def test_media_display_count(driver):
+    driver.delete_all_cookies()  # Ensure session is cleared
     # Unique user credentials
     unique_email = f"bookuser_{uuid.uuid4().hex[:6]}@example.com"
     unique_name = f"BookUser_{uuid.uuid4().hex[:6]}"

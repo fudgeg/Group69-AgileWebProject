@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 BASE = "http://127.0.0.1:5000"
 
 def test_invalid_login(driver):
+    driver.delete_all_cookies()  # Ensure session is cleared
     driver.get(f"{BASE}/login")
     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.NAME, "email")))
 

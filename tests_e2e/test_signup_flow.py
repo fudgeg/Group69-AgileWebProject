@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 BASE = "http://127.0.0.1:5000"
 
 def test_signup_flow(driver):
+    driver.delete_all_cookies()  # Ensure session is cleared
     unique_email = f"testuser_{uuid.uuid4().hex[:8]}@example.com"
     unique_name = f"testuser_{uuid.uuid4().hex[:6]}"
 
