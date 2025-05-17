@@ -53,7 +53,7 @@ Use:
    - Option 1: Use a .env file
    - Option 2: Run following:
    - export FLASK_APP=run.py (or on windows set FLASK_APP=run.py)
-   - export FLASK_ENV=development ((or on windows set FLASK_ENV=development)
+   - export FLASK_ENV=development (or on windows set FLASK_ENV=development)
 4. Set up database
    - flask db init (can be skipped if migration exists)
    - flask db migrate -m "initial" (can be skipped if migration exists)
