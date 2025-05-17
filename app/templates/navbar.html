@@ -1,4 +1,7 @@
 <div class="navbar">
+  <!-- Navbar to allow user to easily navigate to different pages on SoulMaps-->
+  <!-- Logo and Website name stick on far left of navbar -->
+
   <div class="navbar-left">
     <img
       src="{{ url_for('static', filename='media/SoulMapsIcon.png') }}"
@@ -7,6 +10,8 @@
     />
     <div class="logo">Soul Maps</div>
   </div>
+
+  <!-- Buttons to route to Home,For You, Notifications, Friends and Settings Page -->
 
   <div class="nav-icons">
     <a href="{{ url_for('main.home') }}" class="nav-link">

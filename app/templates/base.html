@@ -22,6 +22,7 @@
   <body
     class="{% if hide_navbar and not is_welcome %}center-page{% endif %} {% if is_welcome %}welcome{% endif %}"
   >
+    <!-- Hides Navbar in welcome, login and signup page -->
     {% if not hide_navbar %} {% include "navbar.html" %} {% endif %}
 
     <!-- Global Flash Messages -->

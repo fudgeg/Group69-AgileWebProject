@@ -45,6 +45,7 @@ body.welcome.center-page {
   max-width: 800px;
   margin: auto;
 }
+
 .icon-text {
   font-size: 18px;
   font-weight: bold;
@@ -54,6 +55,7 @@ body.welcome.center-page {
 .feature-showcase {
   background-color: #fefef5;
 }
+
 .section-title {
   font-size: 2.25rem;
   font-weight: bold;
@@ -203,7 +205,6 @@ top: 20px;
 left: 20px;
 }
 
-
 /* ====================== NAVBAR (for all pages after login) ====================== */
 .navbar {
   display: flex;
@@ -273,17 +274,14 @@ left: 20px;
 .home-container {
   position: relative; 
   background-color: #dce9d5;
-
   min-height: 100vh;
   height: auto;
   padding-top: 100px; 
-
   padding: 50px;
   text-align: center;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   overflow: hidden;
   box-sizing: border-box; 
-  
 }
 
 .content {
@@ -332,7 +330,6 @@ left: 20px;
   white-space: normal;
 }
 
-
 .recent-activity li em {
   font-weight: bold;
   font-style: italic;
@@ -350,7 +347,7 @@ left: 20px;
 }
 
 
-/* ======================IMPORT BUTTON IN HOME PAGE ======================*/
+/* ======================UPLOAD BUTTON IN HOME PAGE ======================*/
 .upload-btn {
   margin-top: 70px;
   padding: 12px 90px;
@@ -366,7 +363,6 @@ left: 20px;
   text-align: center;
   position: relative; 
 }
-
 
 .upload-btn:hover {
   background-color: #777;
@@ -448,7 +444,6 @@ left: 20px;
   display: block;
 }
 
-/* Utility */
 .hidden {
   display: none;
 }
@@ -750,7 +745,6 @@ left: 20px;
     justify-content: center;
     margin-bottom: 30px;
 }
-
 
 .friend-search-container input {
   width: 300px;

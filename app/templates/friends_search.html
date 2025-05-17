@@ -4,7 +4,13 @@
   <h2 class="search-results-title">Search Results</h2>
 
   <div class="search-results-list">
-    {% if search_results %} {% for person in search_results %}
+    <!-- Check if there are any search results -->
+    {% if search_results %}
+
+    <!-- Loop through each person in the search results -->
+    {% for person in search_results %}
+
+    <!-- Display the person's profile picture and name -->
     <div class="result-container">
       <img
         src="{{ url_for('static', filename='media/' + person.profile_picture) }}"
@@ -13,11 +19,13 @@
         onerror="this.onerror=null;this.src='{{ url_for('static', filename='media/user.png') }}';"
       />
       <div class="friend-name">{{ person.name }}</div>
+      <!-- Form for sending a friend request -->
+
       <form
         method="POST"
         action="{{ url_for('main.send_friend_request', receiver_id=person.id) }}"
       >
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <button type="submit" class="friends-submit">Add</button>
       </form>
     </div>

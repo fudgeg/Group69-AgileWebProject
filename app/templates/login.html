@@ -1,5 +1,8 @@
 {% extends "base.html" %}{% set hide_navbar = true %} {% block title %}Login –
 Soul Maps{% endblock %} {% block content %}
+
+<!-- Main Login Container -->
+
 <div class="login-container">
   <a href="{{ url_for('main.welcome') }}" class="back-button"> ← Back</a>
   <div class="logo-section">
@@ -9,6 +12,8 @@ Soul Maps{% endblock %} {% block content %}
       class="logo"
     />
   </div>
+
+  <!-- Form Section to let user enter their account details -->
 
   <div class="form-section">
     <h2 class="form-title">Login</h2>
