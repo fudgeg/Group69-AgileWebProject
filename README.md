@@ -108,7 +108,7 @@ to run Selenium Tests use: pytest tests_e2e/
 
 **To run the website after performing selenium tests, you will need to re-run the server**
 
-### Open Tasks
+## Open Tasks
 
 - 🔔 **Notification popup appears on Settings icon** instead of the bell icon. (UI alignment issue)
 - 🖼️ **Snapshot image dimensions are inconsistent** across different screen sizes. Needs fixed aspect ratio or responsive scaling.
