@@ -1,3 +1,6 @@
+# This file contains the routes for the Flask application.
+# It handles user authentication, media uploads, sharing, and notifications.
+# It uses Flask's Blueprint to organize the routes and SQLAlchemy for database interactions.
 import os, json, uuid
 from datetime import datetime
 from collections import Counter

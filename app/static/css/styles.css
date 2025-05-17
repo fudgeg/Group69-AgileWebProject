@@ -1,3 +1,8 @@
+/* This is the main CSS file for the web application
+    It contains styles for various components and pages 
+    including the welcome page, navbar, home page, settings page,
+    login/signup page, friends page, and the upload page. */
+
 /* ====================== GENERAL GLOBAL STYLES ====================== */
 body {
     font-family: "Segoe UI", sans-serif;

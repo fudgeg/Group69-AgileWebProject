@@ -1,4 +1,8 @@
-  //projects js functions stored here
+
+  // This file is used to store some javascript functions for the project
+  // Other functions are stored within their respective files
+
+  // Function to toggle visibility of media type fields
   function toggleFields() {
     const type = document.getElementById("mediaType").value;
 
