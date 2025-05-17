@@ -1,4 +1,5 @@
 
+
   // This file is used to store javascript functions for the project
   // Some js functions are also present in settings.html and foryou.html
 

@@ -233,11 +233,9 @@ block content %}
     </div>
   </div>
 
-  <div
-    id="monthly-data"
-    data-json="{{ monthly_by_type | tojson | safe }}"
-    style="display: none"
-  ></div>
+  <script id="monthly-data" type="application/json">
+  {{ monthly_by_type | tojson }}
+</script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <hr class="divider my-4" />
@@ -299,7 +297,7 @@ block content %}
     <script>
       // Parse the raw monthly data from your hidden JSON div
       const rawData = JSON.parse(
-        document.getElementById("monthly-data").dataset.json
+        document.getElementById("monthly-data").textContent
       );
 
       // Extract and sort months (chronologically)
