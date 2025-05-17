@@ -63,16 +63,6 @@ Soul Maps{% endblock %} {% block content %}
   </div>
 </div>
 
-<script>
-  function checkPasswords() {
-    const password = document.getElementById("password").value;
-    const confirm = document.getElementById("confirm_password").value;
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 
-    if (password !== confirm) {
-      alert("Passwords do not match!");
-      return false; // Prevent form submission
-    }
-    return true; // Allow form to submit to Flask
-  }
-</script>
 {% endblock %}

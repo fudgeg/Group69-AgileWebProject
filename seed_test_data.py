@@ -3,6 +3,7 @@ from app import create_app
 from app.models import db, User, Book, Movie, TVShow, Music
 from datetime import date
 
+# This script seeds the database with static test data for development and testing purposes.
 app = create_app()
 
 def create_user(name, email, password="test123"):
